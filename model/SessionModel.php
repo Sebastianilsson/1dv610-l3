@@ -5,6 +5,11 @@ class SessionModel {
     private $databaseModel;
     private $cookieUsername;
     private $cookiePassword;
+    private static $isLoggedIn = 'SessionModel::IsLoggedIn';
+    private static $userAgent = 'SessionModel::UserAgent';
+    private static $clientIp = 'SessionModel::ClientIp';
+    private static $httpUserAgent = 'HTTP_USER_AGENT';
+    private static $httpXForwardedFor = 'HTTP_X_FORWARDED_FOR';
 
     public function __construct($databaseModel) {
         $this->databaseModel = $databaseModel;
@@ -15,9 +20,13 @@ class SessionModel {
     }
 
     public function setSessionVariables() {
-        $_SESSION['isLoggedIn'] = true;
-        $_SESSION['userAgent'] = $_SERVER['HTTP_USER_AGENT'];
-        $_SESSION['ip'] = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        $_SESSION[self::$isLoggedIn] = true;
+        $_SESSION[self::$userAgent] = getenv(self::$httpUserAgent);
+        $_SESSION[self::$clientIp] = getenv(self::$httpXForwardedFor);
+    }
+
+    public function userHasSession() {
+        return isset($_SESSION[self::$isLoggedIn]);
     }
 
     public function handleNewCookies($username) {
@@ -66,13 +75,13 @@ class SessionModel {
     }
 
     public function isSessionSet() {
-        if (isset($_SESSION['isLoggedIn'])) {
+        if (isset($_SESSION[self::$isLoggedIn])) {
             return true;
         } else {return false;}
     }
 
     public function isSessionHijacked() {
-        if ($_SESSION['userAgent'] == $_SERVER['HTTP_USER_AGENT'] && $_SESSION['ip'] == $_SERVER['HTTP_X_FORWARDED_FOR']) {
+        if ($_SESSION[self::$userAgent] == getenv(self::$httpUserAgent) && $_SESSION[self::$clientIp] == getenv(self::$httpXForwardedFor)) {
             return false;
         } else { return true;}
     }

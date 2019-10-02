@@ -8,11 +8,11 @@ class LoginController {
     private $sessionModel;
     private $loginModel;
 
-    public function __construct($layoutView, $loginView, $databaseModel) {
+    public function __construct($layoutView, $loginView, $databaseModel, $sessionModel) {
         $this->layoutView = $layoutView;
         $this->loginView = $loginView;
         $this->databaseModel = $databaseModel;
-        $this->sessionModel = new SessionModel($this->databaseModel);
+        $this->sessionModel = $sessionModel;
         $this->loginModel = new LoginModel($this->layoutView, $this->loginView, $this->databaseModel);
     }
     // Method called if login was requested.

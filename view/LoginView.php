@@ -75,6 +75,35 @@ class LoginView {
 		';
 	}
 
+	public function handleNewCookies($username) {
+        $this->cookieUsername = $username;
+        $this->cookiePassword = $this->generateRandomString();
+        $this->setCookies();
+        $this->databaseModel->removeOldSessionIfExisting($this->cookieUsername);
+        $this->saveCookiesToDatabase();
+    }
+
+	private function setCookies() {
+        setcookie(self::$cookieName, $this->cookieUsername, time()+3600);
+		setcookie('LoginView::CookiePassword', $this->cookiePassword, time()+3600);
+	}
+	
+	private function generateRandomString() {
+		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$charactersLength = strlen($characters);
+		$lengthOfPassword = 20;
+    	$cookiePassword = '';
+    	for ($index = 0; $index < $lengthOfPassword; $index++) {
+        	$cookiePassword .= $characters[rand(0, $charactersLength - 1)];
+		}
+		return $cookiePassword;
+	}
+	
+	public function destroyCookies() {
+        setcookie (self::$cookieName, "", time() - 3600);
+        setcookie ("LoginView::CookiePassword", "", time() - 3600);
+    }
+
 	public function getUsername() {
         return isset($_POST[self::$username]) ? $_POST[self::$username] :"";
     }

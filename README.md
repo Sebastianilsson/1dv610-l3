@@ -1,2 +1,2 @@
-# Repo for 1dv610 assignment 2
+# Repo for 1dv610 assignment 3
 

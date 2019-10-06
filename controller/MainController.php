@@ -36,7 +36,7 @@ class MainController {
         } elseif ($this->loginView->isLoginFormSubmitted()) {
             $this->loginController->newLogin();
         } else {
-            $this->layoutView->render(false, $this->loginView);
+            $this->layoutView->render($this->loginView);
         }
     }
 

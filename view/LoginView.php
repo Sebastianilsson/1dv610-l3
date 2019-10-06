@@ -143,8 +143,12 @@ class LoginView {
 		$this->logInMessage = $message;
 	}
 
-	public function setIsLoggedIn($value) {
-		$this->loggedIn = $value;
+	public function isLoggedIn() {
+		$this->loggedIn = true;
+	}
+
+	public function isNotLoggedIn() {
+		$this->loggedIn = false;
 	}
 	
 }

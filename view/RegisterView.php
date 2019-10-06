@@ -9,6 +9,7 @@ class RegisterView {
     private static $submitRegistration = 'RegisterView::Register';
     private $name = '';
     private $registerMessage = "";
+    private $isLoggedIn = false;
 
     public function response() {
         return $this->generateRegistrationFormHTML();
@@ -64,6 +65,10 @@ class RegisterView {
 
     public function getRepeatedPassword() {
         return isset($_POST[self::$passwordRepeat]) ? $_POST[self::$passwordRepeat] : "";
+    }
+
+    public function getIsLoggedIn() {
+        return $this->isLoggedIn;
     }
 
     public function isRegisterFormSubmitted() {

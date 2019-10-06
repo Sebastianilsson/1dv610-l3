@@ -5,10 +5,8 @@ class LoginModel {
     private $password;
     private $loginView;
     private $databaseModel;
-    private $layoutView;
 
-    public function __construct($layoutView, $loginView, $databaseModel) {
-        $this->layoutView = $layoutView;
+    public function __construct($loginView, $databaseModel) {
         $this->loginView = $loginView;
         $this->databaseModel = $databaseModel;
     }

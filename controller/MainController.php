@@ -7,7 +7,6 @@ class MainController {
     private $databaseModel;
     private $sessionModel;
     private $loginModel;
-    private $dateTimeView;
     private $registerView;
     private $registerController;
     private $loginController;
@@ -17,8 +16,7 @@ class MainController {
         $this->databaseModel = new DatabaseModel();
         $this->sessionModel = new SessionModel($this->databaseModel);
         $this->loginView = new LoginView();
-        $this->dateTimeView = new DateTimeView();
-        $this->layoutView = new LayoutView($this->dateTimeView);
+        $this->layoutView = new LayoutView();
         $this->registerView = new RegisterView();
         $this->registerController = new RegisterController($this->layoutView, $this->registerView, $this->loginView, $this->databaseModel);
         $this->loginController = new LoginController($this->layoutView, $this->loginView, $this->databaseModel, $this->sessionModel);

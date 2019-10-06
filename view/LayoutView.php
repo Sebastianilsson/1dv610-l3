@@ -3,8 +3,8 @@
 
 class LayoutView {
 
-  public function __construct($dateTimeView) {
-    $this->dateTimeView = $dateTimeView;
+  public function __construct() {
+    $this->dateTimeView = new DateTimeView();
   }
   
   public function render($activeView) {

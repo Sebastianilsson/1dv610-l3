@@ -9,7 +9,7 @@ class LoginView {
 	private static $cookiePassword = 'LoginView::CookiePassword';
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
-	private $cookiePasswordVariable = '';
+	private $cookieUsername;
 	private $name = '';
 	private $logInMessage = '';
 	private $loggedIn = false;
@@ -75,17 +75,16 @@ class LoginView {
 		';
 	}
 
-	public function handleNewCookies($username) {
-        $this->cookieUsername = $username;
-        $this->cookiePassword = $this->generateRandomString();
-        $this->setCookies();
-        $this->databaseModel->removeOldSessionIfExisting($this->cookieUsername);
-        $this->saveCookiesToDatabase();
+	public function handleNewCookies() {
+		$cookieValues = new CookieValues($_POST[self::$username], $this->generateRandomString());
+		$this->setCookies($cookieValues);
+		$this->setLoginMessage("Welcome and you will be remembered");
+		return $cookieValues;
     }
 
-	private function setCookies() {
-        setcookie(self::$cookieName, $this->cookieUsername, time()+3600);
-		setcookie('LoginView::CookiePassword', $this->cookiePassword, time()+3600);
+	private function setCookies($cookieValues) {
+        setcookie(self::$cookieName, $cookieValues->getCookieUsername(), time()+3600);
+		setcookie(self::$cookiePassword, $cookieValues->getCookiePassword(), time()+3600);
 	}
 	
 	private function generateRandomString() {
@@ -101,8 +100,16 @@ class LoginView {
 	
 	public function destroyCookies() {
         setcookie (self::$cookieName, "", time() - 3600);
-        setcookie ("LoginView::CookiePassword", "", time() - 3600);
-    }
+        setcookie (self::$cookiePassword, "", time() - 3600);
+	}
+	
+	public function userHasCookie() {
+		return isset($_COOKIE[self::$cookieName]);
+	}
+
+	public function getCookiePassword() {
+		return $_COOKIE[self::$cookiePassword];
+	}
 
 	public function getUsername() {
         return isset($_POST[self::$username]) ? $_POST[self::$username] :"";

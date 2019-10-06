@@ -116,7 +116,24 @@ class DatabaseModel {
         }
     }
 
-    public function removeOldSessionIfExisting($username) {
+    public function saveCookieCredentials($cookieValues) {
+        $cookieUsername = $cookieValues->getCookieUsername();
+        $cookiePassword = $cookieValues->getCookiePassword();
+        $this->removeOldCookieIfExisting($cookieValues->getCookieUsername());
+        $this->connectToDatabase();
+        $sql = "INSERT INTO sessions (username, password) VALUES (?, ?)";
+        $statement = mysqli_stmt_init($this->connection);
+        if (!mysqli_stmt_prepare($statement, $sql)) {
+            echo "fail to save session...";
+        } else {
+            mysqli_stmt_bind_param($statement, "ss", $cookieUsername, $cookiePassword);
+            mysqli_stmt_execute($statement);
+            mysqli_stmt_close($statement);
+            mysqli_close($this->connection);
+        }
+    }
+
+    private function removeOldCookieIfExisting($username) {
         $this->connectToDatabase();
         $sql = "SELECT username FROM sessions WHERE username=?";
         $statement = mysqli_stmt_init($this->connection);
@@ -135,20 +152,6 @@ class DatabaseModel {
                     mysqli_stmt_execute($statement);
                 }
             }
-            mysqli_stmt_close($statement);
-            mysqli_close($this->connection);
-        }
-    }
-
-    public function saveCookieToDatabase($username, $password) {
-        $this->connectToDatabase();
-        $sql = "INSERT INTO sessions (username, password) VALUES (?, ?)";
-        $statement = mysqli_stmt_init($this->connection);
-        if (!mysqli_stmt_prepare($statement, $sql)) {
-            echo "fail to save session...";
-        } else {
-            mysqli_stmt_bind_param($statement, "ss", $username, $password);
-            mysqli_stmt_execute($statement);
             mysqli_stmt_close($statement);
             mysqli_close($this->connection);
         }

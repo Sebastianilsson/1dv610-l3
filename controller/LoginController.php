@@ -24,8 +24,8 @@ class LoginController {
                 $this->sessionModel->setSessionVariables();
                 $this->loginView->setIsLoggedIn(true);
                 if ($this->loginView->isKeepLoggedInRequested()) {
-                    $this->sessionModel->handleNewCookies($this->loginView->getUsername());
-                    $this->loginView->setLoginMessage("Welcome and you will be remembered");
+                    $cookieValues = $this->loginView->handleNewCookies();
+                    $this->databaseModel->saveCookieCredentials($cookieValues);
                 } else {
                     $this->loginView->setLoginMessage("Welcome");
                 }
@@ -41,7 +41,7 @@ class LoginController {
 
     // Method called if the user already has a cookie from the site
     public function loginWithCookies() {
-        if ($this->sessionModel->checkIfCookieIsValid()) {
+        if ($this->cookieIsValid()) {
             $this->loginView->setIsLoggedIn(true);
             $this->sessionModel->regenerateSessionId();
             if (!$this->sessionModel->isSessionSet()) {
@@ -50,27 +50,32 @@ class LoginController {
             }
             $this->layoutView->render(true, $this->loginView);
         } else {
-            $this->sessionModel->destroyCookies();
+            $this->loginView->destroyCookies();
             $this->loginView->setLoginMessage("Wrong information in cookies");
             $this->layoutView->render(false, $this->loginView);
         }
     }
 
+    private function cookieIsValid() {
+        return $this->databaseModel->cookiePasswordMatch($this->loginView->getCookiePassword());
+    }
+
     // Method called if the user already has an active session from the site
     public function loginWithSession() {
-        if (!$this->sessionModel->isSessionHijacked()) {
+        if ($this->sessionModel->sessionIsHijacked()) {
+            $this->layoutView->render(false, $this->loginView);
+        } else {
             $this->sessionModel->regenerateSessionId();
             $this->loginView->setIsLoggedIn(true);
             $this->layoutView->render(true, $this->loginView);
-        } else {
-            $this->layoutView->render(false, $this->loginView);
         }
     }
 
     // Method called if logout is requested
     public function logout() {
         if ($this->sessionModel->isSessionSet()) {
-            $this->sessionModel->destroySessionAndCookies();
+            $this->sessionModel->destroySession();
+            $this->loginView->destroyCookies();
             $this->loginView->setLoginMessage("Bye bye!");
         }
         $this->layoutView->render(false, $this->loginView);

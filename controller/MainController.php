@@ -29,7 +29,7 @@ class MainController {
             $this->loginController->logout();
         } elseif ($this->registerView->isRegisterFormRequested()) {
             $this->registerController->newRegistration();
-        } elseif(isset($_COOKIE['LoginView::CookieName'])) {
+        } elseif($this->loginView->userHasCookie()) {
             $this->loginController->loginWithCookies();
         } elseif ($this->sessionModel->userHasSession()) {
             $this->loginController->loginWithSession();

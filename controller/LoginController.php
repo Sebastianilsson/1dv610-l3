@@ -13,7 +13,7 @@ class LoginController {
         $this->loginView = $loginView;
         $this->databaseModel = $databaseModel;
         $this->sessionModel = $sessionModel;
-        $this->loginModel = new LoginModel($this->layoutView, $this->loginView, $this->databaseModel);
+        $this->loginModel = new LoginModel($this->loginView, $this->databaseModel);
     }
     // Method called if login was requested.
     public function newLogin() {
@@ -34,7 +34,10 @@ class LoginController {
             } else {
                 $this->loginView->setLoginMessage("Wrong name or password");
             }
-        } 
+        } else {
+            $validationErrorMessage = $this->loginModel->getValidationErrorMessage();
+            $this->loginView->setLoginMessage($validationErrorMessage);
+        }
         $this->loginView->setUsernameValue($this->loginView->getUsername());
         $this->layoutView->render($this->loginView);
     }

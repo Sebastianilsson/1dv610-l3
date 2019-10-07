@@ -5,6 +5,7 @@ class LoginModel {
     private $password;
     private $loginView;
     private $databaseModel;
+    private $validationErrorMessage;
 
     public function __construct($loginView, $databaseModel) {
         $this->loginView = $loginView;
@@ -22,8 +23,8 @@ class LoginModel {
                 if ($this->isUsernameCorrectFormat()) {
                     return true;
                 } else {
-                    $this->loginView->setUsernameValue(strip_tags($this->username));
-                    $this->loginView->addMessage('Username contains invalid characters.');
+                    // $this->loginView->setUsernameValue(strip_tags($this->username));
+                    $this->validationErrorMessage = 'Username contains invalid characters.';
                 }
             }
         }
@@ -41,7 +42,7 @@ class LoginModel {
         if ($this->username != "") {
             return true;
         } else {
-            $this->loginView->setLoginMessage("Username is missing");
+            $this->validationErrorMessage = 'Username is missing';
         }
     }
 
@@ -49,7 +50,7 @@ class LoginModel {
         if ($this->password != "") {
             return true;
         } else {
-            $this->loginView->setLoginMessage('Password is missing');
+            $this->validationErrorMessage = 'Password is missing';
         }
     }
 
@@ -59,5 +60,9 @@ class LoginModel {
         } else {
             return true;
         }
+    }
+
+    public function getValidationErrorMessage() {
+        return $this->validationErrorMessage;
     }
 }

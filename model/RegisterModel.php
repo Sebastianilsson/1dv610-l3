@@ -7,6 +7,7 @@ class RegisterModel {
     private $registerView;
     private $databaseModel;
     private $validationOk = false;
+    private $registrationErrorMessage;
 
     public function __construct($registerView, $databaseModel) {
         $this->registerView = $registerView;
@@ -37,12 +38,12 @@ class RegisterModel {
             $message .= 'Username has too few characters, at least 3 characters.';
         } 
         if ($this->password == "") {
-            $message .= '<br> Password has too few characters, at least 6 characters.';
+            $message .= $message == "" ? 'Password has too few characters, at least 6 characters.' : '<br> Password has too few characters, at least 6 characters.';
         } 
         if ($message == '') {
             return true;
         }
-        $this->registerView->setRegisterMessage($message);
+        $this->registrationErrorMessage = $message;
     }
 
     private function validateUsername() {
@@ -51,14 +52,13 @@ class RegisterModel {
                 if ($this->isUsernameUnique()) {
                     return true;
                 } else {
-                    $this->registerView->setRegisterMessage('User exists, pick another username.');
+                    $this->registrationErrorMessage = 'User exists, pick another username.';
                 }
             } else {
-                $this->registerView->setRegisterMessage('Username has too few characters, at least 3 characters.');
+                $this->registrationErrorMessage = 'Username has too few characters, at least 3 characters.';
             }
         } else {
-            $this->registerView->setUsernameValue(strip_tags($this->username));
-            $this->registerView->setRegisterMessage('Username contains invalid characters.');
+            $this->registrationErrorMessage = 'Username contains invalid characters.';
         }
     }
 
@@ -79,10 +79,10 @@ class RegisterModel {
             if ($this->checkIfPasswordsMatch()) {
                 return true;
             } else {
-                $this->registerView->setRegisterMessage('Passwords do not match.');
+                $this->registrationErrorMessage = 'Passwords do not match.';
             }
         } else {
-            $this->registerView->setRegisterMessage('Password has too few characters, at least 6 characters.');
+            $this->registrationErrorMessage = 'Password has too few characters, at least 6 characters.';
         }
     }
 
@@ -96,6 +96,10 @@ class RegisterModel {
 
     public function isValidationOk() {
         return $this->validationOk;
+    }
+
+    public function getRegistrationErrorMessage() {
+        return $this->registrationErrorMessage;
     }
 
     public function hashPassword() {

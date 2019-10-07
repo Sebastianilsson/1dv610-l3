@@ -26,6 +26,10 @@ class RegisterController {
             $this->registerModel->saveUserToDatabase();
             $this->loginView->setUsernameValue($this->registerView->getUsername());
             $this->loginView->setLoginMessage("Registered new user.");
+        } else {
+            $registerErrorMessage = $this->registerModel->getRegistrationErrorMessage();
+            $this->registerView->setUsernameValue(strip_tags($this->registerView->getUsername()));
+            $this->registerView->setRegisterMessage($registerErrorMessage);
         }
         $this->layoutView->render($this->registerView);
         

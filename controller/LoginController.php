@@ -29,7 +29,7 @@ class LoginController {
                 } else {
                     $this->loginView->setLoginMessage("Welcome");
                 }
-                $this->layoutView->render($this->loginView);
+                // $this->layoutView->render($this->loginView);
                 return;
             } else {
                 $this->loginView->setLoginMessage("Wrong name or password");
@@ -39,7 +39,7 @@ class LoginController {
             $this->loginView->setLoginMessage($validationErrorMessage);
         }
         $this->loginView->setUsernameValue($this->loginView->getUsername());
-        $this->layoutView->render($this->loginView);
+        // $this->layoutView->render($this->loginView);
     }
 
     // Method called if the user already has a cookie from the site
@@ -51,11 +51,11 @@ class LoginController {
                 $this->sessionModel->setSessionVariables();
                 $this->loginView->setLoginMessage("Welcome back with cookie");
             }
-            $this->layoutView->render($this->loginView);
+            // $this->layoutView->render($this->loginView);
         } else {
             $this->loginView->destroyCookies();
             $this->loginView->setLoginMessage("Wrong information in cookies");
-            $this->layoutView->render($this->loginView);
+            // $this->layoutView->render($this->loginView);
         }
     }
 
@@ -66,11 +66,11 @@ class LoginController {
     // Method called if the user already has an active session from the site
     public function loginWithSession() {
         if ($this->sessionModel->sessionIsHijacked()) {
-            $this->layoutView->render($this->loginView);
+            // $this->layoutView->render($this->loginView);
         } else {
             $this->sessionModel->regenerateSessionId();
             $this->loginView->isLoggedIn();
-            $this->layoutView->render($this->loginView);
+            // $this->layoutView->render($this->loginView);
         }
     }
 
@@ -81,6 +81,6 @@ class LoginController {
             $this->loginView->destroyCookies();
             $this->loginView->setLoginMessage("Bye bye!");
         }
-        $this->layoutView->render($this->loginView);
+        // $this->layoutView->render($this->loginView);
     }
 }

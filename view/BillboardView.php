@@ -57,7 +57,7 @@ class BillboardView {
         $posts = '';
         while ($post = mysqli_fetch_array($this->posts)) {
             $posts .= '
-            <div class="post" style="border:solid;padding:20px;width:33%;">
+            <div class="post" style="border:solid;padding:20px;width:33%;margin-bottom:10px;">
                 <h1>'.$post["postTitle"].'</h1>
                 <hr>
                 <h4>Written by : '.$post["username"].'</h4>

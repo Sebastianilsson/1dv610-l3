@@ -40,7 +40,7 @@ class LoginView {
 	*/
 	private function generateLogoutButtonHTML() {
 		return '
-			<a href="?viewImages">View Album</a>
+			<a href="?viewBillboard">View Billboard</a>
 			<form  method="post" >
 				<p id="' . self::$messageId . '">' . $this->logInMessage .'</p>
 				<input type="submit" name="' . self::$logout . '" value="logout"/>
@@ -56,7 +56,7 @@ class LoginView {
 	private function generateLoginFormHTML() {
 		return '
 			<a href="?register">Register a new user</a>
-			<a href="?viewImages">View Album</a>
+			<a href="?viewBillboard">View Billboard</a>
 			<form method="post" > 
 				<fieldset>
 					<legend>Login - enter Username and password</legend>

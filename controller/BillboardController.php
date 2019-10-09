@@ -1,26 +1,26 @@
 <?php
 
-class AlbumController {
+class BillboardController {
 
     private $layoutView;
     private $loginView;
     private $databaseModel;
     private $registerModel;
-    private $albumView;
+    private $billboardView;
 
 
-    public function __construct($layoutView, $loginView, $databaseModel, $albumView) {
+    public function __construct($layoutView, $loginView, $databaseModel, $billboardView) {
         $this->databaseModel = $databaseModel;
-        $this->albumView = $albumView;
+        $this->billboardView = $billboardView;
         $this->loginView = $loginView;
         $this->layoutView = $layoutView;
     }
 
     // Method called if registration of a new user is requested
-    public function handleAlbumInteraction() {
-        // if ($this->albumView->isNewPictureUpload()) {
+    public function handleBillboardInteraction() {
+        // if ($this->billboardView->isNewPictureUpload()) {
 
-        // } elseif ($this->albumView->isNewComment()) {
+        // } elseif ($this->billboardView->isNewComment()) {
 
         // }
         $this->isLoggedIn();
@@ -29,9 +29,9 @@ class AlbumController {
 
     private function isLoggedIn() {
         if ($this->loginView->getIsLoggedIn()) {
-            $this->albumView->isLoggedIn();
+            $this->billboardView->isLoggedIn();
         } else {
-            $this->albumView->isNotLoggedIn();
+            $this->billboardView->isNotLoggedIn();
         }
     }
 }

@@ -7,23 +7,23 @@ class MainController {
     private $loginModel;
 
     private $registerView;
-    private $albumView;
+    private $billboardView;
     private $layoutView;
     private $loginView;
 
     private $registerController;
     private $loginController;
-    private $albumController;
+    private $billboardController;
 
 
     public function __construct() {
         $this->databaseModel = new DatabaseModel();
         $this->sessionModel = new SessionModel($this->databaseModel);
         $this->loginView = new LoginView();
-        $this->albumView = new AlbumView();
+        $this->billboardView = new BillboardView();
         $this->layoutView = new LayoutView();
         $this->registerView = new RegisterView();
-        $this->albumController = new AlbumController($this->layoutView, $this->loginView, $this->databaseModel, $this->albumView);
+        $this->billboardController = new BillboardController($this->layoutView, $this->loginView, $this->databaseModel, $this->billboardView);
         $this->registerController = new RegisterController($this->layoutView, $this->registerView, $this->loginView, $this->databaseModel);
         $this->loginController = new LoginController($this->layoutView, $this->loginView, $this->databaseModel, $this->sessionModel);
     }
@@ -40,14 +40,14 @@ class MainController {
         } elseif ($this->loginView->isLoginFormSubmitted()) {
             $this->loginController->newLogin();
         } 
-        if ($this->albumView->isAlbumRequested()) {
-            $this->albumController->handleAlbumInteraction();
+        if ($this->billboardView->isBillboardRequested()) {
+            $this->billboardController->handleBillboardInteraction();
         }
     }
 
     public function renderState() {
-        if ($this->albumView->isAlbumRequested()) {
-            $this->layoutView->render($this->albumView);
+        if ($this->billboardView->isBillboardRequested()) {
+            $this->layoutView->render($this->billboardView);
         } elseif ($this->registerView->isRegisterFormRequested()) {
             $this->layoutView->render($this->registerView);
         } else {

@@ -1,8 +1,13 @@
 <?php
 
 class BillboardView {
+    private static $postTitle = 'BillboardView::PostTitle';
+	private static $postText = 'BillboardView::PostText';
+    private static $messageId = 'BillboardView::Message';
+    private static $submitPost = 'BillboardView::SubmitPost';
 
     private $isLoggedIn = false;
+    private $postMessage = "";
 
     public function response() {
         return $this->generateBillboardHTML();
@@ -12,7 +17,8 @@ class BillboardView {
         return '
         <a href="?">Back to login</a>
         <h1>Billboard</h1>
-        ' . $this->message() .'
+        <p>' . $this->message() .'</p>
+        '.$this->viewPostForm().'
         ';
     }
 
@@ -22,6 +28,25 @@ class BillboardView {
         } else {
             return 'You are not logged in and can only view posts and comments';
         }
+    }
+
+    private function viewPostForm() {
+        return '
+        <form method="post" > 
+				<fieldset>
+					<legend>New Billboard Post - share whats on your mind</legend>
+					<p id="' . self::$messageId . '">' .$this->postMessage. '</p>
+					
+                    <label for="' . self::$postTitle . '">Post title</label> <br>
+					<input type="text" id="' . self::$postTitle . '" name="' . self::$postTitle . '" /><br>
+
+                    <label for="' . self::$postText . '">Password</label><br>
+                    <textarea id="' . self::$postText . '" name="' . self::$postText . '" rows="4" cols="50"></textarea><br>
+					
+					<input type="submit" name="' . self::$submitPost . '" value="Submit Post" />
+				</fieldset>
+			</form>
+        ';
     }
 
     public function isBillboardRequested() {

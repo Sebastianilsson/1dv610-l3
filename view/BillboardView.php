@@ -53,8 +53,8 @@ class BillboardView {
         return isset($_GET['viewBillboard']);
     }
 
-    public function getIsLoggedIn() {
-        return $this->isLoggedIn;
+    public function isNewPostSubmitted() {
+        return isset($_POST[self::$submitPost]);
     }
 
     public function isLoggedIn() {
@@ -63,5 +63,21 @@ class BillboardView {
 
 	public function isNotLoggedIn() {
 		$this->loggedIn = false;
-	}
+    }
+
+    public function getPost() {
+        return new Post($_POST[self::$postTitle], $_POST[self::$postText]);
+    }
+    
+    public function getIsLoggedIn() {
+        return $this->isLoggedIn;
+    }
+
+    public function getPostTitle() {
+        return $_POST[self::$postTitle];
+    }
+
+    public function getPostText() {
+        return $_POST[self::$postText];
+    }
 }

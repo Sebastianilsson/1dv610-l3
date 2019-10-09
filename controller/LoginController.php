@@ -21,7 +21,7 @@ class LoginController {
         if ($this->loginModel->validateLoginInput()) {
             if ($this->loginModel->checkIfCredentialsMatchInDatabase()) {
                 $this->sessionModel->regenerateSessionId();
-                $this->sessionModel->setSessionVariables();
+                $this->sessionModel->setSessionVariables($this->loginView->getUsername());
                 $this->loginView->isLoggedIn();
                 if ($this->loginView->isKeepLoggedInRequested()) {
                     $cookieValues = $this->loginView->handleNewCookies();
@@ -48,7 +48,7 @@ class LoginController {
             $this->loginView->isLoggedIn();
             $this->sessionModel->regenerateSessionId();
             if (!$this->sessionModel->isSessionSet()) {
-                $this->sessionModel->setSessionVariables();
+                $this->sessionModel->setSessionVariables($this->loginView->getUsername());
                 $this->loginView->setLoginMessage("Welcome back with cookie");
             }
             // $this->layoutView->render($this->loginView);

@@ -18,13 +18,20 @@ class BillboardController {
 
     // Method called if registration of a new user is requested
     public function handleBillboardInteraction() {
-        // if ($this->billboardView->isNewPictureUpload()) {
-
-        // } elseif ($this->billboardView->isNewComment()) {
+        if ($this->billboardView->isNewPostSubmitted()) {
+            $this->createAndSaveNewPost();
+        }
+        // elseif ($this->billboardView->isNewComment()) {
 
         // }
         $this->isLoggedIn();
         // $this->layoutView->render($this->albumView);
+    }
+
+    private function createAndSaveNewPost() {
+        $newPost = $this->billboardView->getPost();
+        print_r($newPost);
+        // $newPost = new Post($postTitle, $postText);
     }
 
     private function isLoggedIn() {

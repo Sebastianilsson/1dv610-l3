@@ -19,8 +19,9 @@ class SessionModel {
         session_regenerate_id(true);
     }
 
-    public function setSessionVariables() {
+    public function setSessionVariables($username) {
         $_SESSION[self::$isLoggedIn] = true;
+        $_SESSION['username'] = $username;
         $_SESSION[self::$userAgent] = getenv(self::$httpUserAgent);
         $_SESSION[self::$clientIp] = getenv(self::$httpXForwardedFor);
     }

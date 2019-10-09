@@ -90,6 +90,21 @@ class DatabaseModel {
         }
     }
 
+    public function getPosts() {
+        $this->connectToDatabase();
+        $sql = "SELECT * FROM posts ORDER BY id DESC";
+        $statement = mysqli_stmt_init($this->connection);
+        if (!mysqli_stmt_prepare($statement, $sql)) {
+            echo "fail to get posts...";
+        } else {
+            mysqli_stmt_execute($statement);
+            $result = mysqli_stmt_get_result($statement);
+            mysqli_stmt_close($statement);
+            mysqli_close($this->connection);
+            return $result;
+        }
+    }
+
     public function usernameExistsInDatabase($username) {
         $this->connectToDatabase();
         $sql = "SELECT username FROM users WHERE username=?";

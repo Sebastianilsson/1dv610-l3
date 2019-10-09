@@ -25,6 +25,8 @@ class BillboardController {
 
         // }
         $this->isLoggedIn();
+        $posts = $this->databaseModel->getPosts();
+        $this->billboardView->setPosts($posts);
         // $this->layoutView->render($this->albumView);
     }
 

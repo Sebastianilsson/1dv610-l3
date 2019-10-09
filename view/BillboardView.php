@@ -8,6 +8,7 @@ class BillboardView {
 
     private $isLoggedIn = false;
     private $postMessage = "";
+    private $posts;
 
     public function response() {
         return $this->generateBillboardHTML();
@@ -19,6 +20,9 @@ class BillboardView {
         <h1>Billboard</h1>
         <p>' . $this->message() .'</p>
         '.$this->viewPostForm().'
+        <br>
+        <hr>
+        '.$this->viewPosts().'
         ';
     }
 
@@ -45,8 +49,24 @@ class BillboardView {
 					
 					<input type="submit" name="' . self::$submitPost . '" value="Submit Post" />
 				</fieldset>
-			</form>
+            </form>
         ';
+    }
+
+    private function viewPosts() {
+        $posts = '';
+        while ($post = mysqli_fetch_array($this->posts)) {
+            $posts .= '
+            <div class="post" style="border:solid;padding:20px;width:33%;">
+                <h1>'.$post["postTitle"].'</h1>
+                <hr>
+                <h4>Written by : '.$post["username"].'</h4>
+                <p>'.$post["postText"].'</p>
+                <p>'.$post["timeStamp"].'</p>
+            </div>
+            ';
+        }
+        return $posts;
     }
 
     public function isBillboardRequested() {
@@ -63,6 +83,10 @@ class BillboardView {
 
 	public function isNotLoggedIn() {
 		$this->loggedIn = false;
+    }
+
+    public function setPosts($posts) {
+        $this->posts = $posts;
     }
 
     public function getPost() {

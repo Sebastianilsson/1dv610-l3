@@ -25,6 +25,10 @@ class Post {
         return $this->postText;
     }
 
+    public function getUsername() {
+        return $this->username;
+    }
+
     public function getPostTitle() {
         return $this->postTitle;
     }

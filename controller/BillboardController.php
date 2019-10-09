@@ -30,7 +30,7 @@ class BillboardController {
 
     private function createAndSaveNewPost() {
         $newPost = $this->billboardView->getPost();
-        print_r($newPost);
+        $this->databaseModel->savePost($newPost);
         // $newPost = new Post($postTitle, $postText);
     }
 

@@ -72,6 +72,24 @@ class DatabaseModel {
         }
     }
 
+    public function savePost($post) {
+        $username = $post->getUsername();
+        $postTitle = $post->getPostTitle();
+        $postText = $post->getPostText();
+        $timeStamp = $post->getTimeStamp();
+        $this->connectToDatabase();
+        $sql = "INSERT INTO posts (username, postTitle, postText, timeStamp) VALUES (?, ?, ?, ?)";
+        $statement = mysqli_stmt_init($this->connection);
+        if (!mysqli_stmt_prepare($statement, $sql)) {
+            echo "fail to save post...";
+        } else {
+            mysqli_stmt_bind_param($statement, "ssss", $username, $postTitle, $postText, $timeStamp);
+            mysqli_stmt_execute($statement);
+            mysqli_stmt_close($statement);
+            mysqli_close($this->connection);
+        }
+    }
+
     public function usernameExistsInDatabase($username) {
         $this->connectToDatabase();
         $sql = "SELECT username FROM users WHERE username=?";

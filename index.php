@@ -18,6 +18,7 @@ require_once('model/LoginModel.php');
 require_once('model/SessionModel.php');
 require_once('model/CookieValues.php');
 require_once('model/Post.php');
+require_once('model/PostComment.php');
 
 //MAKE SURE ERRORS ARE SHOWN.. MIGHT WANT TO TURN THIS OFF ON A PUBLIC SERVER
 error_reporting(E_ALL);

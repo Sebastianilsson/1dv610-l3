@@ -20,20 +20,24 @@ class BillboardController {
     public function handleBillboardInteraction() {
         if ($this->billboardView->isNewPostSubmitted()) {
             $this->createAndSaveNewPost();
+        } elseif ($this->billboardView->isNewCommentSubmitted()) {
+            $this->createAndSaveNewComment();
         }
-        // elseif ($this->billboardView->isNewComment()) {
-
-        // }
         $this->isLoggedIn();
         $posts = $this->databaseModel->getPosts();
         $this->billboardView->setPosts($posts);
-        // $this->layoutView->render($this->albumView);
     }
 
     private function createAndSaveNewPost() {
         $newPost = $this->billboardView->getPost();
         $this->databaseModel->savePost($newPost);
         // $newPost = new Post($postTitle, $postText);
+    }
+
+    private function createAndSaveNewComment() {
+        $newComment = $this->billboardView->getComment();
+        $test = $newComment->getUsername();
+        echo $test;
     }
 
     private function isLoggedIn() {

@@ -8,12 +8,11 @@ class Post {
     private $id;
     private $comments;
 
-    public function __construct($postTitle, $postText, $username = null, $id = null, $comments = array()) {
+    public function __construct($postTitle, $postText, $id = null, $username = null) {
         $this->postTitle = $postTitle;
         $this->postText = $postText;
         $this->username = $username == null ? $_SESSION['username'] : $username;
         $this->id = $id;
-        $this->comments = $comments;
         $this->timeStamp = date('Y-m-d H:i');
     }
 
@@ -37,8 +36,8 @@ class Post {
         return $this->timeStamp;
     }
 
-    public function getComments() {
-        return $this->comments;
+    public function getPostId() {
+        return $this->id;
     }
 
 }

@@ -18,17 +18,24 @@ class BillboardController {
 
     // Method called if registration of a new user is requested
     public function handleBillboardInteraction() {
-        if ($this->billboardView->isNewPostSubmitted()) {
+        if ($this->billboardView->isEditPostSubmitted()) {
+            $this->saveEditedPost();
+        } elseif ($this->billboardView->isNewPostSubmitted()) {
             $this->createAndSaveNewPost();
         } elseif ($this->billboardView->isNewCommentSubmitted()) {
             $this->createAndSaveNewComment();
         }
         if ($this->billboardView->isEditPostRequested()) {
-            echo "fuck yeah!!!!";
+            $this->getPostToEdit();
         } elseif ($this->billboardView->isDeletePostRequested()) {
             $this->deletePost();
         }
         $this->setBillboardState();
+    }
+
+    private function saveEditedPost() {
+        $editedPost = $this->billboardView->getPost();
+        $this->databaseModel->updateEditedPost($editedPost);
     }
 
     private function createAndSaveNewPost() {
@@ -40,6 +47,12 @@ class BillboardController {
     private function createAndSaveNewComment() {
         $newComment = $this->billboardView->getComment();
         $this->databaseModel->savePostComment($newComment);
+    }
+
+    private function getPostToEdit() {
+        $postId = $this->billboardView->getPostId();
+        $postToBeEdit = $this->databaseModel->getPost($postId);
+        $this->billboardView->setPostTitleAndTextEdit($postToBeEdit);
     }
 
     private function deletePost() {

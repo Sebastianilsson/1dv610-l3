@@ -162,6 +162,23 @@ class DatabaseModel {
         }
     }
 
+    public function getPost($postId) {
+        $this->connectToDatabase();
+        $sql = "SELECT * FROM posts WHERE id=?";
+        $statement = mysqli_stmt_init($this->connection);
+        if (!mysqli_stmt_prepare($statement, $sql)) {
+            echo "fail to get user...";
+        } else {
+            mysqli_stmt_bind_param($statement, "s", $postId);
+            mysqli_stmt_execute($statement);
+            $result = mysqli_stmt_get_result($statement);
+            $post = mysqli_fetch_assoc($result);
+            mysqli_stmt_close($statement);
+            mysqli_close($this->connection);
+            return $post;
+        }
+    }
+
     private function deleteComments($postId) {
         $this->connectToDatabase();
         $sql = "DELETE FROM comments WHERE postId=?";
@@ -170,6 +187,23 @@ class DatabaseModel {
             echo "fail to get user...";
         } else {
             mysqli_stmt_bind_param($statement, "s", $postId);
+            mysqli_stmt_execute($statement);
+            mysqli_stmt_close($statement);
+            mysqli_close($this->connection);
+        }
+    }
+
+    public function updateEditedPost($post) {
+        $postTitle = $post->getPostTitle();
+        $postText = $post->getPostText();
+        $postId = $post->getPostId();
+        $this->connectToDatabase();
+        $sql = "UPDATE posts SET postTitle=?, postText=? WHERE id=?";
+        $statement = mysqli_stmt_init($this->connection);
+        if (!mysqli_stmt_prepare($statement, $sql)) {
+            echo "fail to get user...";
+        } else {
+            mysqli_stmt_bind_param($statement, "sss",$postTitle, $postText, $postId);
             mysqli_stmt_execute($statement);
             mysqli_stmt_close($statement);
             mysqli_close($this->connection);

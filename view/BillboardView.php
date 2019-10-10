@@ -11,10 +11,12 @@ class BillboardView {
     private static $submitComment = 'BillboardView::SubmitComment';
 
     private $isLoggedIn = false;
+    private $postEdit = false;
     private $postMessage = "";
     private $commentMessage = "";
     private $postTitleEdit = "";
     private $postTextEdit = "";
+    private $postIdEdit;
     private $posts;
     private $comments;
 
@@ -49,6 +51,8 @@ class BillboardView {
 			<fieldset>
 				<legend>New Billboard Post - share whats on your mind</legend>
                 <p id="' . self::$postMessageId . '">' .$this->postMessage. '</p>
+                <input type="hidden" name="postEdit" value="'.$this->postEdit.'" />
+                <input type="hidden" name="postIdEdit" value="'.$this->postIdEdit.'" />
                 
                 <label for="' . self::$postTitle . '">Post title</label><br>
                 <input type="text" id="' . self::$postTitle . '" name="' . self::$postTitle . '" value="'.$this->postTitleEdit.'" /><br>
@@ -148,7 +152,11 @@ class BillboardView {
     }
 
     public function isNewCommentSubmitted() {
-        return isset ($_POST[self::$submitComment]);
+        return isset($_POST[self::$submitComment]);
+    }
+
+    public function isEditPostSubmitted() {
+        return isset($_POST["postEdit"]);
     }
 
     public function isLoggedIn() {
@@ -168,7 +176,7 @@ class BillboardView {
     }
 
     public function getPost() {
-        return new Post($_POST[self::$postTitle], $_POST[self::$postText]);
+        return new Post($_POST[self::$postTitle], $_POST[self::$postText], $_POST['postIdEdit']);
     }
 
     public function getComment() {
@@ -189,5 +197,13 @@ class BillboardView {
 
     public function getPostText() {
         return $_POST[self::$postText];
+    }
+
+    public function setPostTitleAndTextEdit($post) {
+        $this->postTitleEdit = $post['postTitle'];
+        $this->postTextEdit = $post['postText'];
+        $this->postEdit = true;
+        $this->postIdEdit = $post['id'];
+        $this->postMessage = "Update your post and click \"Submit Post\"";
     }
 }

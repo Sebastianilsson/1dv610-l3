@@ -156,8 +156,21 @@ class DatabaseModel {
         } else {
             mysqli_stmt_bind_param($statement, "s", $postId);
             mysqli_stmt_execute($statement);
-            // mysqli_stmt_store_result($statement);
-            // $nrOfUsersWithUsername = mysqli_stmt_num_rows($statement);
+            mysqli_stmt_close($statement);
+            mysqli_close($this->connection);
+            $this->deleteComments($postId);
+        }
+    }
+
+    private function deleteComments($postId) {
+        $this->connectToDatabase();
+        $sql = "DELETE FROM comments WHERE postId=?";
+        $statement = mysqli_stmt_init($this->connection);
+        if (!mysqli_stmt_prepare($statement, $sql)) {
+            echo "fail to get user...";
+        } else {
+            mysqli_stmt_bind_param($statement, "s", $postId);
+            mysqli_stmt_execute($statement);
             mysqli_stmt_close($statement);
             mysqli_close($this->connection);
         }

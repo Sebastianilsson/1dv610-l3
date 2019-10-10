@@ -13,6 +13,8 @@ class BillboardView {
     private $isLoggedIn = false;
     private $postMessage = "";
     private $commentMessage = "";
+    private $postTitleEdit = "";
+    private $postTextEdit = "";
     private $posts;
     private $comments;
 
@@ -49,10 +51,10 @@ class BillboardView {
                 <p id="' . self::$postMessageId . '">' .$this->postMessage. '</p>
                 
                 <label for="' . self::$postTitle . '">Post title</label><br>
-                <input type="text" id="' . self::$postTitle . '" name="' . self::$postTitle . '" /><br>
+                <input type="text" id="' . self::$postTitle . '" name="' . self::$postTitle . '" value="'.$this->postTitleEdit.'" /><br>
 
                 <label for="' . self::$postText . '">Your thoughts</label><br>
-                <textarea id="' . self::$postText . '" name="' . self::$postText . '" rows="4" cols="50"></textarea><br>
+                <textarea id="' . self::$postText . '" name="' . self::$postText . '" rows="4" cols="50">'.$this->postTextEdit.'</textarea><br>
 					
 				<input type="submit" name="' . self::$submitPost . '" value="Submit Post" />
 			</fieldset>
@@ -67,8 +69,9 @@ class BillboardView {
             $posts .= '
             <div class="post" style="border:solid;padding:20px;width:33%;margin-bottom:10px;">
                 <h1>'.$value["postTitle"].'</h1>
+                '.$this->handleYourPost($value["username"], $value["id"]).'
                 <hr>
-                <h4>Written by : '.$post["username"].'</h4>
+                <h4>Written by : '.$value["username"].'</h4>
                 <p>'.$value["postText"].'</p>
                 <p>'.$value["timeStamp"].'</p>
                 '.$this->commentForm($value).'
@@ -116,8 +119,28 @@ class BillboardView {
         return $comments;
     }
 
+    private function handleYourPost($postAuthor, $postId) {
+        if ($this->isLoggedIn && $_SESSION["username"] == $postAuthor) {
+            return '
+            <form method="post">
+                <input type="hidden" name="postId" value="'.$postId.'" />
+                <input type="submit" name="editPost" value="Edit Post" />
+                <input type="submit" name="deletePost" value="Delete Post" />
+            </form>
+            ';
+        }
+    }
+
     public function isBillboardRequested() {
         return isset($_GET['viewBillboard']);
+    }
+
+    public function isEditPostRequested() {
+        return isset($_POST['editPost']);
+    }
+
+    public function isDeletePostRequested() {
+        return isset($_POST['deletePost']);
     }
 
     public function isNewPostSubmitted() {
@@ -150,6 +173,10 @@ class BillboardView {
 
     public function getComment() {
         return new PostComment($_POST[self::$commentText], $_POST[self::$postId]);
+    }
+
+    public function getPostId () {
+        return $_POST["postId"];
     }
     
     public function getIsLoggedIn() {

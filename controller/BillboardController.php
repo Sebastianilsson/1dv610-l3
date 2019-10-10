@@ -23,6 +23,11 @@ class BillboardController {
         } elseif ($this->billboardView->isNewCommentSubmitted()) {
             $this->createAndSaveNewComment();
         }
+        if ($this->billboardView->isEditPostRequested()) {
+            echo "fuck yeah!!!!";
+        } elseif ($this->billboardView->isDeletePostRequested()) {
+            $this->deletePost();
+        }
         $this->setBillboardState();
     }
 
@@ -35,6 +40,11 @@ class BillboardController {
     private function createAndSaveNewComment() {
         $newComment = $this->billboardView->getComment();
         $this->databaseModel->savePostComment($newComment);
+    }
+
+    private function deletePost() {
+        $postId = $this->billboardView->getPostId();
+        $this->databaseModel->deletePost($postId);
     }
 
     private function setBillboardState() {

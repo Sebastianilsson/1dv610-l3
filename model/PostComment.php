@@ -21,9 +21,12 @@ class PostComment {
         return $this->username;
     }
 
-
     public function getTimeStamp() {
         return $this->timeStamp;
+    }
+
+    public function getPostId() {
+        return $this->postId;
     }
 
 }

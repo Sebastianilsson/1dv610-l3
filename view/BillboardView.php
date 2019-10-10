@@ -14,6 +14,7 @@ class BillboardView {
     private $postMessage = "";
     private $commentMessage = "";
     private $posts;
+    private $comments;
 
     public function response() {
         return $this->generateBillboardHTML();
@@ -45,7 +46,10 @@ class BillboardView {
         <form method="post" > 
 			<fieldset>
 				<legend>New Billboard Post - share whats on your mind</legend>
-				<p id="' . self::$postMessageId . '">' .$this->postMessage. '</p>
+                <p id="' . self::$postMessageId . '">' .$this->postMessage. '</p>
+                
+                <label for="' . self::$postTitle . '">Post title</label><br>
+                <input type="text" id="' . self::$postTitle . '" name="' . self::$postTitle . '" /><br>
 
                 <label for="' . self::$postText . '">Your thoughts</label><br>
                 <textarea id="' . self::$postText . '" name="' . self::$postText . '" rows="4" cols="50"></textarea><br>
@@ -62,12 +66,13 @@ class BillboardView {
         while ($post = mysqli_fetch_array($this->posts)) {
             $posts .= '
             <div class="post" style="border:solid;padding:20px;width:33%;margin-bottom:10px;">
-                <h1>'.$post["postTitle"].'</h1>
+                <h1>'.$post["postTitle"].' |||||| id: '.$post["id"].'</h1>
                 <hr>
                 <h4>Written by : '.$post["username"].'</h4>
                 <p>'.$post["postText"].'</p>
                 <p>'.$post["timeStamp"].'</p>
                 '.$this->commentForm($post).'
+                '.$this->viewComments($post["id"]).'
             </div>
             ';
         }
@@ -96,6 +101,21 @@ class BillboardView {
         }
     }
 
+    private function viewComments($postId) {
+        $comments = '<br><h3>Comments</h3>';
+        while ($comment = mysqli_fetch_array($this->comments)) {
+            if($comment["postId"] == $postId) {
+                $comments .= '
+                <hr>
+                <p>'.$comment["commentText"].'</p>
+                <p>'.$comment["timeStamp"].'</p>
+                <br>
+                ';
+                }
+        }
+        return $comments;
+    }
+
     public function isBillboardRequested() {
         return isset($_GET['viewBillboard']);
     }
@@ -118,6 +138,10 @@ class BillboardView {
 
     public function setPosts($posts) {
         $this->posts = $posts;
+    }
+
+    public function setComments($comments) {
+        $this->comments = $comments;
     }
 
     public function getPost() {

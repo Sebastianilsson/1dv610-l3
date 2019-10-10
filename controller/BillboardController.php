@@ -25,7 +25,9 @@ class BillboardController {
         }
         $this->isLoggedIn();
         $posts = $this->databaseModel->getPosts();
+        $comments = $this->databaseModel->getComments();
         $this->billboardView->setPosts($posts);
+        $this->billboardView->setComments($comments);
     }
 
     private function createAndSaveNewPost() {
@@ -36,8 +38,7 @@ class BillboardController {
 
     private function createAndSaveNewComment() {
         $newComment = $this->billboardView->getComment();
-        $test = $newComment->getUsername();
-        echo $test;
+        $this->databaseModel->savePostComment($newComment);
     }
 
     private function isLoggedIn() {

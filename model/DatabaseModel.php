@@ -90,12 +90,46 @@ class DatabaseModel {
         }
     }
 
+    public function savePostComment($postComment) {
+        $username = $postComment->getUsername();
+        $commentText = $postComment->getCommentText();
+        $timeStamp = $postComment->getTimeStamp();
+        $postId = $postComment->getPostId();
+
+        $this->connectToDatabase();
+        $sql = "INSERT INTO comments (username, commentText, timeStamp, postId) VALUES (?, ?, ?, ?)";
+        $statement = mysqli_stmt_init($this->connection);
+        if (!mysqli_stmt_prepare($statement, $sql)) {
+            echo "fail to save comment...";
+        } else {
+            mysqli_stmt_bind_param($statement, "ssss", $username, $commentText, $timeStamp, $postId);
+            mysqli_stmt_execute($statement);
+            mysqli_stmt_close($statement);
+            mysqli_close($this->connection);
+        }
+    }
+
     public function getPosts() {
         $this->connectToDatabase();
         $sql = "SELECT * FROM posts ORDER BY id DESC";
         $statement = mysqli_stmt_init($this->connection);
         if (!mysqli_stmt_prepare($statement, $sql)) {
             echo "fail to get posts...";
+        } else {
+            mysqli_stmt_execute($statement);
+            $result = mysqli_stmt_get_result($statement);
+            mysqli_stmt_close($statement);
+            mysqli_close($this->connection);
+            return $result;
+        }
+    }
+
+    public function getComments() {
+        $this->connectToDatabase();
+        $sql = "SELECT * FROM comments ORDER BY id DESC";
+        $statement = mysqli_stmt_init($this->connection);
+        if (!mysqli_stmt_prepare($statement, $sql)) {
+            echo "fail to get comments...";
         } else {
             mysqli_stmt_execute($statement);
             $result = mysqli_stmt_get_result($statement);

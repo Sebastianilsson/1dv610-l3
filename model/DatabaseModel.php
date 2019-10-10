@@ -118,9 +118,13 @@ class DatabaseModel {
         } else {
             mysqli_stmt_execute($statement);
             $result = mysqli_stmt_get_result($statement);
+            $postsArray = array();
+            while ($row = mysqli_fetch_array($result)) {
+                $postsArray[] = $row;
+            }
             mysqli_stmt_close($statement);
             mysqli_close($this->connection);
-            return $result;
+            return $postsArray;
         }
     }
 
@@ -133,9 +137,13 @@ class DatabaseModel {
         } else {
             mysqli_stmt_execute($statement);
             $result = mysqli_stmt_get_result($statement);
+            $commentsArray = array();
+            while ($row = mysqli_fetch_array($result)) {
+                $commentsArray[] = $row;
+            }
             mysqli_stmt_close($statement);
             mysqli_close($this->connection);
-            return $result;
+            return $commentsArray;
         }
     }
 

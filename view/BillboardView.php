@@ -63,16 +63,16 @@ class BillboardView {
 
     private function viewPosts() {
         $posts = '';
-        while ($post = mysqli_fetch_array($this->posts)) {
+        foreach ($this->posts as $post => $value) {
             $posts .= '
             <div class="post" style="border:solid;padding:20px;width:33%;margin-bottom:10px;">
-                <h1>'.$post["postTitle"].' |||||| id: '.$post["id"].'</h1>
+                <h1>'.$value["postTitle"].'</h1>
                 <hr>
                 <h4>Written by : '.$post["username"].'</h4>
-                <p>'.$post["postText"].'</p>
-                <p>'.$post["timeStamp"].'</p>
-                '.$this->commentForm($post).'
-                '.$this->viewComments($post["id"]).'
+                <p>'.$value["postText"].'</p>
+                <p>'.$value["timeStamp"].'</p>
+                '.$this->commentForm($value).'
+                '.$this->viewComments($value["id"]).'
             </div>
             ';
         }
@@ -103,12 +103,12 @@ class BillboardView {
 
     private function viewComments($postId) {
         $comments = '<br><h3>Comments</h3>';
-        while ($comment = mysqli_fetch_array($this->comments)) {
-            if($comment["postId"] == $postId) {
+        foreach ($this->comments as $comment => $value) {
+            if($value["postId"] == $postId) {
                 $comments .= '
                 <hr>
-                <p>'.$comment["commentText"].'</p>
-                <p>'.$comment["timeStamp"].'</p>
+                <p>'.$value["commentText"].'</p>
+                <p>'.$value["timeStamp"].'</p>
                 <br>
                 ';
                 }

@@ -23,11 +23,7 @@ class BillboardController {
         } elseif ($this->billboardView->isNewCommentSubmitted()) {
             $this->createAndSaveNewComment();
         }
-        $this->isLoggedIn();
-        $posts = $this->databaseModel->getPosts();
-        $comments = $this->databaseModel->getComments();
-        $this->billboardView->setPosts($posts);
-        $this->billboardView->setComments($comments);
+        $this->setBillboardState();
     }
 
     private function createAndSaveNewPost() {
@@ -39,6 +35,14 @@ class BillboardController {
     private function createAndSaveNewComment() {
         $newComment = $this->billboardView->getComment();
         $this->databaseModel->savePostComment($newComment);
+    }
+
+    private function setBillboardState() {
+        $this->isLoggedIn();
+        $posts = $this->databaseModel->getPosts();
+        $comments = $this->databaseModel->getComments();
+        $this->billboardView->setPosts($posts);
+        $this->billboardView->setComments($comments);
     }
 
     private function isLoggedIn() {

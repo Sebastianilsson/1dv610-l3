@@ -156,7 +156,7 @@ class BillboardView {
     }
 
     public function isEditPostSubmitted() {
-        return isset($_POST["postEdit"]);
+        return (isset($_POST["postEdit"]) && $_POST["postEdit"] == true);
     }
 
     public function isLoggedIn() {

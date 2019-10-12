@@ -3,33 +3,38 @@
 class DatabaseModel {
 
     // Only used to connect to local database during development
-    private $databaseServerName = "localhost";
-    private $databaseUserName = "root";
-    private $databasePassword = "";
-    private $databaseName = "1dv610-l2";
+    private $databaseServerName;
+    private $databaseUserName;
+    private $databasePassword;
+    private $databaseName;
 
     private $connection;
     private $statement;
 
     public function __construct() {
-        $this->checkIfOnLocalhost();
+        // $this->checkIfOnLocalhost();
+        $settings = new Settings();
+        $this->databaseServerName = $settings->getDatabaseServerName();
+        $this->databaseUserName = $settings->getDatabaseUsername();
+        $this->databasePassword = $settings->getDatabasePassword();
+        $this->databaseName = $settings->getDatabaseName();
     }
 
     // Method that sets credentials for database if not on localhost
-    private function checkIfOnLocalhost() {
-        $whitelist = array(
-            '127.0.0.1',
-            '::1'
-        );
-        if(in_array($_SERVER['REMOTE_ADDR'], $whitelist)){
-            return;
-        } else {
-            $this->databaseServerName = getenv('DATABASE_SERVER_NAME');
-            $this->databaseUserName = getenv('DATABASE_USERNAME');
-            $this->databasePassword = getenv('DATABASE_PASSWORD');
-            $this->databaseName = getenv('DATABASE_NAME');
-        }
-    }
+    // private function checkIfOnLocalhost() {
+    //     $whitelist = array(
+    //         '127.0.0.1',
+    //         '::1'
+    //     );
+    //     if(in_array($_SERVER['REMOTE_ADDR'], $whitelist)){
+    //         return;
+    //     } else {
+    //         $this->databaseServerName = getenv('DATABASE_SERVER_NAME');
+    //         $this->databaseUserName = getenv('DATABASE_USERNAME');
+    //         $this->databasePassword = getenv('DATABASE_PASSWORD');
+    //         $this->databaseName = getenv('DATABASE_NAME');
+    //     }
+    // }
 
     private function connectToDatabase() {
         $this->connection = mysqli_connect($this->databaseServerName, $this->databaseUserName, $this->databasePassword, $this->databaseName);
@@ -200,45 +205,20 @@ class DatabaseModel {
         $cookieUsername = $cookieValues->getCookieUsername();
         $cookiePassword = $cookieValues->getCookiePassword();
         $this->removeOldCookieIfExisting($cookieValues->getCookieUsername());
-        $this->connectToDatabase();
-    //     $sql = "IF EXISTS(SELECT * FROM sessions WHERE username='.$cookieUsername.')
-    //     UPDATE sessions SET password='.$cookiePassword.'
-    // ELSE 
-    //     INSERT INTO sessions (username, password) VALUES ('.$cookieUsername.', '.$cookiePassword.')";
-    //     mysqli_query($this->connection, $sql);
-        $statement = mysqli_stmt_init($this->connection);
-        if (!mysqli_stmt_prepare($statement, $sql)) {
-            echo "fail to save session...";
-        } else {
-            mysqli_stmt_bind_param($statement, "ss", $cookieUsername, $cookiePassword);
-            mysqli_stmt_execute($statement);
-            mysqli_stmt_close($statement);
-            mysqli_close($this->connection);
+        $sql = "INSERT INTO sessions (username, password) VALUES (?, ?)";
+        if ($this->prepareStatement($sql)) {
+            mysqli_stmt_bind_param($this->statement, "ss", $cookieUsername, $cookiePassword);
+            mysqli_stmt_execute($this->statement);
+            $this->closeStatementAndConnection();
         }
     }
 
     private function removeOldCookieIfExisting($username) {
-        $this->connectToDatabase();
-        $sql = "SELECT username FROM sessions WHERE username=?";
-        $statement = mysqli_stmt_init($this->connection);
-        if (!mysqli_stmt_prepare($statement, $sql)) {
-            echo "fail to get user...";
-        } else {
-            mysqli_stmt_bind_param($statement, "s", $username);
-            mysqli_stmt_execute($statement);
-            mysqli_stmt_store_result($statement);
-            $nrOfUsersWithUsername = mysqli_stmt_num_rows($statement);
-            if ($nrOfUsersWithUsername == 1) {
-                $sql = "DELETE FROM sessions WHERE username='$username'";
-                if (!mysqli_stmt_prepare($statement, $sql)) {
-                    echo "failed to delete session";
-                } else {
-                    mysqli_stmt_execute($statement);
-                }
-            }
-            mysqli_stmt_close($statement);
-            mysqli_close($this->connection);
+        $sql = "DELETE FROM sessions WHERE username='$username'";
+        if ($this->prepareStatement($sql)) {
+            mysqli_stmt_execute($this->statement);
         }
+        $this->closeStatementAndConnection();
     }
 
     public function cookiePasswordMatch() {

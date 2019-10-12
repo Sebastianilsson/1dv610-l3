@@ -50,7 +50,9 @@ class BillboardController {
 
     private function createAndSaveNewComment() {
         $newComment = $this->billboardView->getComment();
-        $this->databaseModel->savePostComment($newComment);
+        if ($newComment->isValid()) {
+            $this->databaseModel->savePostComment($newComment);
+        }    
     }
 
     private function getPostToEdit() {

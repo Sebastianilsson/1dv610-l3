@@ -29,7 +29,7 @@ class Post {
             return true;
         } else {
             $this->isPostValid = false;
-            $this->errorMessage = "All fields needs to be filled.";
+            $this->errorMessage = "All fields in a Post needs to be filled.";
         }
     }
 

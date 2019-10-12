@@ -52,7 +52,11 @@ class BillboardController {
         $newComment = $this->billboardView->getComment();
         if ($newComment->isValid()) {
             $this->databaseModel->savePostComment($newComment);
-        }    
+        } else {
+            $errorMessage = $newComment->getErrorMessage();
+            $this->billboardView->setPostMessage($errorMessage);
+        }
+        
     }
 
     private function getPostToEdit() {

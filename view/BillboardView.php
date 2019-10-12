@@ -3,17 +3,15 @@
 class BillboardView {
     private static $postTitle = 'BillboardView::PostTitle';
 	private static $postText = 'BillboardView::PostText';
-    private static $postMessageId = 'BillboardView::PostMessage';
+    private static $billboardMessageId = 'BillboardView::PostMessage';
     private static $submitPost = 'BillboardView::SubmitPost';
     private static $postId = 'BillboardView::PostId';
-    private static $commentMessageId = 'BillboardView::CommentMessage';
     private static $commentText = 'BillboardView::CommentText';
     private static $submitComment = 'BillboardView::SubmitComment';
 
     private $isLoggedIn = false;
     private $postEdit = false;
-    private $postMessage = "";
-    private $commentMessage = "";
+    private $billboardMessage = "";
     private $postTitleEdit = "";
     private $postTextEdit = "";
     private $postIdEdit;
@@ -29,6 +27,7 @@ class BillboardView {
         <a href="?">Back to login</a>
         <h1>Billboard</h1>
         <p>' . $this->message() .'</p>
+        <h3 id="' . self::$billboardMessageId . '">' .$this->billboardMessage. '</h3>
         '.$this->viewPostForm().'
         <br>
         <hr>
@@ -50,7 +49,7 @@ class BillboardView {
         <form method="post" > 
 			<fieldset>
 				<legend>New Billboard Post - share whats on your mind</legend>
-                <p id="' . self::$postMessageId . '">' .$this->postMessage. '</p>
+                
                 <input type="hidden" name="postEdit" value="'.$this->postEdit.'" />
                 <input type="hidden" name="postIdEdit" value="'.$this->postIdEdit.'" />
                 
@@ -93,7 +92,6 @@ class BillboardView {
                 <form method="post" > 
                 <fieldset>
                     <legend>New Comment On "'.$post["postTitle"].'" - what do you think about his update?</legend>
-                    <p id="' . self::$commentMessageId . '">' .$this->commentMessage. '</p>
 
                     <input type="hidden" name="'.self::$postId.'" value="'.$post["id"].'" />
 
@@ -200,7 +198,7 @@ class BillboardView {
     }
 
     public function setPostMessage($message) {
-        $this->postMessage = $message;
+        $this->billboardMessage = $message;
     }
 
     public function setPostTitleAndTextEdit($post) {
@@ -208,6 +206,6 @@ class BillboardView {
         $this->postTextEdit = $post['postText'];
         $this->postEdit = true;
         $this->postIdEdit = $post['id'];
-        $this->postMessage = "Update your post and click \"Submit Post\"";
+        $this->billboardMessage = "Update your post and click \"Submit Post\"";
     }
 }

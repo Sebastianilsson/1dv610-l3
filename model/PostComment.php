@@ -6,6 +6,7 @@ class PostComment {
     private $username;
     private $postId;
     private $isCommentValid = true;
+    private $errorMessage = "";
 
     public function __construct($commentText, $postId) {
         $this->commentText = $this->validateText($commentText);
@@ -25,6 +26,7 @@ class PostComment {
             return true;
         } else {
             $this->isCommentValid = false;
+            $this->errorMessage = "You can't submit an empty Comment.";
         }
     }
 
@@ -34,11 +36,16 @@ class PostComment {
             return true;
         } else {
             $this->isCommentValid = false;
+            $this->errorMessage = "Comment can't contain script-tags";
         }
     }
 
     public function isValid() {
         return $this->isCommentValid;
+    }
+
+    public function getErrorMessage() {
+        return $this->errorMessage;
     }
 
     public function getCommentText() {

@@ -3,20 +3,20 @@
 class DatabaseModel {
 
     // Only used to connect to local database during development
-    private $databaseServerName;
-    private $databaseUserName;
-    private $databasePassword;
-    private $databaseName;
+    private $databaseServerName = 'localhost';
+    private $databaseUserName = 'root';
+    private $databasePassword = '';
+    private $databaseName = '1dv610-l2';
 
     private $connection;
     private $statement;
 
     public function __construct() {
-        $settings = new Settings();
-        $this->databaseServerName = $settings->getDatabaseServerName();
-        $this->databaseUserName = $settings->getDatabaseUsername();
-        $this->databasePassword = $settings->getDatabasePassword();
-        $this->databaseName = $settings->getDatabaseName();
+        // $settings = new Settings();
+        // $this->databaseServerName = $settings->getDatabaseServerName();
+        // $this->databaseUserName = $settings->getDatabaseUsername();
+        // $this->databasePassword = $settings->getDatabasePassword();
+        // $this->databaseName = $settings->getDatabaseName();
         $this->checkIfOnLocalhost();
     }
 

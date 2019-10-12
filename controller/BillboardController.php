@@ -55,9 +55,9 @@ class BillboardController {
         $this->billboardView->setPostTitleAndTextEdit($postToBeEdit);
     }
 
-    private function deletePost() {
+    private function deletePostAndComments() {
         $postId = $this->billboardView->getPostId();
-        $this->databaseModel->deletePost($postId);
+        $this->databaseModel->deletePostAndComments($postId);
     }
 
     private function setBillboardState() {

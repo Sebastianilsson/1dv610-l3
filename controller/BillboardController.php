@@ -28,7 +28,7 @@ class BillboardController {
         if ($this->billboardView->isEditPostRequested()) {
             $this->getPostToEdit();
         } elseif ($this->billboardView->isDeletePostRequested()) {
-            $this->deletePost();
+            $this->deletePostAndComments();
         }
         $this->setBillboardState();
     }

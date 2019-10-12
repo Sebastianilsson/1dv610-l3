@@ -9,6 +9,8 @@ class DatabaseModel {
     private $databaseName = "1dv610-l2";
 
     private $connection;
+    private $statement;
+
     public function __construct() {
         $this->checkIfOnLocalhost();
     }
@@ -32,24 +34,34 @@ class DatabaseModel {
     private function connectToDatabase() {
         $this->connection = mysqli_connect($this->databaseServerName, $this->databaseUserName, $this->databasePassword, $this->databaseName);
         if (!$this->connection) {
-            echo "failed connection";
+            throw new Exception("Failed to connect to database...");
             die("Connection failed...".mysqli_connect_error());
         }
     }
 
-    public function checkIfUsernameIsFree($username) {
+    private function prepareStatement($sqlQuery) {
         $this->connectToDatabase();
-        $sql = "SELECT username FROM users WHERE username=?";
-        $statement = mysqli_stmt_init($this->connection);
-        if (!mysqli_stmt_prepare($statement, $sql)) {
-            echo "fail to get user...";
+        $this->statement = mysqli_stmt_init($this->connection);
+        if (mysqli_stmt_prepare($this->statement, $sqlQuery)) {
+            return true;
         } else {
-            mysqli_stmt_bind_param($statement, "s", $username);
-            mysqli_stmt_execute($statement);
-            mysqli_stmt_store_result($statement);
-            $nrOfUsersWithUsername = mysqli_stmt_num_rows($statement);
-            mysqli_stmt_close($statement);
-            mysqli_close($this->connection);
+            throw new Exception("Couldn't prepare statement for database...");
+        }
+    }
+
+    private function closeStatementAndConnection() {
+        mysqli_stmt_close($this->statement);
+        mysqli_close($this->connection);
+    }
+
+    public function checkIfUsernameIsFree($username) {
+        $sql = "SELECT username FROM users WHERE username=?";
+        if ($this->prepareStatement($sql)) {
+            mysqli_stmt_bind_param($this->statement, "s", $username);
+            mysqli_stmt_execute($this->statement);
+            mysqli_stmt_store_result($this->statement);
+            $nrOfUsersWithUsername = mysqli_stmt_num_rows($this->statement);
+            $this->closeStatementAndConnection();
             if ($nrOfUsersWithUsername == 0) {
                 return true;
             } else {
@@ -59,16 +71,11 @@ class DatabaseModel {
     }
 
     public function saveUserToDatabase($username, $password) {
-        $this->connectToDatabase();
         $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
-        $statement = mysqli_stmt_init($this->connection);
-        if (!mysqli_stmt_prepare($statement, $sql)) {
-            echo "fail to get user...";
-        } else {
-            mysqli_stmt_bind_param($statement, "ss", $username, $password);
-            mysqli_stmt_execute($statement);
-            mysqli_stmt_close($statement);
-            mysqli_close($this->connection);
+        if ($this->prepareStatement($sql)) {
+            mysqli_stmt_bind_param($this->statement, "ss", $username, $password);
+            mysqli_stmt_execute($this->statement);
+            $this->closeStatementAndConnection();
         }
     }
 
@@ -77,16 +84,11 @@ class DatabaseModel {
         $postTitle = $post->getPostTitle();
         $postText = $post->getPostText();
         $timeStamp = $post->getTimeStamp();
-        $this->connectToDatabase();
         $sql = "INSERT INTO posts (username, postTitle, postText, timeStamp) VALUES (?, ?, ?, ?)";
-        $statement = mysqli_stmt_init($this->connection);
-        if (!mysqli_stmt_prepare($statement, $sql)) {
-            echo "fail to save post...";
-        } else {
-            mysqli_stmt_bind_param($statement, "ssss", $username, $postTitle, $postText, $timeStamp);
-            mysqli_stmt_execute($statement);
-            mysqli_stmt_close($statement);
-            mysqli_close($this->connection);
+        if ($this->prepareStatement($sql)) {
+            mysqli_stmt_bind_param($this->statement, "ssss", $username, $postTitle, $postText, $timeStamp);
+            mysqli_stmt_execute($this->statement);
+            $this->closeStatementAndConnection();
         }
     }
 
@@ -95,101 +97,61 @@ class DatabaseModel {
         $commentText = $postComment->getCommentText();
         $timeStamp = $postComment->getTimeStamp();
         $postId = $postComment->getPostId();
-
-        $this->connectToDatabase();
         $sql = "INSERT INTO comments (username, commentText, timeStamp, postId) VALUES (?, ?, ?, ?)";
-        $statement = mysqli_stmt_init($this->connection);
-        if (!mysqli_stmt_prepare($statement, $sql)) {
-            echo "fail to save comment...";
-        } else {
-            mysqli_stmt_bind_param($statement, "ssss", $username, $commentText, $timeStamp, $postId);
-            mysqli_stmt_execute($statement);
-            mysqli_stmt_close($statement);
-            mysqli_close($this->connection);
+        if ($this->prepareStatement($sql)) {
+            mysqli_stmt_bind_param($this->statement, "ssss", $username, $commentText, $timeStamp, $postId);
+            mysqli_stmt_execute($this->statement);
+            $this->closeStatementAndConnection();
         }
     }
 
     public function getPosts() {
-        $this->connectToDatabase();
         $sql = "SELECT * FROM posts ORDER BY id DESC";
-        $statement = mysqli_stmt_init($this->connection);
-        if (!mysqli_stmt_prepare($statement, $sql)) {
-            echo "fail to get posts...";
-        } else {
-            mysqli_stmt_execute($statement);
-            $result = mysqli_stmt_get_result($statement);
+        if ($this->prepareStatement($sql)) {
+            mysqli_stmt_execute($this->statement);
+            $result = mysqli_stmt_get_result($this->statement);
             $postsArray = array();
             while ($row = mysqli_fetch_array($result)) {
                 $postsArray[] = $row;
             }
-            mysqli_stmt_close($statement);
-            mysqli_close($this->connection);
+            $this->closeStatementAndConnection();
             return $postsArray;
         }
     }
 
     public function getComments() {
-        $this->connectToDatabase();
         $sql = "SELECT * FROM comments ORDER BY id DESC";
-        $statement = mysqli_stmt_init($this->connection);
-        if (!mysqli_stmt_prepare($statement, $sql)) {
-            echo "fail to get comments...";
-        } else {
-            mysqli_stmt_execute($statement);
-            $result = mysqli_stmt_get_result($statement);
+        if ($this->prepareStatement($sql)) {
+            mysqli_stmt_execute($this->statement);
+            $result = mysqli_stmt_get_result($this->statement);
             $commentsArray = array();
             while ($row = mysqli_fetch_array($result)) {
                 $commentsArray[] = $row;
             }
-            mysqli_stmt_close($statement);
-            mysqli_close($this->connection);
+            $this->closeStatementAndConnection();
             return $commentsArray;
         }
     }
 
-    public function deletePost($postId) {
-        $this->connectToDatabase();
-        $sql = "DELETE FROM posts WHERE id=?";
-        $statement = mysqli_stmt_init($this->connection);
-        if (!mysqli_stmt_prepare($statement, $sql)) {
-            echo "fail to get user...";
-        } else {
-            mysqli_stmt_bind_param($statement, "s", $postId);
-            mysqli_stmt_execute($statement);
-            mysqli_stmt_close($statement);
-            mysqli_close($this->connection);
-            $this->deleteComments($postId);
+    public function deletePostAndComments($postId) {
+        $sql = "DELETE posts, comments FROM posts INNER JOIN comments 
+        ON comments.postId = posts.id WHERE posts.id = ?";
+        if ($this->prepareStatement($sql)) {
+            mysqli_stmt_bind_param($this->statement, "s", $postId);
+            mysqli_stmt_execute($this->statement);
+            $this->closeStatementAndConnection();
         }
     }
 
     public function getPost($postId) {
-        $this->connectToDatabase();
         $sql = "SELECT * FROM posts WHERE id=?";
-        $statement = mysqli_stmt_init($this->connection);
-        if (!mysqli_stmt_prepare($statement, $sql)) {
-            echo "fail to get user...";
-        } else {
-            mysqli_stmt_bind_param($statement, "s", $postId);
-            mysqli_stmt_execute($statement);
-            $result = mysqli_stmt_get_result($statement);
+        if ($this->prepareStatement($sql)) {
+            mysqli_stmt_bind_param($this->statement, "s", $postId);
+            mysqli_stmt_execute($this->statement);
+            $result = mysqli_stmt_get_result($this->statement);
             $post = mysqli_fetch_assoc($result);
-            mysqli_stmt_close($statement);
-            mysqli_close($this->connection);
+            $this->closeStatementAndConnection();
             return $post;
-        }
-    }
-
-    private function deleteComments($postId) {
-        $this->connectToDatabase();
-        $sql = "DELETE FROM comments WHERE postId=?";
-        $statement = mysqli_stmt_init($this->connection);
-        if (!mysqli_stmt_prepare($statement, $sql)) {
-            echo "fail to get user...";
-        } else {
-            mysqli_stmt_bind_param($statement, "s", $postId);
-            mysqli_stmt_execute($statement);
-            mysqli_stmt_close($statement);
-            mysqli_close($this->connection);
         }
     }
 
@@ -199,35 +161,22 @@ class DatabaseModel {
         $postId = $post->getPostId();
         $this->connectToDatabase();
         $sql = "UPDATE posts SET postTitle=?, postText=? WHERE id=?";
-        $statement = mysqli_stmt_init($this->connection);
-        if (!mysqli_stmt_prepare($statement, $sql)) {
-            echo "fail to get user...";
-        } else {
-            mysqli_stmt_bind_param($statement, "sss",$postTitle, $postText, $postId);
-            mysqli_stmt_execute($statement);
-            mysqli_stmt_close($statement);
-            mysqli_close($this->connection);
+        if ($this->prepareStatement($sql)) {
+            mysqli_stmt_bind_param($this->statement, "sss",$postTitle, $postText, $postId);
+            mysqli_stmt_execute($this->statement);
+            $this->closeStatementAndConnection();
         }
     }
 
     public function usernameExistsInDatabase($username) {
-        $this->connectToDatabase();
         $sql = "SELECT username FROM users WHERE username=?";
-        $statement = mysqli_stmt_init($this->connection);
-        if (!mysqli_stmt_prepare($statement, $sql)) {
-            echo "fail to get user...";
-        } else {
-            mysqli_stmt_bind_param($statement, "s", $username);
-            mysqli_stmt_execute($statement);
-            mysqli_stmt_store_result($statement);
-            $nrOfUsersWithUsername = mysqli_stmt_num_rows($statement);
-            mysqli_stmt_close($statement);
-            mysqli_close($this->connection);
-            if ($nrOfUsersWithUsername == 1) {
-                return true;
-            } else {
-                return false;
-            }
+        if ($this->prepareStatement($sql)) {
+            mysqli_stmt_bind_param($this->statement, "s", $username);
+            mysqli_stmt_execute($this->statement);
+            mysqli_stmt_store_result($this->statement);
+            $nrOfUsersWithUsername = mysqli_stmt_num_rows($this->statement);
+            $this->closeStatementAndConnection();
+            return $nrOfUsersWithUsername == 1 ? true : false;
         }
     }
 
@@ -235,21 +184,14 @@ class DatabaseModel {
         $this->connectToDatabase();
         $sql = "SELECT * FROM users WHERE username=?";
         $statement = mysqli_stmt_init($this->connection);
-        if (!mysqli_stmt_prepare($statement, $sql)) {
-            echo "Failed to get user";
-        } else {
-            mysqli_stmt_bind_param($statement, "s", $username);
-            mysqli_stmt_execute($statement);
-            $matchingUser = mysqli_stmt_get_result($statement);
+        if ($this->prepareStatement($sql)) {
+            mysqli_stmt_bind_param($this->statement, "s", $username);
+            mysqli_stmt_execute($this->statement);
+            $matchingUser = mysqli_stmt_get_result($this->statement);
             if ($user = mysqli_fetch_assoc($matchingUser)) {    
                 $matchingPassword = password_verify($password, $user['password']);
-                mysqli_stmt_close($statement);
-                mysqli_close($this->connection);
-                if ($matchingPassword) {
-                    return true;
-                }
-            } else {
-                return false;
+                $this->closeStatementAndConnection();
+                return $matchingPassword ? true : false;
             }
         }
     }
@@ -259,7 +201,11 @@ class DatabaseModel {
         $cookiePassword = $cookieValues->getCookiePassword();
         $this->removeOldCookieIfExisting($cookieValues->getCookieUsername());
         $this->connectToDatabase();
-        $sql = "INSERT INTO sessions (username, password) VALUES (?, ?)";
+    //     $sql = "IF EXISTS(SELECT * FROM sessions WHERE username='.$cookieUsername.')
+    //     UPDATE sessions SET password='.$cookiePassword.'
+    // ELSE 
+    //     INSERT INTO sessions (username, password) VALUES ('.$cookieUsername.', '.$cookiePassword.')";
+    //     mysqli_query($this->connection, $sql);
         $statement = mysqli_stmt_init($this->connection);
         if (!mysqli_stmt_prepare($statement, $sql)) {
             echo "fail to save session...";

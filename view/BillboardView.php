@@ -199,6 +199,10 @@ class BillboardView {
         return $_POST[self::$postText];
     }
 
+    public function setPostMessage($message) {
+        $this->postMessage = $message;
+    }
+
     public function setPostTitleAndTextEdit($post) {
         $this->postTitleEdit = $post['postTitle'];
         $this->postTextEdit = $post['postText'];

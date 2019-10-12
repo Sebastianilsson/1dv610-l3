@@ -40,8 +40,12 @@ class BillboardController {
 
     private function createAndSaveNewPost() {
         $newPost = $this->billboardView->getPost();
-        $this->databaseModel->savePost($newPost);
-        // $newPost = new Post($postTitle, $postText);
+        if ($newPost->isValid()) {
+            $this->databaseModel->savePost($newPost);
+        } else {
+            $errorMessage = $newPost->getErrorMessage();
+            $this->billboardView->setPostMessage($errorMessage);
+        }
     }
 
     private function createAndSaveNewComment() {

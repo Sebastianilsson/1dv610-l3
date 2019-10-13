@@ -46,10 +46,50 @@
 * A button for logout is shown. (No login form)
 # BIIIIILD
 
-
-
-
-# Test case 5.1 - Successfully creating a billboard post
+# Test case 6.1 - Successfully creating a billboard post
 ### Input:
+* Test case 5.3
+* Enter the post title "My firts billboard post!" and for your thougths "I wonder what this will look like?".
+* Press the button "Submit Post"
 
-* 
+### output:
+* The text "Logged in", is shown.
+* A button/link with text "Back to login" is shown.
+* Feedback: "Your post has been submitted"
+* A billboard with a form to submit a new billboard post and the post just sumbitted with its own comment form.
+
+# Test case 6.2 - Creating a billboard post with no title or body should fail
+### Input:
+* Test case 5.3
+* Let the fields post title and for your thougths be emtyp.
+* Press the button "Submit Post"
+
+### output:
+* The text "Logged in", is shown.
+* A button/link with text "Back to login" is shown.
+* Feedback: "All fields in a Post needs to be filled."
+* A billboard with a form to submit a new billboard post and the previously submitted posts.
+
+# Test case 6.3 - Creating a billboard post with no body should fail KOLLA OM TITEL SKA VARA KVAR
+### Input:
+* Test case 5.3
+* Enter the post title "Will not work" and let your thougths be emtyp.
+* Press the button "Submit Post"
+
+### output:
+* The text "Logged in", is shown.
+* A button/link with text "Back to login" is shown.
+* Feedback: "All fields in a Post needs to be filled."
+* A billboard with a form to submit a new billboard post and the previously submitted posts.
+
+# Test case 6.4 - Creating a billboard post with no title should fail KOLLA OM BODY SKA VARA KVAR
+### Input:
+* Test case 5.3
+* Let the post title be empty and in the your thougths enter "Will not work either.".
+* Press the button "Submit Post"
+
+### output:
+* The text "Logged in", is shown.
+* A button/link with text "Back to login" is shown.
+* Feedback: "All fields in a Post needs to be filled."
+* A billboard with a form to submit a new billboard post and the previously submitted posts.

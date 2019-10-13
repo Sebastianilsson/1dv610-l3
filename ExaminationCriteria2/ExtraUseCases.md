@@ -1,6 +1,19 @@
 [Already existing Use Cases](https://github.com/dntoll/1dv610/blob/master/assignments/A2_resources/UseCases.md)
 
-# UC5 Create a billboard post
+# UC5 View the billboard
+
+## Precondition
+
+Main scenario: Navigate to page
+Alternate scenario: UC1
+
+## Main Scenario
+
+1. Starts when a logged out user wants to view the billboard.
+2. User clicks on the link "View Billboard".
+3. System presents the billboard view (without "new post" or "comment" forms) with the existing posts.
+
+# UC6 Create a billboard post
 
 ## Precondition
 
@@ -23,11 +36,11 @@ UC1 main scenario is followed and succeeded.
   - 1. System presents error message.
   - 2. Step 3 in Main Scenario.
 
-# UC6 Edit a billboard post
+# UC7 Edit a billboard post
 
 ## Precondition
 
-UC5 main scenario is followed and succeeded.
+UC6 main scenario is followed and succeeded.
 
 ## Main Scenario
 
@@ -48,11 +61,11 @@ UC5 main scenario is followed and succeeded.
   - 1. System presents error message.
   - 2. Step 2 in Main Scenario.
 
-# UC7 Delete a billboard post
+# UC8 Delete a billboard post
 
 ## Precondition
 
-UC5 or UC6 main scenario is followed and succeeded.
+UC6 or UC7 main scenario is followed and succeeded.
 
 ## Main Scenario
 
@@ -61,11 +74,11 @@ UC5 or UC6 main scenario is followed and succeeded.
 3. User clicks on the button "Delete Post" (only exists on the ones that he created).
 4. System deletes the post from the database and presents the billboard without the deleted post.
 
-# UC8 Comment on a billboard post
+# UC9 Comment on a billboard post
 
 ## Precondition
 
-UC5 or UC6 main scenario is followed and succeeded.
+UC6 or UC7 main scenario is followed and succeeded.
 
 ## Main Scenario
 
@@ -82,15 +95,3 @@ UC5 or UC6 main scenario is followed and succeeded.
 - 3b. User tries to submit a comment that is containing script-tags.
   - 1. System presents error message.
   - 2. Step 2 in Main Scenario.
-
-# UC9 View the billboard
-
-## Precondition
-
-UC5 and UC3 main scenarios are followed and succeeded.
-
-## Main Scenario
-
-1. Starts when a logged out user wants to view the billboard.
-2. User clicks on the link "View Billboard".
-3. System presents the billboard view (without "new post" or "comment" forms) with the existing posts.

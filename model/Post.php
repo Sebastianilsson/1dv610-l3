@@ -7,6 +7,8 @@ class Post {
     private $username;
     private $id;
     private $comments;
+    private $isFilledError = false;
+    private $isHTMLTagsError = false;
     private $isPostValid = true;
     private $errorMessage = "";
 
@@ -29,7 +31,7 @@ class Post {
             return true;
         } else {
             $this->isPostValid = false;
-            $this->errorMessage = "All fields in a Post needs to be filled.";
+            $this->isFilledError = true;
         }
     }
 
@@ -39,7 +41,7 @@ class Post {
             return true;
         } else {
             $this->isPostValid = false;
-            $this->errorMessage = "Post can not contain script-tags";
+            $this->isHTMLTagsError = true;
         }
     }
 
@@ -68,7 +70,15 @@ class Post {
     }
 
     public function getErrorMessage() {
-        return $this->errorMessage;
+        if ($this->isFilledError && $this->isHTMLTagsError) {
+            return "All fields in a Post needs to be filled. 
+            Post can not contain script-tags.";
+        } elseif ($this->isFilledError) {
+            return "All fields in a Post needs to be filled.";
+        } elseif ($this->isHTMLTagsError) {
+            return "Post can not contain script-tags.";
+        }
+        
     }
 
 }

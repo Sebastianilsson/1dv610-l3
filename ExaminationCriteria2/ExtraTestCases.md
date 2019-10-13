@@ -57,6 +57,7 @@
 * A button/link with text "Back to login" is shown.
 * Feedback: "Your post has been submitted"
 * A billboard with a form to submit a new billboard post and the post just sumbitted with its own comment form.
+# BIIIIIIILD
 
 # Test case 6.2 - Creating a billboard post with no title or body should fail
 ### Input:
@@ -69,6 +70,7 @@
 * A button/link with text "Back to login" is shown.
 * Feedback: "All fields in a Post needs to be filled."
 * A billboard with a form to submit a new billboard post and the previously submitted posts.
+# BIIIIIIILD
 
 # Test case 6.3 - Creating a billboard post with no body should fail KOLLA OM TITEL SKA VARA KVAR
 ### Input:
@@ -81,6 +83,7 @@
 * A button/link with text "Back to login" is shown.
 * Feedback: "All fields in a Post needs to be filled."
 * A billboard with a form to submit a new billboard post and the previously submitted posts.
+# BIIIIIIILD
 
 # Test case 6.4 - Creating a billboard post with no title should fail KOLLA OM BODY SKA VARA KVAR
 ### Input:
@@ -93,3 +96,4 @@
 * A button/link with text "Back to login" is shown.
 * Feedback: "All fields in a Post needs to be filled."
 * A billboard with a form to submit a new billboard post and the previously submitted posts.
+# BIIIIIIILD

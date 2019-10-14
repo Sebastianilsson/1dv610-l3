@@ -112,36 +112,30 @@ class DatabaseModel {
 
     public function getPosts() {
         $sql = "SELECT * FROM posts ORDER BY id DESC";
-        if ($this->prepareStatement($sql)) {
-            mysqli_stmt_execute($this->statement);
-            $result = mysqli_stmt_get_result($this->statement);
-            $postsArray = array();
-            while ($row = mysqli_fetch_array($result)) {
-                $postsArray[] = $row;
-            }
-            $this->closeStatementAndConnection();
-            return $postsArray;
-        }
+        return $this->selectAllFromOneTable($sql);
     }
 
     public function getComments() {
         $sql = "SELECT * FROM comments ORDER BY id DESC";
+        return $this->selectAllFromOneTable($sql);
+    }
+
+    private function selectAllFromOneTable($sql) {
         if ($this->prepareStatement($sql)) {
             mysqli_stmt_execute($this->statement);
             $result = mysqli_stmt_get_result($this->statement);
-            $commentsArray = array();
+            $contentArray = array();
             while ($row = mysqli_fetch_array($result)) {
-                $commentsArray[] = $row;
+                $contentArray[] = $row;
             }
             $this->closeStatementAndConnection();
-            return $commentsArray;
+            return $contentArray;
         }
     }
 
     public function deletePostAndComments($postId) {
         $this->deleteFromDataBaseById("DELETE FROM posts WHERE id=?", $postId);
         $this->deleteFromDataBaseById("DELETE FROM comments WHERE postId=?", $postId);
-        // $sql = "DELETE FROM posts WHERE id=?; DELETE FROM comments WHERE postId=?";
     }
 
     private function deleteFromDataBaseById($sql, $id) {

@@ -95,7 +95,7 @@ class BillboardView {
 
                     <input type="hidden" name="'.self::$postId.'" value="'.$post["id"].'" />
 
-                    <label for="' . self::$commentText . '">Password</label><br>
+                    <label for="' . self::$commentText . '">Comment</label><br>
                     <textarea id="' . self::$commentText . '" name="' . self::$commentText . '" rows="4" cols="50"></textarea><br>
                         
                     <input type="submit" name="' . self::$submitComment . '" value="Submit Comment" />
@@ -120,7 +120,7 @@ class BillboardView {
         }
         return $comments;
     }
-
+// SKICKA IN UTIFRÅN SESSION MM
     private function handleYourPost($postAuthor, $postId) {
         if ($this->isLoggedIn && $_SESSION["username"] == $postAuthor) {
             return '

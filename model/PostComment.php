@@ -36,7 +36,7 @@ class PostComment {
             return true;
         } else {
             $this->isCommentValid = false;
-            $this->errorMessage = "Comment can't contain script-tags";
+            $this->errorMessage = "Comment can't contain script-tags.";
         }
     }
 

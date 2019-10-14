@@ -139,10 +139,14 @@ class DatabaseModel {
     }
 
     public function deletePostAndComments($postId) {
-        $sql = "DELETE posts, comments FROM posts INNER JOIN comments 
-        ON comments.postId = posts.id WHERE posts.id = ?";
+        $this->deleteFromDataBaseById("DELETE FROM posts WHERE id=?", $postId);
+        $this->deleteFromDataBaseById("DELETE FROM comments WHERE postId=?", $postId);
+        // $sql = "DELETE FROM posts WHERE id=?; DELETE FROM comments WHERE postId=?";
+    }
+
+    private function deleteFromDataBaseById($sql, $id) {
         if ($this->prepareStatement($sql)) {
-            mysqli_stmt_bind_param($this->statement, "s", $postId);
+            mysqli_stmt_bind_param($this->statement, "s", $id);
             mysqli_stmt_execute($this->statement);
             $this->closeStatementAndConnection();
         }

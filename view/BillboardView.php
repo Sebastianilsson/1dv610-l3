@@ -68,17 +68,17 @@ class BillboardView {
 
     private function viewPosts() {
         $posts = '';
-        foreach ($this->posts as $post => $value) {
+        foreach ($this->posts as $post => $postContent) {
             $posts .= '
             <div class="post" style="border:solid;padding:20px;width:33%;margin-bottom:10px;">
-                <h1>'.$value["postTitle"].'</h1>
-                '.$this->handleYourPost($value["username"], $value["id"]).'
+                <h1>'.$postContent["postTitle"].'</h1>
+                '.$this->handleYourPost($postContent["username"], $postContent["id"]).'
                 <hr>
-                <h4>Written by : '.$value["username"].'</h4>
-                <p>'.$value["postText"].'</p>
-                <p>'.$value["timeStamp"].'</p>
-                '.$this->commentForm($value).'
-                '.$this->viewComments($value["id"]).'
+                <h4>Written by : '.$postContent["username"].'</h4>
+                <p>'.$postContent["postText"].'</p>
+                <p>'.$postContent["timeStamp"].'</p>
+                '.$this->commentForm($postContent).'
+                '.$this->viewComments($postContent["id"]).'
             </div>
             ';
         }
@@ -108,12 +108,12 @@ class BillboardView {
 
     private function viewComments($postId) {
         $comments = '<br><h3>Comments</h3>';
-        foreach ($this->comments as $comment => $value) {
-            if($value["postId"] == $postId) {
+        foreach ($this->comments as $comment => $commentContent) {
+            if($commentContent["postId"] == $postId) {
                 $comments .= '
                 <hr>
-                <p>'.$value["commentText"].'</p>
-                <p>'.$value["timeStamp"].'</p>
+                <p>'.$commentContent["commentText"].'</p>
+                <p>'.$commentContent["timeStamp"].'</p>
                 <br>
                 ';
                 }

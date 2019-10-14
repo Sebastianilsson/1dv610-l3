@@ -309,7 +309,7 @@
 - Edit so "<a>Potential harmful</a>" in your thoughts and post title so its empty.
 - Press the button "Submit Post"
 
-### output:
+### Output:
 
 - The text "Logged in", is shown.
 - A button/link with text "Back to login" is shown.
@@ -326,7 +326,7 @@
 - Edit so "<a>Potential harmful</a>" in post title and your thoughts so its empty.
 - Press the button "Submit Post"
 
-### output:
+### Output:
 
 - The text "Logged in", is shown.
 - A button/link with text "Back to login" is shown.
@@ -334,3 +334,153 @@
 - A billboard with a form to submit a new billboard post and the original post.
 
 # BIIIIIIILD
+
+# Test case 7.10 - A user that hasn't created the post should not be able to edit it
+
+### Input:
+
+- Test case 4.10 - Enter Username: "testing" and Password: "testtest"
+- Test case 1.7 - Enter Username: "testing" and Password: "testtest"
+- Click on the link "View Billboard"
+
+### Output:
+
+- The text "Logged in", is shown.
+- A button/link with text "Back to login" is shown.
+- A billboard with a form to submit a new billbord post and the post previously created by the user "test".
+- (No buttons "Edit Post" or "Delete Post" since he didn't create the post)
+
+# BIIIIIIILD
+
+# Test case 7.11 - A user that isn't logged in should not be able to edit a billboard post
+
+### Input:
+
+- Test case 5.1
+
+### Output:
+
+- The text "Not logged in", is shown.
+- A button/link with text "Back to login" is shown.
+- A billboard with the post previously created by the user "test".
+- (No form to submit a new billboard post, no form to submit a comment to the existing post or buttons "Edit Post" or "Delete Post" on the exsisting post since the user isn't logged in)
+
+# BIIIIIIILD
+
+# 8.1 A user that created the post and is logged in should be able to submmit a comment to the post
+
+### Input:
+- Test case 5.3
+- Scroll down to the post previously created by the user "test".
+- Enter "This is a test" in the comment field of the comment form.
+- Click on the button "Submit Comment"
+
+### Output:
+- The text "Logged in", is shown.
+- A button/link with text "Back to login" is shown.
+- A billboard with a form to submit a new billboard post and the post previously made with its own comment form and the recently submitted comment.
+
+# BIIIIIILD
+
+# 8.2 A user that didn't created the post but is logged in should be able to submmit a comment to the post
+
+### Input:
+- Test case 5.3 - Enter Username: "testing" and Password: "testtest"
+- Scroll down to the post previously created by the user "test".
+- Enter "This is also a test" in the comment field of the comment form.
+- Click on the button "Submit Comment"
+
+### Output:
+- The text "Logged in", is shown.
+- A button/link with text "Back to login" is shown.
+- A billboard with a form to submit a new billboard post and the post previously made with its own comment form and the two comments.
+
+# BIIIIIILD
+
+# 8.3 A logged in user that tries to submit an empty comment to a post should fail
+
+### Input:
+- Test case 5.3
+- Scroll down to the post previously created by the user "test".
+- Leave the comment field empty.
+- Click on the button "Submit Comment"
+
+### Output:
+- The text "Logged in", is shown.
+- A button/link with text "Back to login" is shown.
+- Feedback: "You can't submit an empty Comment."
+- A billboard with a form to submit a new billboard post and the post previously made with its own comment form and the two comments.
+- (No third empty comment)
+
+# BIIIIIILD
+
+# 8.4 A logged in user that tries to submit a comment with potential harmful script tags to a post should fail
+
+### Input:
+- Test case 5.3
+- Scroll down to the post previously created by the user "test".
+- Enter "<a>This test will not work</a>" in the comment field.
+- Click on the button "Submit Comment"
+
+### Output:
+- The text "Logged in", is shown.
+- A button/link with text "Back to login" is shown.
+- Feedback: "Comment can't contain script-tags."
+- A billboard with a form to submit a new billboard post and the post previously made with its own comment form and the two comments.
+- (No third comment with script tags)
+
+# BIIIIIILD
+
+# Test case 8.5 - A user that isn't logged in should not be able to comment on a billboard post
+
+### Input:
+
+- Test case 5.1
+
+### Output:
+
+- The text "Not logged in", is shown.
+- A button/link with text "Back to login" is shown.
+- A billboard with the post previously created by the user "test" and its two comments.
+- (No form to submit a new billboard post, no form to submit a comment to the existing post or buttons "Edit Post" or "Delete Post" on the exsisting post since the user isn't logged in)
+
+# BIIIIIIILD
+
+# Test case 9.1 - A user that is logged in but didn't create the post should fail trying to delet it
+
+### Input:
+- Test case 5.3 - Enter Username: "testing" and Password: "testtest" (not Username: "test")
+
+### Output:
+- The text "Logged in", is shown.
+- A button/link with text "Back to login" is shown.
+- A billboard with a form to submit a new billboard post, the post previously created by the user "test", a comment form to the post and its two comments.
+- (No buttons "Edit Post" or "Delete Post" since the user logged in isn't the one who created the post)
+
+# BIIIILD
+
+# Test case 9.2 - A user that isn't logged in and didn't create the post should fail trying to delet it
+
+### Input:
+- Test case 5.1
+
+### Output:
+- The text "Not logged in", is shown.
+- A button/link with text "Back to login" is shown.
+- A billboard with the post previously created by the user "test" and its two comments.
+- (No form to submit a new billboard post, no form to submit a comment to the existing post or buttons "Edit Post" or "Delete Post" on the exsisting post since the user isn't logged in)
+
+# BIIIIIILD
+
+# Test case 9.3 - A user that is logged in and createed the post should be able to delet it
+
+### Input:
+- Test case 5.3
+- Scroll down to the post previously made by "test"
+- Click on the button "Delete Post"
+
+### Output:
+- The text "Logged in", is shown.
+- A button/link with text "Back to login" is shown.
+- A billboard with a form to submit a new billboard is shown.
+- (No post or comments)

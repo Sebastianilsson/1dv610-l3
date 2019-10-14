@@ -61,20 +61,7 @@ UC6 main scenario is followed and succeeded.
   - 1. System presents error message.
   - 2. Step 2 in Main Scenario.
 
-# UC8 Delete a billboard post
-
-## Precondition
-
-UC6 or UC7 main scenario is followed and succeeded.
-
-## Main Scenario
-
-1. Starts when a logged in user wants to delete a post that he has created.
-2. System presents the billboard view and all the existing posts.
-3. User clicks on the button "Delete Post" (only exists on the ones that he created).
-4. System deletes the post from the database and presents the billboard without the deleted post.
-
-# UC9 Comment on a billboard post
+# UC8 Comment on a billboard post
 
 ## Precondition
 
@@ -95,3 +82,16 @@ UC6 or UC7 main scenario is followed and succeeded.
 - 3b. User tries to submit a comment that is containing script-tags.
   - 1. System presents error message.
   - 2. Step 2 in Main Scenario.
+  
+  # UC9 Delete a billboard post
+
+## Precondition
+
+UC6 or UC7 main scenario is followed and succeeded.
+
+## Main Scenario
+
+1. Starts when a logged in user wants to delete a post that he has created.
+2. System presents the billboard view and all the existing posts.
+3. User clicks on the button "Delete Post" (only exists on the ones that he created).
+4. System deletes the post from the database and presents the billboard without the deleted post.

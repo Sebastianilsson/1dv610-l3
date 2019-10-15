@@ -23,23 +23,16 @@ class LoginController {
                 $this->sessionModel->regenerateSessionId();
                 $this->sessionModel->setSessionVariables($this->loginView->getUsername());
                 $this->loginView->isLoggedIn();
+                $this->loginModel->setWelcomeMessage($this->loginView->isKeepLoggedInRequested());
                 if ($this->loginView->isKeepLoggedInRequested()) {
                     $cookieValues = $this->loginView->handleNewCookies();
                     $this->databaseModel->saveCookieCredentials($cookieValues);
-                } else {
-                    $this->loginView->setLoginMessage("Welcome");
                 }
-                // $this->layoutView->render($this->loginView);
-                return;
-            } else {
-                $this->loginView->setLoginMessage("Wrong name or password");
             }
-        } else {
-            $validationErrorMessage = $this->loginModel->getValidationErrorMessage();
-            $this->loginView->setLoginMessage($validationErrorMessage);
         }
+        $loginMessage = $this->loginModel->getLoginMessage();
+        $this->loginView->setLoginMessage($loginMessage);
         $this->loginView->setUsernameValue($this->loginView->getUsername());
-        // $this->layoutView->render($this->loginView);
     }
 
     // Method called if the user already has a cookie from the site

@@ -80,7 +80,7 @@ class LoginView {
 	public function handleNewCookies() {
 		$cookieValues = new CookieValues($_POST[self::$username], $this->generateRandomString());
 		$this->setCookies($cookieValues);
-		$this->setLoginMessage("Welcome and you will be remembered");
+		// $this->setLoginMessage("Welcome and you will be remembered");
 		return $cookieValues;
     }
 

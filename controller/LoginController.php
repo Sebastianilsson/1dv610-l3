@@ -60,7 +60,7 @@ class LoginController {
     }
 
     private function cookieIsValid() {
-        return $this->databaseModel->cookiePasswordMatch($this->loginView->getCookiePassword());
+        return $this->databaseModel->cookiePasswordMatch($this->loginView->getCookieUsernameAndPassword());
     }
 
     // Method called if the user already has an active session from the site

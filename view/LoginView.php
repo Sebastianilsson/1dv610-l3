@@ -113,6 +113,10 @@ class LoginView {
 		return $_COOKIE[self::$cookiePassword];
 	}
 
+	public function getCookieUsernameAndPassword() : CookieValues {
+		return new CookieValues($_COOKIE[self::$cookieName], $_COOKIE[self::$cookiePassword]);
+	}
+
 	public function getUsername() {
         return isset($_POST[self::$username]) ? $_POST[self::$username] :"";
     }

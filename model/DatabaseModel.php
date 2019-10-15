@@ -67,11 +67,7 @@ class DatabaseModel {
             mysqli_stmt_store_result($this->statement);
             $nrOfUsersWithUsername = mysqli_stmt_num_rows($this->statement);
             $this->closeStatementAndConnection();
-            if ($nrOfUsersWithUsername == 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return $nrOfUsersWithUsername == 0 ? true : false;
         }
     }
 
@@ -219,25 +215,17 @@ class DatabaseModel {
         $this->closeStatementAndConnection();
     }
 
-    public function cookiePasswordMatch() {
-        $this->connectToDatabase();
+    public function cookiePasswordMatch($cookieValues) {
+        $cookieUsername = $cookieValues->getCookieUsername();
+        $cookiePassword = $cookieValues->getCookiePassword();
         $sql = "SELECT * FROM sessions WHERE username=?";
-        $statement = mysqli_stmt_init($this->connection);
-        if (!mysqli_stmt_prepare($statement, $sql)) {
-            echo "Failed to get user";
-        } else {
-            mysqli_stmt_bind_param($statement, "s", $_COOKIE['LoginView::CookieName']);
-            mysqli_stmt_execute($statement);
-            $matchingUser = mysqli_stmt_get_result($statement);
-            if ($user = mysqli_fetch_assoc($matchingUser)) {    
-                mysqli_stmt_close($statement);
-                mysqli_close($this->connection);
-                if ($_COOKIE['LoginView::CookiePassword'] == $user['password']) {
-                    return true;
-                }
-            } else {
-                return false;
-            }
+        if ($this->prepareStatement($sql)) {
+            mysqli_stmt_bind_param($this->statement, "s", $cookieUsername);
+            mysqli_stmt_execute($this->statement);
+            $matchingUser = mysqli_stmt_get_result($this->statement);
+            $user = mysqli_fetch_assoc($matchingUser);    
+            $this->closeStatementAndConnection();
+            return $cookiePassword == $user['password'] ? true : false;
         }
     }
 }

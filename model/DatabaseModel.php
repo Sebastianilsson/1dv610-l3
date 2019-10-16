@@ -3,37 +3,20 @@
 class DatabaseModel {
 
     // Only used to connect to local database during development
-    private $databaseServerName = 'localhost';
-    private $databaseUserName = 'root';
-    private $databasePassword = '';
-    private $databaseName = '1dv610-l2';
+    private $databaseServerName;
+    private $databaseUserName;
+    private $databasePassword;
+    private $databaseName;
 
     private $connection;
     private $statement;
 
     public function __construct() {
-        // $settings = new Settings();
-        // $this->databaseServerName = $settings->getDatabaseServerName();
-        // $this->databaseUserName = $settings->getDatabaseUsername();
-        // $this->databasePassword = $settings->getDatabasePassword();
-        // $this->databaseName = $settings->getDatabaseName();
-        $this->checkIfOnLocalhost();
-    }
-
-    // Method that sets credentials for database if not on localhost
-    private function checkIfOnLocalhost() {
-        $whitelist = array(
-            '127.0.0.1',
-            '::1'
-        );
-        if(in_array($_SERVER['REMOTE_ADDR'], $whitelist)){
-            return;
-        } else {
-            $this->databaseServerName = getenv('DATABASE_SERVER_NAME');
-            $this->databaseUserName = getenv('DATABASE_USERNAME');
-            $this->databasePassword = getenv('DATABASE_PASSWORD');
-            $this->databaseName = getenv('DATABASE_NAME');
-        }
+        $settings = new Settings();
+        $this->databaseServerName = $settings->getDatabaseServerName();
+        $this->databaseUserName = $settings->getDatabaseUserName();
+        $this->databasePassword = $settings->getDatabasePassword();
+        $this->databaseName = $settings->getDatabaseName();
     }
 
     private function connectToDatabase() {

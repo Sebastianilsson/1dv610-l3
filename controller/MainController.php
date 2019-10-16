@@ -20,7 +20,7 @@ class MainController {
         $this->databaseModel = new DatabaseModel();
         $this->sessionModel = new SessionModel($this->databaseModel);
         $this->loginView = new LoginView();
-        $this->billboardView = new BillboardView();
+        $this->billboardView = new BillboardView($this->sessionModel);
         $this->layoutView = new LayoutView();
         $this->registerView = new RegisterView();
         $this->billboardController = new BillboardController($this->layoutView, $this->loginView, $this->databaseModel, $this->billboardView);

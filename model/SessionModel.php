@@ -6,7 +6,7 @@ class SessionModel {
     private $cookieUsername;
     private $cookiePassword;
     private static $isLoggedIn = 'SessionModel::IsLoggedIn';
-    // private static $username = 'SessionModel::Username';
+    private static $username = 'SessionModel::Username';
     private static $userAgent = 'SessionModel::UserAgent';
     private static $clientIp = 'SessionModel::ClientIp';
     private static $httpUserAgent = 'HTTP_USER_AGENT';
@@ -22,7 +22,7 @@ class SessionModel {
 
     public function setSessionVariables($username) {
         $_SESSION[self::$isLoggedIn] = true;
-        $_SESSION['username'] = $username;
+        $_SESSION[self::$username] = $username;
         $_SESSION[self::$userAgent] = getenv(self::$httpUserAgent);
         $_SESSION[self::$clientIp] = getenv(self::$httpXForwardedFor);
     }
@@ -45,12 +45,16 @@ class SessionModel {
     public function isSessionSet() {
         if (isset($_SESSION[self::$isLoggedIn])) {
             return true;
-        } else {return false;}
+        }
     }
 
     public function sessionIsNotHijacked() {
         if ($_SESSION[self::$userAgent] == getenv(self::$httpUserAgent) && $_SESSION[self::$clientIp] == getenv(self::$httpXForwardedFor)) {
             return true;
-        } else { return false;}
+        }
+    }
+
+    public function getSessionUsername() {
+        return $_SESSION[self::$username];
     }
 }

@@ -8,10 +8,10 @@ class PostComment {
     private $isCommentValid = true;
     private $errorMessage = "";
 
-    public function __construct($commentText, $postId) {
+    public function __construct($commentText, $username, $postId) {
         $this->commentText = $this->validateText($commentText);
         $this->postId = $postId;
-        $this->username = $_SESSION['username'];
+        $this->username = $username;
         $this->timeStamp = date('Y-m-d H:i');
     }
 

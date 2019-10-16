@@ -12,10 +12,10 @@ class Post {
     private $isPostValid = true;
     private $errorMessage = "";
 
-    public function __construct($postTitle, $postText, $id = null) {
+    public function __construct($postTitle, $postText, $username, $id = null) {
         $this->postTitle = $this->validateText($postTitle);
         $this->postText = $this->validateText($postText);
-        $this->username = $_SESSION['username'];
+        $this->username = $username;
         $this->id = $id;
         $this->timeStamp = date('Y-m-d H:i');
     }

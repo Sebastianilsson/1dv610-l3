@@ -8,15 +8,24 @@ class BillboardView {
     private static $postId = 'BillboardView::PostId';
     private static $commentText = 'BillboardView::CommentText';
     private static $submitComment = 'BillboardView::SubmitComment';
+    private static $postEdit = 'BillboardView::PostEdit';
+    private static $postEditById = 'BillboardView::PostEditById';
+    private static $postDelete = 'BillboardView::PostDelete';
 
     private $isLoggedIn = false;
-    private $postEdit = false;
+    private $isPostEdit = false;
     private $billboardMessage = "";
     private $postTitleEdit = "";
     private $postTextEdit = "";
     private $postIdEdit;
     private $posts;
     private $comments;
+
+    private $sessionModel;
+
+    public function __construct($sessionModel) {
+        $this->sessionModel = $sessionModel;
+    }
 
     public function response() {
         return $this->generateBillboardHTML();
@@ -50,8 +59,8 @@ class BillboardView {
 			<fieldset>
 				<legend>New Billboard Post - share whats on your mind</legend>
                 
-                <input type="hidden" name="postEdit" value="'.$this->postEdit.'" />
-                <input type="hidden" name="postIdEdit" value="'.$this->postIdEdit.'" />
+                <input type="hidden" name="'.self::$postEdit.'" value="'.$this->isPostEdit.'" />
+                <input type="hidden" name="'.self::$postEditById.'" value="'.$this->postIdEdit.'" />
                 
                 <label for="' . self::$postTitle . '">Post title</label><br>
                 <input type="text" id="' . self::$postTitle . '" name="' . self::$postTitle . '" value="'.$this->postTitleEdit.'" /><br>
@@ -70,7 +79,7 @@ class BillboardView {
         $posts = '';
         foreach ($this->posts as $post => $postContent) {
             $posts .= '
-            <div class="post" style="border:solid;padding:20px;width:33%;margin-bottom:10px;">
+            <div class="post" style="border:solid;padding:20px;width:450px;margin-bottom:10px;">
                 <h1>'.$postContent["postTitle"].'</h1>
                 '.$this->handleYourPost($postContent["username"], $postContent["id"]).'
                 <hr>
@@ -120,14 +129,14 @@ class BillboardView {
         }
         return $comments;
     }
-// SKICKA IN UTIFRÅN SESSION MM
+
     private function handleYourPost($postAuthor, $postId) {
-        if ($this->isLoggedIn && $_SESSION["username"] == $postAuthor) {
+        if ($this->isLoggedIn && $this->sessionModel->getSessionUsername() == $postAuthor) {
             return '
             <form method="post">
-                <input type="hidden" name="postId" value="'.$postId.'" />
-                <input type="submit" name="editPost" value="Edit Post" />
-                <input type="submit" name="deletePost" value="Delete Post" />
+                <input type="hidden" name="'.self::$postId.'" value="'.$postId.'" />
+                <input type="submit" name="'.self::$postEdit.'" value="Edit Post" />
+                <input type="submit" name="'.self::$postDelete.'" value="Delete Post" />
             </form>
             ';
         }
@@ -138,11 +147,11 @@ class BillboardView {
     }
 
     public function isEditPostRequested() {
-        return isset($_POST['editPost']);
+        return isset($_POST[self::$postEdit]);
     }
 
     public function isDeletePostRequested() {
-        return isset($_POST['deletePost']);
+        return isset($_POST[self::$postDelete]);
     }
 
     public function isNewPostSubmitted() {
@@ -154,7 +163,7 @@ class BillboardView {
     }
 
     public function isEditPostSubmitted() {
-        return (isset($_POST["postEdit"]) && $_POST["postEdit"] == true);
+        return (isset($_POST[self::$postEdit]) && $this->isPostEdit);
     }
 
     public function isLoggedIn() {
@@ -174,15 +183,15 @@ class BillboardView {
     }
 
     public function getPost() {
-        return new Post($_POST[self::$postTitle], $_POST[self::$postText], $_POST['postIdEdit']);
+        return new Post($_POST[self::$postTitle], $_POST[self::$postText], $this->sessionModel->getSessionUsername(), $_POST[self::$postEditById]);
     }
 
     public function getComment() {
-        return new PostComment($_POST[self::$commentText], $_POST[self::$postId]);
+        return new PostComment($_POST[self::$commentText], $this->sessionModel->getSessionUsername(), $_POST[self::$postId]);
     }
 
     public function getPostId () {
-        return $_POST["postId"];
+        return $_POST[self::$postId];
     }
     
     public function getIsLoggedIn() {
@@ -204,7 +213,7 @@ class BillboardView {
     public function setPostTitleAndTextEdit($post) {
         $this->postTitleEdit = $post['postTitle'];
         $this->postTextEdit = $post['postText'];
-        $this->postEdit = true;
+        $this->isPostEdit = true;
         $this->postIdEdit = $post['id'];
         $this->billboardMessage = "Update your post and click \"Submit Post\"";
     }

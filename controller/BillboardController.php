@@ -24,8 +24,7 @@ class BillboardController {
             $this->createAndSaveNewPost();
         } elseif ($this->billboardView->isNewCommentSubmitted()) {
             $this->createAndSaveNewComment();
-        }
-        if ($this->billboardView->isEditPostRequested()) {
+        } elseif ($this->billboardView->isEditPostRequested()) {
             $this->getPostToEdit();
         } elseif ($this->billboardView->isDeletePostRequested()) {
             $this->deletePostAndComments();

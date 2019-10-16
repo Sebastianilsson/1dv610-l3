@@ -23,9 +23,9 @@ class MainController {
         $this->billboardView = new BillboardView($this->sessionModel);
         $this->layoutView = new LayoutView();
         $this->registerView = new RegisterView();
-        $this->billboardController = new BillboardController($this->layoutView, $this->loginView, $this->databaseModel, $this->billboardView);
-        $this->registerController = new RegisterController($this->layoutView, $this->registerView, $this->loginView, $this->databaseModel);
-        $this->loginController = new LoginController($this->layoutView, $this->loginView, $this->databaseModel, $this->sessionModel);
+        $this->billboardController = new BillboardController($this->loginView, $this->databaseModel, $this->billboardView);
+        $this->registerController = new RegisterController($this->registerView, $this->loginView, $this->databaseModel);
+        $this->loginController = new LoginController($this->loginView, $this->databaseModel, $this->sessionModel);
     }
     // Routes the user through the application depending on user action
     public function setState() {

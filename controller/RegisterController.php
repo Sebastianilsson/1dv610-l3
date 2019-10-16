@@ -2,17 +2,15 @@
 
 class RegisterController {
 
-    private $layoutView;
     private $loginView;
     private $databaseModel;
     private $registerView;
     private $registerModel;
 
-    public function __construct($layoutView, $registerView, $loginView, $databaseModel) {
+    public function __construct($registerView, $loginView, $databaseModel) {
         $this->registerView = $registerView;
         $this->databaseModel = $databaseModel;
         $this->loginView = $loginView;
-        $this->layoutView = $layoutView;
         $this->registerModel = new RegisterModel($this->registerView, $this->databaseModel);
     }
 

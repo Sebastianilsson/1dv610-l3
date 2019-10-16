@@ -20,35 +20,21 @@ class LoginController {
         $this->loginModel->getUserLoginInput();
         if ($this->loginModel->validateLoginInput()) {
             if ($this->loginModel->checkIfCredentialsMatchInDatabase()) {
-                $this->sessionModel->regenerateSessionId();
-                $this->sessionModel->setSessionVariables($this->loginView->getUsername());
-                $this->loginView->isLoggedIn();
-                $this->loginModel->setWelcomeMessage($this->loginView->isKeepLoggedInRequested());
-                if ($this->loginView->isKeepLoggedInRequested()) {
-                    $cookieValues = $this->loginView->handleNewCookies();
-                    $this->databaseModel->saveCookieCredentials($cookieValues);
-                }
+                $this->successfulNewLogin();
             }
         }
+        $this->loginView->setUsernameValue($this->loginView->getUsername());
         $loginMessage = $this->loginModel->getLoginMessage();
         $this->loginView->setLoginMessage($loginMessage);
-        $this->loginView->setUsernameValue($this->loginView->getUsername());
     }
 
     // Method called if the user already has a cookie from the site
     public function loginWithCookies() {
         if ($this->cookieIsValid()) {
-            $this->loginView->isLoggedIn();
-            $this->sessionModel->regenerateSessionId();
-            if (!$this->sessionModel->isSessionSet()) {
-                $this->sessionModel->setSessionVariables($this->loginView->getUsername());
-                $this->loginView->setLoginMessage("Welcome back with cookie");
-            }
-            // $this->layoutView->render($this->loginView);
+            $this->successfulCookieLogin();
         } else {
             $this->loginView->destroyCookies();
             $this->loginView->setLoginMessage("Wrong information in cookies");
-            // $this->layoutView->render($this->loginView);
         }
     }
 
@@ -58,12 +44,9 @@ class LoginController {
 
     // Method called if the user already has an active session from the site
     public function loginWithSession() {
-        if ($this->sessionModel->sessionIsHijacked()) {
-            // $this->layoutView->render($this->loginView);
-        } else {
+        if ($this->sessionModel->sessionIsNotHijacked()) {
             $this->sessionModel->regenerateSessionId();
             $this->loginView->isLoggedIn();
-            // $this->layoutView->render($this->loginView);
         }
     }
 
@@ -74,6 +57,25 @@ class LoginController {
             $this->loginView->destroyCookies();
             $this->loginView->setLoginMessage("Bye bye!");
         }
-        // $this->layoutView->render($this->loginView);
+    }
+
+    private function successfulNewLogin() {
+        $this->sessionModel->regenerateSessionId();
+        $this->sessionModel->setSessionVariables($this->loginView->getUsername());
+        $this->loginView->isLoggedIn();
+        $this->loginModel->setWelcomeMessage($this->loginView->isKeepLoggedInRequested());
+        if ($this->loginView->isKeepLoggedInRequested()) {
+            $cookieValues = $this->loginView->handleNewCookies();
+            $this->databaseModel->saveCookieCredentials($cookieValues);
+        }
+    }
+
+    private function successfulCookieLogin() {
+        $this->loginView->isLoggedIn();
+        $this->sessionModel->regenerateSessionId();
+        if (!$this->sessionModel->isSessionSet()) {
+            $this->sessionModel->setSessionVariables($this->loginView->getUsername());
+            $this->loginView->setLoginMessage("Welcome back with cookie");
+        }
     }
 }

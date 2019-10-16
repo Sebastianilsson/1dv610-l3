@@ -6,6 +6,7 @@ class SessionModel {
     private $cookieUsername;
     private $cookiePassword;
     private static $isLoggedIn = 'SessionModel::IsLoggedIn';
+    // private static $username = 'SessionModel::Username';
     private static $userAgent = 'SessionModel::UserAgent';
     private static $clientIp = 'SessionModel::ClientIp';
     private static $httpUserAgent = 'HTTP_USER_AGENT';
@@ -47,9 +48,9 @@ class SessionModel {
         } else {return false;}
     }
 
-    public function sessionIsHijacked() {
+    public function sessionIsNotHijacked() {
         if ($_SESSION[self::$userAgent] == getenv(self::$httpUserAgent) && $_SESSION[self::$clientIp] == getenv(self::$httpXForwardedFor)) {
-            return false;
-        } else { return true;}
+            return true;
+        } else { return false;}
     }
 }

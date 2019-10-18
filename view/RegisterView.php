@@ -56,15 +56,15 @@ class RegisterView {
     }
 
     public function getUsername() {
-        return isset($_POST[self::$username]) ? $_POST[self::$username] : "";
+        return $_POST[self::$username];
     }
 
     public function getPassword() {
-        return isset($_POST[self::$password]) ? $_POST[self::$password] : "";
+        return $_POST[self::$password];
     }
 
     public function getRepeatedPassword() {
-        return isset($_POST[self::$passwordRepeat]) ? $_POST[self::$passwordRepeat] : "";
+        return $_POST[self::$passwordRepeat];
     }
 
     public function getIsLoggedIn() {
@@ -72,11 +72,7 @@ class RegisterView {
     }
 
     public function isRegisterFormSubmitted() {
-        if (isset($_POST[self::$submitRegistration])) {
-            return true;
-        } else {
-            return false;
-        }
+        return isset($_POST[self::$submitRegistration]);
     }
 
     public function setUsernameValue($name) {

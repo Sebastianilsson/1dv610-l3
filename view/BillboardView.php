@@ -210,6 +210,7 @@ class BillboardView {
         $this->billboardMessage = $message;
     }
 
+    // FÅ IN ETT OBJEKT HÄR??
     public function setPostTitleAndTextEdit($post) {
         $this->postTitleEdit = $post['postTitle'];
         $this->postTextEdit = $post['postText'];

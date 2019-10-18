@@ -80,7 +80,6 @@ class LoginView {
 	public function handleNewCookies() {
 		$cookieValues = new CookieValues($_POST[self::$username], $this->generateRandomString());
 		$this->setCookies($cookieValues);
-		// $this->setLoginMessage("Welcome and you will be remembered");
 		return $cookieValues;
     }
 
@@ -118,11 +117,11 @@ class LoginView {
 	}
 
 	public function getUsername() {
-        return isset($_POST[self::$username]) ? $_POST[self::$username] :"";
+        return $_POST[self::$username];
     }
 
     public function getPassword() {
-        return isset($_POST[self::$password]) ? $_POST[self::$password] :"";
+        return $_POST[self::$password];
 	}
 
 	public function getIsLoggedIn() {

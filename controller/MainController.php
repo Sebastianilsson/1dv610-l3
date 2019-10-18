@@ -4,7 +4,6 @@ class MainController {
 
     private $databaseModel;
     private $sessionModel;
-    private $loginModel;
 
     private $registerView;
     private $billboardView;
@@ -19,10 +18,12 @@ class MainController {
     public function __construct() {
         $this->databaseModel = new DatabaseModel();
         $this->sessionModel = new SessionModel($this->databaseModel);
+
         $this->loginView = new LoginView();
         $this->billboardView = new BillboardView($this->sessionModel);
         $this->layoutView = new LayoutView();
         $this->registerView = new RegisterView();
+        
         $this->billboardController = new BillboardController($this->loginView, $this->databaseModel, $this->billboardView);
         $this->registerController = new RegisterController($this->registerView, $this->loginView, $this->databaseModel);
         $this->loginController = new LoginController($this->loginView, $this->databaseModel, $this->sessionModel);

@@ -29,7 +29,6 @@ class RegisterController {
             $registerErrorMessage = $this->registerModel->getRegistrationErrorMessage();
             $this->registerView->setUsernameValue(strip_tags($this->registerView->getUsername()));
             $this->registerView->setRegisterMessage($registerErrorMessage);
-            // $this->layoutView->render($this->registerView);
         }
         
     }

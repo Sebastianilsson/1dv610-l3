@@ -32,9 +32,9 @@ class MainController {
     public function setState() {
         if ($this->loginView->isLoggedOutRequested()) {
             $this->loginController->logout();
-        } elseif ($this->registerView->isRegisterFormRequested()) {
+        } elseif ($this->registerView->isRegisterFormSubmitted()) {
             $this->registerController->newRegistration();
-        }  elseif($this->loginView->userHasCookie()) {
+        } elseif($this->loginView->userHasCookie()) {
             $this->loginController->loginWithCookies();
         } elseif ($this->sessionModel->userHasSession()) {
             $this->loginController->loginWithSession();

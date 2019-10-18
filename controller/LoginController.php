@@ -72,7 +72,7 @@ class LoginController {
         $this->loginView->isLoggedIn();
         $this->sessionModel->regenerateSessionId();
         if (!$this->sessionModel->isSessionSet()) {
-            $this->sessionModel->setSessionVariables($this->loginView->getUsername());
+            $this->sessionModel->setSessionVariables($this->loginView->getCookieUsername());
             $this->loginView->setLoginMessage("Welcome back with cookie");
         }
     }

@@ -22,8 +22,6 @@ class LoginController {
             }
         }
         $this->loginView->setUsernameValue($this->loginView->getUsername());
-        $loginMessage = $this->loginModel->getLoginMessage();
-        $this->loginView->setLoginMessage($loginMessage);
     }
 
     // Method called if the user already has a cookie from the site
@@ -32,7 +30,7 @@ class LoginController {
             $this->successfulCookieLogin();
         } else {
             $this->loginView->destroyCookies();
-            $this->loginView->setLoginMessage("Wrong information in cookies");
+            $this->loginView->setLoginMessage(Messages::$tamperedCookie);
         }
     }
 
@@ -53,7 +51,7 @@ class LoginController {
         if ($this->sessionModel->isSessionSet()) {
             $this->sessionModel->destroySession();
             $this->loginView->destroyCookies();
-            $this->loginView->setLoginMessage("Bye bye!");
+            $this->loginView->setLoginMessage(Messages::$logoutBye);
         }
     }
 
@@ -61,10 +59,11 @@ class LoginController {
         $this->sessionModel->regenerateSessionId();
         $this->sessionModel->setSessionVariables($this->loginView->getUsername());
         $this->loginView->isLoggedIn();
-        $this->loginModel->setWelcomeMessage($this->loginView->isKeepLoggedInRequested());
+        $this->loginView->setLoginMessage(Messages::$welcome);
         if ($this->loginView->isKeepLoggedInRequested()) {
             $cookieValues = $this->loginView->handleNewCookies();
             $this->databaseModel->saveCookieCredentials($cookieValues);
+            $this->loginView->setLoginMessage(Messages::$welcomeWithRememberRequested);
         }
     }
 
@@ -73,7 +72,7 @@ class LoginController {
         $this->sessionModel->regenerateSessionId();
         if (!$this->sessionModel->isSessionSet()) {
             $this->sessionModel->setSessionVariables($this->loginView->getCookieUsername());
-            $this->loginView->setLoginMessage("Welcome back with cookie");
+            $this->loginView->setLoginMessage(Messages::$welcomeWithCookie);
         }
     }
 }

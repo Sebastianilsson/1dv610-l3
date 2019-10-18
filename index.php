@@ -6,6 +6,7 @@ require_once('view/DateTimeView.php');
 require_once('view/LayoutView.php');
 require_once('view/RegisterView.php');
 require_once('view/BillboardView.php');
+require_once('view/Messages.php');
 
 require_once('controller/MainController.php');
 require_once('controller/RegisterController.php');

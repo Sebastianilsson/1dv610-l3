@@ -35,13 +35,13 @@ class LoginModel {
         }
     }
 
-    public function setWelcomeMessage($keepLoginRequested) {
-        if ($keepLoginRequested) {
-            $this->loginMessage = "Welcome and you will be remembered";
-        } else {
-            $this->loginMessage = "Welcome";
-        }
-    }
+    // public function setWelcomeMessage($keepLoginRequested) {
+    //     if ($keepLoginRequested) {
+    //         $this->loginMessage = "Welcome and you will be remembered";
+    //     } else {
+    //         $this->loginMessage = "Welcome";
+    //     }
+    // }
 
     private function usernameInputExists() {
         if ($this->username != "") {

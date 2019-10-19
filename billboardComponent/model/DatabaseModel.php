@@ -44,26 +44,26 @@ class DatabaseModel {
         mysqli_close($this->connection);
     }
 
-    public function checkIfUsernameIsFree($username) {
-        $sql = "SELECT username FROM users WHERE username=?";
-        if ($this->prepareStatement($sql)) {
-            mysqli_stmt_bind_param($this->statement, "s", $username);
-            mysqli_stmt_execute($this->statement);
-            mysqli_stmt_store_result($this->statement);
-            $nrOfUsersWithUsername = mysqli_stmt_num_rows($this->statement);
-            $this->closeStatementAndConnection();
-            return $nrOfUsersWithUsername == 0 ? true : false;
-        }
-    }
+    // public function checkIfUsernameIsFree($username) {
+    //     $sql = "SELECT username FROM users WHERE username=?";
+    //     if ($this->prepareStatement($sql)) {
+    //         mysqli_stmt_bind_param($this->statement, "s", $username);
+    //         mysqli_stmt_execute($this->statement);
+    //         mysqli_stmt_store_result($this->statement);
+    //         $nrOfUsersWithUsername = mysqli_stmt_num_rows($this->statement);
+    //         $this->closeStatementAndConnection();
+    //         return $nrOfUsersWithUsername == 0 ? true : false;
+    //     }
+    // }
 
-    public function saveUserToDatabase($username, $password) {
-        $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
-        if ($this->prepareStatement($sql)) {
-            mysqli_stmt_bind_param($this->statement, "ss", $username, $password);
-            mysqli_stmt_execute($this->statement);
-            $this->closeStatementAndConnection();
-        }
-    }
+    // public function saveUserToDatabase($username, $password) {
+    //     $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+    //     if ($this->prepareStatement($sql)) {
+    //         mysqli_stmt_bind_param($this->statement, "ss", $username, $password);
+    //         mysqli_stmt_execute($this->statement);
+    //         $this->closeStatementAndConnection();
+    //     }
+    // }
 
     public function savePost($post) {
         $username = $post->getUsername();
@@ -152,65 +152,65 @@ class DatabaseModel {
         }
     }
 
-    public function usernameExistsInDatabase($username) {
-        $sql = "SELECT username FROM users WHERE username=?";
-        if ($this->prepareStatement($sql)) {
-            mysqli_stmt_bind_param($this->statement, "s", $username);
-            mysqli_stmt_execute($this->statement);
-            mysqli_stmt_store_result($this->statement);
-            $nrOfUsersWithUsername = mysqli_stmt_num_rows($this->statement);
-            $this->closeStatementAndConnection();
-            return $nrOfUsersWithUsername == 1 ? true : false;
-        }
-    }
+    // public function usernameExistsInDatabase($username) {
+    //     $sql = "SELECT username FROM users WHERE username=?";
+    //     if ($this->prepareStatement($sql)) {
+    //         mysqli_stmt_bind_param($this->statement, "s", $username);
+    //         mysqli_stmt_execute($this->statement);
+    //         mysqli_stmt_store_result($this->statement);
+    //         $nrOfUsersWithUsername = mysqli_stmt_num_rows($this->statement);
+    //         $this->closeStatementAndConnection();
+    //         return $nrOfUsersWithUsername == 1 ? true : false;
+    //     }
+    // }
 
-    public function userPasswordMatch($username, $password) {
-        $this->connectToDatabase();
-        $sql = "SELECT * FROM users WHERE username=?";
-        $statement = mysqli_stmt_init($this->connection);
-        if ($this->prepareStatement($sql)) {
-            mysqli_stmt_bind_param($this->statement, "s", $username);
-            mysqli_stmt_execute($this->statement);
-            $matchingUser = mysqli_stmt_get_result($this->statement);
-            if ($user = mysqli_fetch_assoc($matchingUser)) {    
-                $matchingPassword = password_verify($password, $user['password']);
-                $this->closeStatementAndConnection();
-                return $matchingPassword ? true : false;
-            }
-        }
-    }
+    // public function userPasswordMatch($username, $password) {
+    //     $this->connectToDatabase();
+    //     $sql = "SELECT * FROM users WHERE username=?";
+    //     $statement = mysqli_stmt_init($this->connection);
+    //     if ($this->prepareStatement($sql)) {
+    //         mysqli_stmt_bind_param($this->statement, "s", $username);
+    //         mysqli_stmt_execute($this->statement);
+    //         $matchingUser = mysqli_stmt_get_result($this->statement);
+    //         if ($user = mysqli_fetch_assoc($matchingUser)) {    
+    //             $matchingPassword = password_verify($password, $user['password']);
+    //             $this->closeStatementAndConnection();
+    //             return $matchingPassword ? true : false;
+    //         }
+    //     }
+    // }
 
-    public function saveCookieCredentials($cookieValues) {
-        $cookieUsername = $cookieValues->getCookieUsername();
-        $cookiePassword = $cookieValues->getCookiePassword();
-        $this->removeOldCookieIfExisting($cookieValues->getCookieUsername());
-        $sql = "INSERT INTO sessions (username, password) VALUES (?, ?)";
-        if ($this->prepareStatement($sql)) {
-            mysqli_stmt_bind_param($this->statement, "ss", $cookieUsername, $cookiePassword);
-            mysqli_stmt_execute($this->statement);
-            $this->closeStatementAndConnection();
-        }
-    }
+    // public function saveCookieCredentials($cookieValues) {
+    //     $cookieUsername = $cookieValues->getCookieUsername();
+    //     $cookiePassword = $cookieValues->getCookiePassword();
+    //     $this->removeOldCookieIfExisting($cookieValues->getCookieUsername());
+    //     $sql = "INSERT INTO sessions (username, password) VALUES (?, ?)";
+    //     if ($this->prepareStatement($sql)) {
+    //         mysqli_stmt_bind_param($this->statement, "ss", $cookieUsername, $cookiePassword);
+    //         mysqli_stmt_execute($this->statement);
+    //         $this->closeStatementAndConnection();
+    //     }
+    // }
 
-    private function removeOldCookieIfExisting($username) {
-        $sql = "DELETE FROM sessions WHERE username='$username'";
-        if ($this->prepareStatement($sql)) {
-            mysqli_stmt_execute($this->statement);
-        }
-        $this->closeStatementAndConnection();
-    }
+    // private function removeOldCookieIfExisting($username) {
+    //     $sql = "DELETE FROM sessions WHERE username='$username'";
+    //     if ($this->prepareStatement($sql)) {
+    //         mysqli_stmt_execute($this->statement);
+    //     }
+    //     $this->closeStatementAndConnection();
+    // }
 
-    public function cookiePasswordMatch($cookieValues) {
-        $cookieUsername = $cookieValues->getCookieUsername();
-        $cookiePassword = $cookieValues->getCookiePassword();
-        $sql = "SELECT * FROM sessions WHERE username=?";
-        if ($this->prepareStatement($sql)) {
-            mysqli_stmt_bind_param($this->statement, "s", $cookieUsername);
-            mysqli_stmt_execute($this->statement);
-            $matchingUser = mysqli_stmt_get_result($this->statement);
-            $user = mysqli_fetch_assoc($matchingUser);    
-            $this->closeStatementAndConnection();
-            return $cookiePassword == $user['password'] ? true : false;
-        }
-    }
+    // public function cookiePasswordMatch($cookieValues) {
+    //     $cookieUsername = $cookieValues->getCookieUsername();
+    //     $cookiePassword = $cookieValues->getCookiePassword();
+    //     $sql = "SELECT * FROM sessions WHERE username=?";
+    //     if ($this->prepareStatement($sql)) {
+    //         mysqli_stmt_bind_param($this->statement, "s", $cookieUsername);
+    //         mysqli_stmt_execute($this->statement);
+    //         $matchingUser = mysqli_stmt_get_result($this->statement);
+    //         $user = mysqli_fetch_assoc($matchingUser);    
+    //         $this->closeStatementAndConnection();
+    //         return $cookiePassword == $user['password'] ? true : false;
+    //     }
+    // }
 }

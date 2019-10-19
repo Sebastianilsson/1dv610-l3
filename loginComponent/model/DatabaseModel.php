@@ -50,7 +50,10 @@ class DatabaseModel {
             mysqli_stmt_store_result($this->statement);
             $nrOfUsersWithUsername = mysqli_stmt_num_rows($this->statement);
             $this->closeStatementAndConnection();
-            return $nrOfUsersWithUsername == 0 ? true : false;
+            if ($nrOfUsersWithUsername > 0) {
+                throw new UsernameAlreadyExists('The username "'.$username.'" already exists in the database');
+            }
+            // return $nrOfUsersWithUsername == 0 ? true : false;
         }
     }
 

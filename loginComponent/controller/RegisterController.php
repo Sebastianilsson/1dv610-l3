@@ -16,19 +16,28 @@ class RegisterController {
 
     // Method called if registration of a new user is requested
     public function newRegistration() {
-        $this->registerModel->getUserRegistrationInput();
-        $this->registerView->setUsernameValue($this->registerView->getUsername());
-        $this->registerModel->validateRegisterInputIfSubmitted();
-        if ($this->registerModel->isValidationOk()) {
+        try {
+            $this->registerModel->getUserRegistrationInput();
+            $this->registerModel->validateRegisterInput();
             $this->registerModel->hashPassword();
             $this->registerModel->saveUserToDatabase();
             $this->loginView->setUsernameValue($this->registerView->getUsername());
-            $this->loginView->setLoginMessage("Registered new user.");
+            $this->loginView->setLoginMessage(Messages::$successfulRegistration);
             header("Location: ?");
-        } else {
-            $registerErrorMessage = $this->registerModel->getRegistrationErrorMessage();
-            $this->registerView->setUsernameValue(strip_tags($this->registerView->getUsername()));
-            $this->registerView->setRegisterMessage($registerErrorMessage);
+        } catch (ShortUsernameAndPassword $error) {
+            $this->registerView->setRegisterMessage(Messages::$toShortUsernameAndPassword);
+        } catch (ShortPassword $error) {
+            $this->registerView->setRegisterMessage(Messages::$toShortPassword);
+        } catch (ShortUsername $error) {
+            $this->registerView->setRegisterMessage(Messages::$toShortUsername);
+        } catch (UsernameAlreadyExists $error) {
+            $this->registerView->setRegisterMessage(Messages::$userAlreadyExists);
+        } catch (InvalidCharactersInUsername $error) {
+            $this->registerView->setRegisterMessage(Messages::$invalidCharactersInUsername);
+        } catch (PasswordsDoNotMatch $error) {
+            $this->registerView->setRegisterMessage(Messages::$passwordsDoNotMatch);
+        } finally {
+            $this->registerView->setUsernameValue($this->registerView->getUsername());
         }
         
     }

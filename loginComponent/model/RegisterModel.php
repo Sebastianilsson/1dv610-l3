@@ -20,77 +20,54 @@ class RegisterModel {
         $this->passwordRepeat = $this->registerView->getRepeatedPassword();
     }
 
-    public function validateRegisterInputIfSubmitted() {
-        if ($this->registerView->isRegisterFormSubmitted()) {
-            if ($this->checkForInputInAllFields()) {
-                if ($this->validateUsername()) {
-                    if ($this->validatePassword()) {
-                        $this->validationOk = true;
-                    }
-                }
-            }
-        }
+    public function validateRegisterInput() {
+        $this->checkForInputInAllFields();
+        $this->validateUsername();
+        $this->validatePassword();
     }
 
     private function checkForInputInAllFields() {
-        $message = '';
-        if ($this->username == "") {
-            $message .= 'Username has too few characters, at least 3 characters.';
-        } 
-        if ($this->password == "") {
-            $message .= $message == "" ? 'Password has too few characters, at least 6 characters.' : '<br> Password has too few characters, at least 6 characters.';
-        } 
-        if ($message == '') {
-            return true;
+        if (!$this->username && !$this->password) {
+            throw new ShortUsernameAndPassword('"'.$this->username.'" and "'.$this->password.'" are to short');
+        } elseif (!$this->password) {
+            throw new ShortPassword('The password "'.$this->password.'" is to short');
+        } elseif (!$this->username) {
+            throw new ShortUsername('The password "'.$this->username.'" is to short');
         }
-        $this->registrationErrorMessage = $message;
     }
 
     private function validateUsername() {
-        if ($this->isUsernameCorrectFormat()) {
-            if (strlen($this->username) >= 3) {
-                if ($this->isUsernameUnique()) {
-                    return true;
-                } else {
-                    $this->registrationErrorMessage = 'User exists, pick another username.';
-                }
-            } else {
-                $this->registrationErrorMessage = 'Username has too few characters, at least 3 characters.';
-            }
-        } else {
-            $this->registrationErrorMessage = 'Username contains invalid characters.';
-        }
+        $this->isUsernameCorrectFormat();
+        $this->isUsernameLongEnough();
+        $this->databaseModel->checkIfUsernameIsFree($this->username);
     }
 
-    private function isUsernameUnique() {
-        return $this->databaseModel->checkIfUsernameIsFree($this->username);
+    private function isUsernameLongEnough() {
+        if (strlen($this->username) < 3) {
+            throw new ShortUsername('The password "'.$this->username.'" is to short');
+        }
     }
 
     private function isUsernameCorrectFormat() {
         if (preg_match_all("/[^a-zA-Z0-9]/", $this->username) > 0) {
-            return false;
-        } else {
-            return true;
+            throw new InvalidCharactersInUsername('Username "'.$this->username.'" is not valid');
         }
     }
 
     private function validatePassword() {
-        if (strlen($this->password) >= 6) {
-            if ($this->checkIfPasswordsMatch()) {
-                return true;
-            } else {
-                $this->registrationErrorMessage = 'Passwords do not match.';
-            }
-        } else {
-            $this->registrationErrorMessage = 'Password has too few characters, at least 6 characters.';
+        $this->isPasswordLongEnough();
+        $this->checkIfPasswordsMatch();
+    }
+
+    private function isPasswordLongEnough() {
+        if (strlen($this->password) < 6) {
+            throw new ShortPassword('The password "'.$this->password.'" is to short');
         }
     }
 
     private function checkIfPasswordsMatch() {
-        if ($this->password == $this->passwordRepeat) {
-            return true;
-        } else {
-            return false;
+        if ($this->password != $this->passwordRepeat) {
+            throw new PasswordsDoNotMatch('Password: "'.$this->password.'" do not match repeated password: "'.$this->passwordRepeat.'"');
         }
     }
 

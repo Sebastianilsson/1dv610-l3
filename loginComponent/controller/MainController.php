@@ -20,11 +20,9 @@ class MainController {
         $this->sessionModel = new SessionModel($this->databaseModel);
 
         $this->loginView = new LoginView();
-        $this->billboardView = new BillboardView($this->sessionModel);
         $this->layoutView = new LayoutView();
         $this->registerView = new RegisterView();
         
-        $this->billboardController = new BillboardController($this->loginView, $this->databaseModel, $this->billboardView);
         $this->registerController = new RegisterController($this->registerView, $this->loginView, $this->databaseModel);
         $this->loginController = new LoginController($this->loginView, $this->databaseModel, $this->sessionModel);
     }
@@ -41,15 +39,10 @@ class MainController {
             } elseif ($this->loginView->isLoginFormSubmitted()) {
                 $this->loginController->newLogin();
             } 
-            if ($this->billboardView->isBillboardRequested()) {
-                $this->billboardController->handleBillboardInteraction();
-            }
     }
 
     public function renderState() {
-        if ($this->billboardView->isBillboardRequested()) {
-            $this->layoutView->render($this->billboardView);
-        } elseif ($this->registerView->isRegisterFormRequested()) {
+        if ($this->registerView->isRegisterFormRequested()) {
             $this->layoutView->render($this->registerView);
         } else {
             $this->layoutView->render($this->loginView);

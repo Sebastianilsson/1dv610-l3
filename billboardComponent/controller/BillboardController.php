@@ -14,6 +14,14 @@ class BillboardController {
         $this->loginView = $loginView;
     }
 
+    // $this->billboardController = new BillboardController($this->loginView, $this->databaseModel, $this->billboardView);
+    // if ($this->billboardView->isBillboardRequested()) {
+    //     $this->billboardController->handleBillboardInteraction();
+    // }
+    // if ($this->billboardView->isBillboardRequested()) {
+    //     $this->layoutView->render($this->billboardView);
+    // } 
+    // $this->billboardView = new BillboardView($this->sessionModel);
     // Method called if registration of a new user is requested
     public function handleBillboardInteraction() {
         if ($this->billboardView->isEditPostSubmitted()) {

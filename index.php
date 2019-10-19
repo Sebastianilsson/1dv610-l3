@@ -15,5 +15,5 @@ $loginComponent->render();
 $user = $loginComponent->getCurrentUser();
 
 $billboardComponent = new BillboardComponent($user);
-var_dump($billboardComponent->render());
+$billboardComponent->render();
 

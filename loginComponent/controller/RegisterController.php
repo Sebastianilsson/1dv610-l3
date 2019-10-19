@@ -37,7 +37,7 @@ class RegisterController {
         } catch (PasswordsDoNotMatch $error) {
             $this->registerView->setRegisterMessage(Messages::$passwordsDoNotMatch);
         } finally {
-            $this->registerView->setUsernameValue($this->registerView->getUsername());
+            $this->registerView->setUsernameValue(strip_tags($this->registerView->getUsername()));
         }
         
     }

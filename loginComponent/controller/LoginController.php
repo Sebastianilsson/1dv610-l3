@@ -20,7 +20,6 @@ class LoginController {
             $this->loginModel->validateLoginInput();
             $this->loginModel->checkIfCredentialsMatchInDatabase();
             $this->successfulNewLogin();
-            $this->loginView->setUsernameValue($this->loginView->getUsername());
         } catch (MissingUsernameException $error) {
             $this->loginView->setLoginMessage(Messages::$usernameMissing);
         } catch (MissingPasswordException $error) {
@@ -29,6 +28,8 @@ class LoginController {
             $this->loginView->setLoginMessage(Messages::$invalidCharactersInUsername);
         } catch (UsernameOrPasswordIsInvalid $error) {
             $this->loginView->setLoginMessage(Messages::$wrongUsernameOrPassword);
+        } finally {
+            $this->loginView->setUsernameValue($this->loginView->getUsername());
         }
         
     }

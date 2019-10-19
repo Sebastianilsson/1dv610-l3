@@ -2,7 +2,6 @@
 
 class DatabaseModel {
 
-    // Only used to connect to local database during development
     private $databaseServerName;
     private $databaseUserName;
     private $databasePassword;
@@ -66,93 +65,6 @@ class DatabaseModel {
         }
     }
 
-    // public function savePost($post) {
-    //     $username = $post->getUsername();
-    //     $postTitle = $post->getPostTitle();
-    //     $postText = $post->getPostText();
-    //     $timeStamp = $post->getTimeStamp();
-    //     $sql = "INSERT INTO posts (username, postTitle, postText, timeStamp) VALUES (?, ?, ?, ?)";
-    //     if ($this->prepareStatement($sql)) {
-    //         mysqli_stmt_bind_param($this->statement, "ssss", $username, $postTitle, $postText, $timeStamp);
-    //         mysqli_stmt_execute($this->statement);
-    //         $this->closeStatementAndConnection();
-    //     }
-    // }
-
-    // public function savePostComment($postComment) {
-    //     $username = $postComment->getUsername();
-    //     $commentText = $postComment->getCommentText();
-    //     $timeStamp = $postComment->getTimeStamp();
-    //     $postId = $postComment->getPostId();
-    //     $sql = "INSERT INTO comments (username, commentText, timeStamp, postId) VALUES (?, ?, ?, ?)";
-    //     if ($this->prepareStatement($sql)) {
-    //         mysqli_stmt_bind_param($this->statement, "ssss", $username, $commentText, $timeStamp, $postId);
-    //         mysqli_stmt_execute($this->statement);
-    //         $this->closeStatementAndConnection();
-    //     }
-    // }
-
-    // public function getPosts() {
-    //     $sql = "SELECT * FROM posts ORDER BY id DESC";
-    //     return $this->selectAllFromOneTable($sql);
-    // }
-
-    // public function getComments() {
-    //     $sql = "SELECT * FROM comments ORDER BY id DESC";
-    //     return $this->selectAllFromOneTable($sql);
-    // }
-
-    // private function selectAllFromOneTable($sql) {
-    //     if ($this->prepareStatement($sql)) {
-    //         mysqli_stmt_execute($this->statement);
-    //         $result = mysqli_stmt_get_result($this->statement);
-    //         $contentArray = array();
-    //         while ($row = mysqli_fetch_array($result)) {
-    //             $contentArray[] = $row;
-    //         }
-    //         $this->closeStatementAndConnection();
-    //         return $contentArray;
-    //     }
-    // }
-
-    // public function deletePostAndComments($postId) {
-    //     $this->deleteFromDataBaseById("DELETE FROM posts WHERE id=?", $postId);
-    //     $this->deleteFromDataBaseById("DELETE FROM comments WHERE postId=?", $postId);
-    // }
-
-    // private function deleteFromDataBaseById($sql, $id) {
-    //     if ($this->prepareStatement($sql)) {
-    //         mysqli_stmt_bind_param($this->statement, "s", $id);
-    //         mysqli_stmt_execute($this->statement);
-    //         $this->closeStatementAndConnection();
-    //     }
-    // }
-
-    // public function getPost($postId) {
-    //     $sql = "SELECT * FROM posts WHERE id=?";
-    //     if ($this->prepareStatement($sql)) {
-    //         mysqli_stmt_bind_param($this->statement, "s", $postId);
-    //         mysqli_stmt_execute($this->statement);
-    //         $result = mysqli_stmt_get_result($this->statement);
-    //         $post = mysqli_fetch_assoc($result);
-    //         $this->closeStatementAndConnection();
-    //         return $post;
-    //     }
-    // }
-
-    // public function updateEditedPost($post) {
-    //     $postTitle = $post->getPostTitle();
-    //     $postText = $post->getPostText();
-    //     $postId = $post->getPostId();
-    //     $this->connectToDatabase();
-    //     $sql = "UPDATE posts SET postTitle=?, postText=? WHERE id=?";
-    //     if ($this->prepareStatement($sql)) {
-    //         mysqli_stmt_bind_param($this->statement, "sss",$postTitle, $postText, $postId);
-    //         mysqli_stmt_execute($this->statement);
-    //         $this->closeStatementAndConnection();
-    //     }
-    // }
-
     public function usernameExistsInDatabase($username) {
         $sql = "SELECT username FROM users WHERE username=?";
         if ($this->prepareStatement($sql)) {
@@ -185,7 +97,7 @@ class DatabaseModel {
         $cookieUsername = $cookieValues->getCookieUsername();
         $cookiePassword = $cookieValues->getCookiePassword();
         $this->removeOldCookieIfExisting($cookieValues->getCookieUsername());
-        $sql = "INSERT INTO sessions (username, password) VALUES (?, ?)";
+        $sql = "INSERT INTO cookies (username, password) VALUES (?, ?)";
         if ($this->prepareStatement($sql)) {
             mysqli_stmt_bind_param($this->statement, "ss", $cookieUsername, $cookiePassword);
             mysqli_stmt_execute($this->statement);
@@ -194,7 +106,7 @@ class DatabaseModel {
     }
 
     private function removeOldCookieIfExisting($username) {
-        $sql = "DELETE FROM sessions WHERE username='$username'";
+        $sql = "DELETE FROM cookies WHERE username='$username'";
         if ($this->prepareStatement($sql)) {
             mysqli_stmt_execute($this->statement);
         }
@@ -204,7 +116,7 @@ class DatabaseModel {
     public function cookiePasswordMatch($cookieValues) {
         $cookieUsername = $cookieValues->getCookieUsername();
         $cookiePassword = $cookieValues->getCookiePassword();
-        $sql = "SELECT * FROM sessions WHERE username=?";
+        $sql = "SELECT * FROM cookies WHERE username=?";
         if ($this->prepareStatement($sql)) {
             mysqli_stmt_bind_param($this->statement, "s", $cookieUsername);
             mysqli_stmt_execute($this->statement);
@@ -214,7 +126,6 @@ class DatabaseModel {
             if ($cookiePassword != $user['password']) {
                 throw new TamperedCookie('"'.$cookiePassword.'" does not match the existing cookie');
             }
-            // return $cookiePassword == $user['password'] ? true : false;
         }
     }
 }

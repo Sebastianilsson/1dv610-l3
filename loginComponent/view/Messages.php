@@ -9,4 +9,5 @@ class Messages {
     public static $usernameMissing = 'Username is missing';
     public static $passwordMissing = 'Password is missing';
     public static $invalidCharactersInUsername = "Username contains invalid characters.";
+    public static $wrongUsernameOrPassword = "Wrong name or password";
 }

@@ -208,7 +208,10 @@ class DatabaseModel {
             $matchingUser = mysqli_stmt_get_result($this->statement);
             $user = mysqli_fetch_assoc($matchingUser);    
             $this->closeStatementAndConnection();
-            return $cookiePassword == $user['password'] ? true : false;
+            if ($cookiePassword != $user['password']) {
+                throw new TamperedCookie('"'.$cookiePassword.'" does not match the existing cookie');
+            }
+            // return $cookiePassword == $user['password'] ? true : false;
         }
     }
 }

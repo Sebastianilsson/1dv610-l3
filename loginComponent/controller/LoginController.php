@@ -17,32 +17,31 @@ class LoginController {
     public function newLogin() {
         try {
             $this->loginModel->getUserLoginInput();
-        if ($this->loginModel->validateLoginInput()) {
-            if ($this->loginModel->checkIfCredentialsMatchInDatabase()) {
-                $this->successfulNewLogin();
-            }
+            $this->loginModel->validateLoginInput();
+            $this->loginModel->checkIfCredentialsMatchInDatabase();
+            $this->successfulNewLogin();
             $this->loginView->setUsernameValue($this->loginView->getUsername());
-        }
         } catch (MissingUsernameException $error) {
             $this->loginView->setLoginMessage(Messages::$usernameMissing);
         } catch (MissingPasswordException $error) {
             $this->loginView->setLoginMessage(Messages::$passwordMissing);
+        } catch (InvalidCharactersInUsername $error) {
+            $this->loginView->setLoginMessage(Messages::$invalidCharactersInUsername);
+        } catch (UsernameOrPasswordIsInvalid $error) {
+            $this->loginView->setLoginMessage(Messages::$wrongUsernameOrPassword);
         }
         
     }
 
     // Method called if the user already has a cookie from the site
     public function loginWithCookies() {
-        if ($this->cookieIsValid()) {
+        try {
+            $this->databaseModel->cookiePasswordMatch($this->loginView->getCookieUsernameAndPassword());
             $this->successfulCookieLogin();
-        } else {
+        } catch (TamperedCookie $error) {
             $this->loginView->destroyCookies();
             $this->loginView->setLoginMessage(Messages::$tamperedCookie);
         }
-    }
-
-    private function cookieIsValid() {
-        return $this->databaseModel->cookiePasswordMatch($this->loginView->getCookieUsernameAndPassword());
     }
 
     // Method called if the user already has an active session from the site

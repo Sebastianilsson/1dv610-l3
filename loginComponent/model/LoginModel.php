@@ -5,7 +5,7 @@ class LoginModel {
     private $password;
     private $loginView;
     private $databaseModel;
-    private $loginMessage;
+    // private $loginMessage;
 
     public function __construct($loginView, $databaseModel) {
         $this->loginView = $loginView;
@@ -18,20 +18,21 @@ class LoginModel {
     }
 
     public function validateLoginInput() {
-        if ($this->usernameInputExists()) {
-            if ($this->passwordInputExists()) {
-                if ($this->isUsernameCorrectFormat()) {
-                    return true;
-                }
-            }
-        }
+        $this->usernameInputExists();
+        $this->passwordInputExists();
+        $this->isUsernameCorrectFormat();
+        // if ($this->usernameInputExists()) {
+        //     if ($this->passwordInputExists()) {
+        //         if ($this->isUsernameCorrectFormat()) {
+        //             return true;
+        //         }
+        //     }
+        // }
     }
 
     public function checkIfCredentialsMatchInDatabase() {
-        if ($this->databaseModel->usernameExistsInDatabase($this->username) && $this->databaseModel->userPasswordMatch($this->username, $this->password)) {
-            return true;
-        } else {
-            $this->loginMessage = "Wrong name or password";
+        if (!$this->databaseModel->usernameExistsInDatabase($this->username) || !$this->databaseModel->userPasswordMatch($this->username, $this->password)) {
+            throw new UsernameOrPasswordIsInvalid('Wrong username or password entered');
         }
     }
 
@@ -44,17 +45,13 @@ class LoginModel {
     // }
 
     private function usernameInputExists() {
-        if ($this->username) {
-            return true;
-        } else {
+        if (!$this->username) {
             throw new MissingUsernameException('User did not provide a username');
         }
     }
 
     private function passwordInputExists() {
-        if ($this->password != "") {
-            return true;
-        } else {
+        if (!$this->password) {
             throw new MissingPasswordException('User did not provide a password');
         }
     }
@@ -62,14 +59,12 @@ class LoginModel {
     private function isUsernameCorrectFormat() {
         if (preg_match_all("/[^a-zA-Z0-9]/", $this->username) > 0) {
             throw new InvalidCharactersInUsername('Username "'.$this->username.'" is not valid');
-            $this->loginMessage = 'Username contains invalid characters.';
-            return false;
-        } else {
-            return true;
+            // $this->loginMessage = 'Username contains invalid characters.';
+            // return false;
         }
     }
 
-    public function getLoginMessage() {
-        return $this->loginMessage;
-    }
+    // public function getLoginMessage() {
+    //     return $this->loginMessage;
+    // }
 }

@@ -15,13 +15,20 @@ class LoginController {
     }
     // Method called if login was requested.
     public function newLogin() {
-        $this->loginModel->getUserLoginInput();
+        try {
+            $this->loginModel->getUserLoginInput();
         if ($this->loginModel->validateLoginInput()) {
             if ($this->loginModel->checkIfCredentialsMatchInDatabase()) {
                 $this->successfulNewLogin();
             }
+            $this->loginView->setUsernameValue($this->loginView->getUsername());
         }
-        $this->loginView->setUsernameValue($this->loginView->getUsername());
+        } catch (MissingUsernameException $error) {
+            $this->loginView->setLoginMessage(Messages::$usernameMissing);
+        } catch (MissingPasswordException $error) {
+            $this->loginView->setLoginMessage(Messages::$passwordMissing);
+        }
+        
     }
 
     // Method called if the user already has a cookie from the site

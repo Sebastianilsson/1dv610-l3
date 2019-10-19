@@ -44,10 +44,10 @@ class LoginModel {
     // }
 
     private function usernameInputExists() {
-        if ($this->username != "") {
+        if ($this->username) {
             return true;
         } else {
-            $this->loginMessage = 'Username is missing';
+            throw new MissingUsernameException('User did not provide a username');
         }
     }
 
@@ -55,12 +55,13 @@ class LoginModel {
         if ($this->password != "") {
             return true;
         } else {
-            $this->loginMessage = 'Password is missing';
+            throw new MissingPasswordException('User did not provide a password');
         }
     }
 
     private function isUsernameCorrectFormat() {
         if (preg_match_all("/[^a-zA-Z0-9]/", $this->username) > 0) {
+            throw new InvalidCharactersInUsername('Username "'.$this->username.'" is not valid');
             $this->loginMessage = 'Username contains invalid characters.';
             return false;
         } else {

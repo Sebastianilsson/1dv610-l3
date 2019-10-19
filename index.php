@@ -20,6 +20,7 @@ require_once('model/SessionModel.php');
 require_once('model/CookieValues.php');
 require_once('model/Post.php');
 require_once('model/PostComment.php');
+require_once('model/Exceptions.php');
 
 require_once('Settings.php');
 
@@ -33,6 +34,8 @@ session_start();
 // Create main controller
 $componentController = new MainController();
 
-$componentController->setState();
-$componentController->renderState();
+    $componentController->setState();
+    $componentController->renderState();
+
+
 

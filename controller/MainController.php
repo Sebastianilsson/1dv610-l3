@@ -30,20 +30,20 @@ class MainController {
     }
     // Routes the user through the application depending on user action
     public function setState() {
-        if ($this->loginView->isLoggedOutRequested()) {
-            $this->loginController->logout();
-        } elseif ($this->registerView->isRegisterFormSubmitted()) {
-            $this->registerController->newRegistration();
-        } elseif($this->loginView->userHasCookie()) {
-            $this->loginController->loginWithCookies();
-        } elseif ($this->sessionModel->userHasSession()) {
-            $this->loginController->loginWithSession();
-        } elseif ($this->loginView->isLoginFormSubmitted()) {
-            $this->loginController->newLogin();
-        } 
-        if ($this->billboardView->isBillboardRequested()) {
-            $this->billboardController->handleBillboardInteraction();
-        }
+            if ($this->loginView->isLoggedOutRequested()) {
+                $this->loginController->logout();
+            } elseif ($this->registerView->isRegisterFormSubmitted()) {
+                $this->registerController->newRegistration();
+            } elseif($this->loginView->userHasCookie()) {
+                $this->loginController->loginWithCookies();
+            } elseif ($this->sessionModel->userHasSession()) {
+                $this->loginController->loginWithSession();
+            } elseif ($this->loginView->isLoginFormSubmitted()) {
+                $this->loginController->newLogin();
+            } 
+            if ($this->billboardView->isBillboardRequested()) {
+                $this->billboardController->handleBillboardInteraction();
+            }
     }
 
     public function renderState() {

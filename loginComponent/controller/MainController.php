@@ -49,4 +49,12 @@ class MainController {
         }
     }
 
+    public function getUser() {
+        if ($this->loginView->getIsLoggedIn()) {
+            return new User($this->sessionModel->getSessionUsername(), $this->loginView->getIsLoggedIn());
+        } else {
+            return new User("", false);
+        }
+    }
+
 }

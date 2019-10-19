@@ -12,7 +12,9 @@ class BillboardView {
     private static $postEditById = 'BillboardView::PostEditById';
     private static $postDelete = 'BillboardView::PostDelete';
 
-    private $isLoggedIn = false;
+    private $isLoggedIn;
+    private $username;
+    
     private $isPostEdit = false;
     private $billboardMessage = "";
     private $postTitleEdit = "";
@@ -21,14 +23,13 @@ class BillboardView {
     private $posts;
     private $comments;
 
-    private $sessionModel;
-
-    public function __construct($sessionModel) {
-        $this->sessionModel = $sessionModel;
+    public function __construct($user) {
+        $this->isLoggedIn = $user->getIsLoggedIn();
+        $this->username = $user->getUsername();
     }
 
     public function response() {
-        return $this->generateBillboardHTML();
+        echo $this->generateBillboardHTML();
     }
 
     private function generateBillboardHTML() {
@@ -131,7 +132,7 @@ class BillboardView {
     }
 
     private function handleYourPost($postAuthor, $postId) {
-        if ($this->isLoggedIn && $this->sessionModel->getSessionUsername() == $postAuthor) {
+        if ($this->isLoggedIn && $this->username == $postAuthor) {
             return '
             <form method="post">
                 <input type="hidden" name="'.self::$postId.'" value="'.$postId.'" />
@@ -166,13 +167,13 @@ class BillboardView {
         return (isset($_POST[self::$postEdit]) && $this->isPostEdit);
     }
 
-    public function isLoggedIn() {
-		$this->isLoggedIn = true;
-	}
+    // public function isLoggedIn() {
+	// 	$this->isLoggedIn = true;
+	// }
 
-	public function isNotLoggedIn() {
-		$this->loggedIn = false;
-    }
+	// public function isNotLoggedIn() {
+	// 	$this->loggedIn = false;
+    // }
 
     public function setPosts($posts) {
         $this->posts = $posts;
@@ -183,11 +184,11 @@ class BillboardView {
     }
 
     public function getPost() {
-        return new Post($_POST[self::$postTitle], $_POST[self::$postText], $this->sessionModel->getSessionUsername(), $_POST[self::$postEditById]);
+        return new Post($_POST[self::$postTitle], $_POST[self::$postText], $this->username, $_POST[self::$postEditById]);
     }
 
     public function getComment() {
-        return new PostComment($_POST[self::$commentText], $this->sessionModel->getSessionUsername(), $_POST[self::$postId]);
+        return new PostComment($_POST[self::$commentText], $this->username, $_POST[self::$postId]);
     }
 
     public function getPostId () {

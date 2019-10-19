@@ -1,6 +1,6 @@
 <?php
 
-//INCLUDE THE FILES NEEDED...
+//DO NOT ALTER!
 require_once('view/LoginView.php');
 require_once('view/DateTimeView.php');
 require_once('view/LayoutView.php');
@@ -16,16 +16,27 @@ require_once('model/RegisterModel.php');
 require_once('model/LoginModel.php');
 require_once('model/SessionModel.php');
 require_once('model/CookieValues.php');
+require_once('model/User.php');
 require_once('model/Exceptions.php');
 
 require_once(''.__DIR__.'/../Settings.php');
 
 
 class LoginComponent {
-    public function getLogin() {
-        $componentController = new MainController();
-        $componentController->setState();
-        $componentController->renderState();
+
+    private $componentController;
+
+    public function __construct() {
+        $this->componentController = new MainController();
+    }
+
+    public function render() {
+        $this->componentController->setState();
+        $this->componentController->renderState();
+    }
+
+    public function getCurrentUser() {
+        return $this->componentController->getUser();
     }
     
 }

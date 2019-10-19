@@ -2,16 +2,14 @@
 
 class BillboardController {
 
-    private $loginView;
     private $databaseModel;
     private $registerModel;
     private $billboardView;
 
+    public function __construct($user) {
 
-    public function __construct($loginView, $databaseModel, $billboardView) {
-        $this->databaseModel = $databaseModel;
-        $this->billboardView = $billboardView;
-        $this->loginView = $loginView;
+        $this->databaseModel = new \Billboard\DatabaseModel();
+        $this->billboardView = new BillboardView($user);
     }
 
     // $this->billboardController = new BillboardController($this->loginView, $this->databaseModel, $this->billboardView);
@@ -36,6 +34,10 @@ class BillboardController {
             $this->deletePostAndComments();
         }
         $this->setBillboardState();
+    }
+
+    public function renderState() {
+        $this->billboardView->response();
     }
 
     private function saveEditedPost() {
@@ -76,18 +78,18 @@ class BillboardController {
     }
 
     private function setBillboardState() {
-        $this->isLoggedIn();
+        // $this->isLoggedIn();
         $posts = $this->databaseModel->getPosts();
         $comments = $this->databaseModel->getComments();
         $this->billboardView->setPosts($posts);
         $this->billboardView->setComments($comments);
     }
 
-    private function isLoggedIn() {
-        if ($this->loginView->getIsLoggedIn()) {
-            $this->billboardView->isLoggedIn();
-        } else {
-            $this->billboardView->isNotLoggedIn();
-        }
-    }
+    // private function isLoggedIn() {
+    //     if ($this->isLoggedIn) {
+    //         $this->billboardView->isLoggedIn();
+    //     } else {
+    //         $this->billboardView->isNotLoggedIn();
+    //     }
+    // }
 }

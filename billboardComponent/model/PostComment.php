@@ -5,47 +5,31 @@ class PostComment {
     private $timeStamp;
     private $username;
     private $postId;
-    private $isCommentValid = true;
-    private $errorMessage = "";
 
     public function __construct($commentText, $username, $postId) {
-        $this->commentText = $this->validateText($commentText);
+        $this->validateText($commentText);
+        $this->commentText = $commentText;
         $this->postId = $postId;
         $this->username = $username;
         $this->timeStamp = date('Y-m-d H:i');
     }
 
     private function validateText($text) {
-        if($this->isFieldFilled($text) && $this->isNoHTMLTags($text)) {
-            return $text;
-        }
+        $this->isFieldFilled($text);
+        $this->isNoHTMLTags($text);
     }
 
     private function isFieldFilled($text) {
-        if (strlen($text) > 0) {
-            return true;
-        } else {
-            $this->isCommentValid = false;
-            $this->errorMessage = "You can't submit an empty Comment.";
+        if (strlen($text) == 0) {
+            throw new EmptyField('All empty field in submit');
         }
     }
 
     private function isNoHTMLTags($text) {
         $textWithoutTags = strip_tags($text);
-        if ($textWithoutTags == $text) {
-            return true;
-        } else {
-            $this->isCommentValid = false;
-            $this->errorMessage = "Comment can't contain script-tags.";
+        if ($textWithoutTags != $text) {
+            throw new HTMLTagsInText('Text: "'.$text.'" contains script tags');
         }
-    }
-
-    public function isValid() {
-        return $this->isCommentValid;
-    }
-
-    public function getErrorMessage() {
-        return $this->errorMessage;
     }
 
     public function getCommentText() {

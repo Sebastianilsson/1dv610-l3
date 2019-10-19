@@ -41,55 +41,58 @@ class BillboardController {
     }
 
     private function saveEditedPost() {
-        $editedPost = $this->billboardView->getPost();
-        $this->databaseModel->updateEditedPost($editedPost);
+        try {
+            $editedPost = $this->billboardView->getPost();
+            $this->databaseModel->updateEditedPost($editedPost);
+            $this->billboardView->setPostMessage(\Billboard\Messages::$postEdited);
+        } catch (EmptyField $error) {
+            $this->billboardView->setPostMessage(\Billboard\Messages::$emptyFieldPost);
+        } catch (HTMLTagsInText $error) {
+            $this->billboardView->setPostMessage(\Billboard\Messages::$scriptTagsInPost);
+        }
     }
 
     private function createAndSaveNewPost() {
-        $newPost = $this->billboardView->getPost();
-        if ($newPost->isValid()) {
+        try {
+            $newPost = $this->billboardView->getPost();
             $this->databaseModel->savePost($newPost);
-        } else {
-            $errorMessage = $newPost->getErrorMessage();
-            $this->billboardView->setPostMessage($errorMessage);
+            $this->billboardView->setPostMessage(\Billboard\Messages::$postCreated);
+        } catch (EmptyField $error) {
+            $this->billboardView->setPostMessage(\Billboard\Messages::$emptyFieldPost);
+        } catch (HTMLTagsInText $error) {
+            $this->billboardView->setPostMessage(\Billboard\Messages::$scriptTagsInPost);
         }
     }
 
     private function createAndSaveNewComment() {
-        $newComment = $this->billboardView->getComment();
-        if ($newComment->isValid()) {
+        try {
+            $newComment = $this->billboardView->getComment();
             $this->databaseModel->savePostComment($newComment);
-        } else {
-            $errorMessage = $newComment->getErrorMessage();
-            $this->billboardView->setPostMessage($errorMessage);
+            $this->billboardView->setPostMessage(\Billboard\Messages::$commentCreated);
+        } catch (EmptyField $error) {
+            $this->billboardView->setPostMessage(\Billboard\Messages::$emptyFieldComment);
+        } catch (HTMLTagsInText $error) {
+            $this->billboardView->setPostMessage(\Billboard\Messages::$scriptTagsInComment);
         }
-        
     }
 
     private function getPostToEdit() {
         $postId = $this->billboardView->getPostId();
         $postToBeEdit = $this->databaseModel->getPost($postId);
         $this->billboardView->setPostTitleAndTextEdit($postToBeEdit);
+        $this->billboardView->setPostMessage(\Billboard\Messages::$editYourPost);
     }
 
     private function deletePostAndComments() {
         $postId = $this->billboardView->getPostId();
         $this->databaseModel->deletePostAndComments($postId);
+        $this->billboardView->setPostMessage(\Billboard\Messages::$postDeleted);
     }
 
     private function setBillboardState() {
-        // $this->isLoggedIn();
         $posts = $this->databaseModel->getPosts();
         $comments = $this->databaseModel->getComments();
         $this->billboardView->setPosts($posts);
         $this->billboardView->setComments($comments);
     }
-
-    // private function isLoggedIn() {
-    //     if ($this->isLoggedIn) {
-    //         $this->billboardView->isLoggedIn();
-    //     } else {
-    //         $this->billboardView->isNotLoggedIn();
-    //     }
-    // }
 }

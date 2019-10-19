@@ -167,14 +167,6 @@ class BillboardView {
         return (isset($_POST[self::$postEdit]) && $this->isPostEdit);
     }
 
-    // public function isLoggedIn() {
-	// 	$this->isLoggedIn = true;
-	// }
-
-	// public function isNotLoggedIn() {
-	// 	$this->loggedIn = false;
-    // }
-
     public function setPosts($posts) {
         $this->posts = $posts;
     }
@@ -217,6 +209,5 @@ class BillboardView {
         $this->postTextEdit = $post['postText'];
         $this->isPostEdit = true;
         $this->postIdEdit = $post['id'];
-        $this->billboardMessage = "Update your post and click \"Submit Post\"";
     }
 }

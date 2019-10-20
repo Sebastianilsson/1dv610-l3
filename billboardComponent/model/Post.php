@@ -8,7 +8,7 @@ class Post {
     private $id;
 
     public function __construct($postTitle, $postText, $username, $id = null) {
-        $this->validateText($postTitle, $postText);
+        // $this->validateText($postTitle, $postText);
         $this->postTitle = $postTitle;
         $this->postText = $postText;
         $this->username = $username;
@@ -23,20 +23,20 @@ class Post {
         $this->isNoHTMLTags($text);
     }
 
-    private function isFieldFilled($text) {
-        if (strlen($text) == 0) {
-            throw new EmptyField('All empty field in submit');
-        }
-    }
+    // private function isFieldFilled($text) {
+    //     if (strlen($text) == 0) {
+    //         throw new EmptyField('All empty field in submit');
+    //     }
+    // }
 
-    private function isNoHTMLTags($text) {
-        $textWithoutTags = strip_tags($text);
-        if ($textWithoutTags != $text) {
-            throw new HTMLTagsInText('Text: "'.$text.'" contains script tags');
-        }
-    }
+    // private function isNoHTMLTags($text) {
+    //     $textWithoutTags = strip_tags($text);
+    //     if ($textWithoutTags != $text) {
+    //         throw new HTMLTagsInText('Text: "'.$text.'" contains script tags');
+    //     }
+    // }
 
-    public function getPostText() {
+    public function getText() {
         return $this->postText;
     }
 
@@ -44,7 +44,7 @@ class Post {
         return $this->username;
     }
 
-    public function getPostTitle() {
+    public function getTitle() {
         return $this->postTitle;
     }
 
@@ -52,7 +52,7 @@ class Post {
         return $this->timeStamp;
     }
 
-    public function getPostId() {
+    public function getId() {
         return $this->id;
     }
 

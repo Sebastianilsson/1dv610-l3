@@ -3,23 +3,16 @@
 class BillboardController {
 
     private $databaseModel;
-    private $registerModel;
+    private $validation;
     private $billboardView;
 
     public function __construct($user) {
 
         $this->databaseModel = new \Billboard\DatabaseModel();
+        $this->validation = new \Billboard\Validation();
         $this->billboardView = new BillboardView($user);
     }
 
-    // $this->billboardController = new BillboardController($this->loginView, $this->databaseModel, $this->billboardView);
-    // if ($this->billboardView->isBillboardRequested()) {
-    //     $this->billboardController->handleBillboardInteraction();
-    // }
-    // if ($this->billboardView->isBillboardRequested()) {
-    //     $this->layoutView->render($this->billboardView);
-    // } 
-    // $this->billboardView = new BillboardView($this->sessionModel);
     // Method called if registration of a new user is requested
     public function handleBillboardInteraction() {
         if ($this->billboardView->isEditPostSubmitted()) {
@@ -43,6 +36,7 @@ class BillboardController {
     private function saveEditedPost() {
         try {
             $editedPost = $this->billboardView->getPost();
+            $this->validation->postValidation($editedPost);
             $this->databaseModel->updateEditedPost($editedPost);
             $this->billboardView->setPostMessage(\Billboard\Messages::$postEdited);
         } catch (EmptyField $error) {
@@ -55,6 +49,7 @@ class BillboardController {
     private function createAndSaveNewPost() {
         try {
             $newPost = $this->billboardView->getPost();
+            $this->validation->postValidation($newPost);
             $this->databaseModel->savePost($newPost);
             $this->billboardView->setPostMessage(\Billboard\Messages::$postCreated);
         } catch (EmptyField $error) {
@@ -67,6 +62,7 @@ class BillboardController {
     private function createAndSaveNewComment() {
         try {
             $newComment = $this->billboardView->getComment();
+            $this->validation->commentValidation($newComment);
             $this->databaseModel->savePostComment($newComment);
             $this->billboardView->setPostMessage(\Billboard\Messages::$commentCreated);
         } catch (EmptyField $error) {

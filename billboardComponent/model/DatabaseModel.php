@@ -45,8 +45,8 @@ class DatabaseModel {
 
     public function savePost($post) {
         $username = $post->getUsername();
-        $postTitle = $post->getPostTitle();
-        $postText = $post->getPostText();
+        $postTitle = $post->getTitle();
+        $postText = $post->getText();
         $timeStamp = $post->getTimeStamp();
         $sql = "INSERT INTO posts (username, postTitle, postText, timeStamp) VALUES (?, ?, ?, ?)";
         if ($this->prepareStatement($sql)) {
@@ -58,7 +58,7 @@ class DatabaseModel {
 
     public function savePostComment($postComment) {
         $username = $postComment->getUsername();
-        $commentText = $postComment->getCommentText();
+        $commentText = $postComment->getText();
         $timeStamp = $postComment->getTimeStamp();
         $postId = $postComment->getPostId();
         $sql = "INSERT INTO comments (username, commentText, timeStamp, postId) VALUES (?, ?, ?, ?)";
@@ -118,9 +118,9 @@ class DatabaseModel {
     }
 
     public function updateEditedPost($post) {
-        $postTitle = $post->getPostTitle();
-        $postText = $post->getPostText();
-        $postId = $post->getPostId();
+        $postTitle = $post->getTitle();
+        $postText = $post->getText();
+        $postId = $post->getId();
         $this->connectToDatabase();
         $sql = "UPDATE posts SET postTitle=?, postText=? WHERE id=?";
         if ($this->prepareStatement($sql)) {

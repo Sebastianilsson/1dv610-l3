@@ -7,7 +7,7 @@ class PostComment {
     private $postId;
 
     public function __construct($commentText, $username, $postId) {
-        $this->validateText($commentText);
+        // $this->validateText($commentText);
         $this->commentText = $commentText;
         $this->postId = $postId;
         $this->username = $username;
@@ -19,20 +19,20 @@ class PostComment {
         $this->isNoHTMLTags($text);
     }
 
-    private function isFieldFilled($text) {
-        if (strlen($text) == 0) {
-            throw new EmptyField('All empty field in submit');
-        }
-    }
+    // private function isFieldFilled($text) {
+    //     if (strlen($text) == 0) {
+    //         throw new EmptyField('All empty field in submit');
+    //     }
+    // }
 
-    private function isNoHTMLTags($text) {
-        $textWithoutTags = strip_tags($text);
-        if ($textWithoutTags != $text) {
-            throw new HTMLTagsInText('Text: "'.$text.'" contains script tags');
-        }
-    }
+    // private function isNoHTMLTags($text) {
+    //     $textWithoutTags = strip_tags($text);
+    //     if ($textWithoutTags != $text) {
+    //         throw new HTMLTagsInText('Text: "'.$text.'" contains script tags');
+    //     }
+    // }
 
-    public function getCommentText() {
+    public function getText() {
         return $this->commentText;
     }
 

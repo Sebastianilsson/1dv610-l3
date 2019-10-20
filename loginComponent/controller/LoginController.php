@@ -13,13 +13,11 @@ class LoginController {
         $this->databaseModel = $databaseModel;
         $this->sessionModel = $sessionModel;
         $this->validation = new Validation();
-        // $this->loginModel = new LoginModel($this->loginView, $this->databaseModel);
     }
     // Method called if login was requested.
     public function newLogin() {
         try {
             $loginUser = $this->loginView->getLoginUser();
-            // $this->loginModel->getUserLoginInput();
             $this->validation->validateLoginCredentials($loginUser);
             $this->checkIfCredentialsMatchInDatabase($loginUser);
             $this->successfulNewLogin();
@@ -66,8 +64,8 @@ class LoginController {
     }
 
     private function checkIfCredentialsMatchInDatabase($user) {
-        // var_dump($this->databaseModel->userPasswordMatch($user->getUsername(), $user->getPassword()));
-        if (!$this->databaseModel->usernameExistsInDatabase($user->getUsername()) || !$this->databaseModel->userPasswordMatch($user->getUsername(), $user->getPassword())) {
+        if (!$this->databaseModel->usernameExistsInDatabase($user->getUsername()) || 
+        !$this->databaseModel->userPasswordMatch($user->getUsername(), $user->getPassword())) {
             throw new UsernameOrPasswordIsInvalid('Wrong username or password entered');
         }
     }

@@ -17,13 +17,13 @@ class MainController {
 
     public function __construct() {
         $this->databaseModel = new DatabaseModel();
-        $this->sessionModel = new SessionModel($this->databaseModel);
+        $this->sessionModel = new SessionModel();
 
         $this->loginView = new LoginView();
         $this->layoutView = new LayoutView();
         $this->registerView = new RegisterView();
         
-        $this->registerController = new RegisterController($this->registerView, $this->loginView, $this->databaseModel);
+        $this->registerController = new RegisterController($this->registerView, $this->databaseModel);
         $this->loginController = new LoginController($this->loginView, $this->databaseModel, $this->sessionModel);
     }
     // Routes the user through the application depending on user action

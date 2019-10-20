@@ -2,9 +2,6 @@
 
 class SessionModel {
 
-    private $databaseModel;
-    private $cookieUsername;
-    private $cookiePassword;
     private static $isLoggedIn = 'SessionModel::IsLoggedIn';
     private static $username = 'SessionModel::Username';
     private static $userAgent = 'SessionModel::UserAgent';
@@ -12,16 +9,15 @@ class SessionModel {
     private static $httpUserAgent = 'HTTP_USER_AGENT';
     private static $httpXForwardedFor = 'HTTP_X_FORWARDED_FOR';
 
-    public function __construct($databaseModel) {
-        $this->databaseModel = $databaseModel;
-    }
+    private static $doRegenerate = true;
+    private static $userIsLoggedIn = true;
 
     public function regenerateSessionId() {
-        session_regenerate_id(true);
+        session_regenerate_id(self::$doRegenerate);
     }
 
-    public function setSessionVariables($username) {
-        $_SESSION[self::$isLoggedIn] = true;
+    public function setSessionVariables(string $username) {
+        $_SESSION[self::$isLoggedIn] = self::$userIsLoggedIn;
         $_SESSION[self::$username] = $username;
         $_SESSION[self::$userAgent] = getenv(self::$httpUserAgent);
         $_SESSION[self::$clientIp] = getenv(self::$httpXForwardedFor);
@@ -31,11 +27,6 @@ class SessionModel {
         return isset($_SESSION[self::$isLoggedIn]);
     }
     
-    public function checkIfCookieIsValid() {
-        if ($this->databaseModel->cookiePasswordMatch()) {
-            return true;
-        }
-    }
 
     public function destroySession() {
         session_unset();
@@ -43,15 +34,12 @@ class SessionModel {
     }
 
     public function isSessionSet() {
-        if (isset($_SESSION[self::$isLoggedIn])) {
-            return true;
-        }
+        return isset($_SESSION[self::$isLoggedIn]);
     }
 
     public function sessionIsNotHijacked() {
-        if ($_SESSION[self::$userAgent] == getenv(self::$httpUserAgent) && $_SESSION[self::$clientIp] == getenv(self::$httpXForwardedFor)) {
-            return true;
-        }
+        return ($_SESSION[self::$userAgent] == getenv(self::$httpUserAgent) && 
+        $_SESSION[self::$clientIp] == getenv(self::$httpXForwardedFor));
     }
 
     public function getSessionUsername() {

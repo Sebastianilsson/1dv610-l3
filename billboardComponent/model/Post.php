@@ -1,6 +1,9 @@
 <?php
 
 class Post {
+
+    private static $currentDateAndTime = 'Y-m-d H:i';
+
     private $postTitle;
     private $postText;
     private $timeStamp;
@@ -8,12 +11,11 @@ class Post {
     private $id;
 
     public function __construct($postTitle, $postText, $username, $id = null) {
-        // $this->validateText($postTitle, $postText);
         $this->postTitle = $postTitle;
         $this->postText = $postText;
         $this->username = $username;
         $this->id = $id;
-        $this->timeStamp = date('Y-m-d H:i');
+        $this->timeStamp = date(self::$currentDateAndTime);
     }
 
     private function validateText($title, $text) {
@@ -22,19 +24,6 @@ class Post {
         $this->isNoHTMLTags($title);
         $this->isNoHTMLTags($text);
     }
-
-    // private function isFieldFilled($text) {
-    //     if (strlen($text) == 0) {
-    //         throw new EmptyField('All empty field in submit');
-    //     }
-    // }
-
-    // private function isNoHTMLTags($text) {
-    //     $textWithoutTags = strip_tags($text);
-    //     if ($textWithoutTags != $text) {
-    //         throw new HTMLTagsInText('Text: "'.$text.'" contains script tags');
-    //     }
-    // }
 
     public function getText() {
         return $this->postText;

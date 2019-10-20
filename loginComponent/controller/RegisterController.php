@@ -7,7 +7,7 @@ class RegisterController
     private $registerView;
     private $validation;
 
-    public function __construct($registerView, $databaseModel)
+    public function __construct(RegisterView $registerView, DatabaseModel $databaseModel)
     {
         $this->registerView = $registerView;
         $this->databaseModel = $databaseModel;

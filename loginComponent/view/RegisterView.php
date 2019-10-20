@@ -12,12 +12,12 @@ class RegisterView
     private $registerMessage = "";
     private $isLoggedIn = false;
 
-    public function response()
+    public function response(): string
     {
         return $this->generateRegistrationFormHTML();
     }
 
-    private function generateRegistrationFormHTML()
+    private function generateRegistrationFormHTML(): string
     {
         return '
         <a href="?">Back to login</a>
@@ -38,57 +38,57 @@ class RegisterView
         ';
     }
 
-    public function isRegisterFormRequested()
+    public function isRegisterFormRequested(): bool
     {
         return isset($_GET['register']);
     }
 
-    public function isRegistrationRequested()
+    public function isRegistrationRequested(): bool
     {
         return isset($_POST[self::$submitRegistration]);
     }
 
-    public function isUsernameSet()
+    public function isUsernameSet(): bool
     {
         return isset($_POST[self::$username]);
     }
 
-    public function isPasswordSet()
+    public function isPasswordSet(): bool
     {
         return isset($_POST[self::$password]);
     }
 
-    public function isRepeatedPasswordSet()
+    public function isRepeatedPasswordSet(): bool
     {
         return isset($_POST[self::$passwordRepeat]);
     }
 
-    public function getUserRegistration()
+    public function getUserRegistration(): RegisterUser
     {
         return new RegisterUser($_POST[self::$username], $_POST[self::$password], $_POST[self::$passwordRepeat]);
     }
 
-    public function getUsername()
+    public function getUsername(): string
     {
         return $_POST[self::$username];
     }
 
-    public function getPassword()
+    public function getPassword(): string
     {
         return $_POST[self::$password];
     }
 
-    public function getRepeatedPassword()
+    public function getRepeatedPassword(): string
     {
         return $_POST[self::$passwordRepeat];
     }
 
-    public function getIsLoggedIn()
+    public function getIsLoggedIn(): bool
     {
         return $this->isLoggedIn;
     }
 
-    public function isRegisterFormSubmitted()
+    public function isRegisterFormSubmitted(): bool
     {
         return isset($_POST[self::$submitRegistration]);
     }

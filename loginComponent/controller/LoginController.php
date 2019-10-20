@@ -8,7 +8,7 @@ class LoginController
     private $sessionModel;
     private $validation;
 
-    public function __construct($loginView, $databaseModel, $sessionModel)
+    public function __construct(LoginView $loginView, DatabaseModel $databaseModel, SessionModel $sessionModel)
     {
         $this->loginView = $loginView;
         $this->databaseModel = $databaseModel;

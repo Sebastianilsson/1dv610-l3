@@ -53,7 +53,7 @@ class MainController
         }
     }
 
-    public function getUser()
+    public function getUser(): User
     {
         if ($this->loginView->getIsLoggedIn()) {
             return new User($this->sessionModel->getSessionUsername(), $this->loginView->getIsLoggedIn());

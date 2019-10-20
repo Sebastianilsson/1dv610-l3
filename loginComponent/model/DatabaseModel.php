@@ -76,7 +76,7 @@ class DatabaseModel
         }
     }
 
-    public function usernameExistsInDatabase(string $username)
+    public function usernameExistsInDatabase(string $username): bool
     {
         $sql = "SELECT username FROM users WHERE username=?";
         $this->prepareStatement($sql);
@@ -88,7 +88,7 @@ class DatabaseModel
         return $nrOfUsersWithUsername == 1 ? true : false;
     }
 
-    public function userPasswordMatch(LoginUser $user)
+    public function userPasswordMatch(LoginUser $user): bool
     {
         $username = $user->getUsername();
         $password = $user->getPassword();

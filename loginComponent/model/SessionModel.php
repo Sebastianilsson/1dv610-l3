@@ -26,7 +26,7 @@ class SessionModel
         $_SESSION[self::$clientIp] = getenv(self::$httpXForwardedFor);
     }
 
-    public function userHasSession()
+    public function userHasSession(): bool
     {
         return isset($_SESSION[self::$isLoggedIn]);
     }
@@ -38,18 +38,18 @@ class SessionModel
         session_destroy();
     }
 
-    public function isSessionSet()
+    public function isSessionSet(): bool
     {
         return isset($_SESSION[self::$isLoggedIn]);
     }
 
-    public function sessionIsNotHijacked()
+    public function sessionIsNotHijacked(): bool
     {
         return ($_SESSION[self::$userAgent] == getenv(self::$httpUserAgent) &&
             $_SESSION[self::$clientIp] == getenv(self::$httpXForwardedFor));
     }
 
-    public function getSessionUsername()
+    public function getSessionUsername(): string
     {
         return $_SESSION[self::$username];
     }

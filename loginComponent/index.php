@@ -41,7 +41,7 @@ class LoginComponent
         $this->componentController->renderState();
     }
 
-    public function getCurrentUser()
+    public function getCurrentUser(): User
     {
         return $this->componentController->getUser();
     }

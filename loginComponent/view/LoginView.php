@@ -24,7 +24,7 @@ class LoginView
 	 *
 	 * @return  void BUT writes to standard output and cookies!
 	 */
-	public function response()
+	public function response(): string
 	{
 		$response = "";
 		if ($this->getIsLoggedIn()) {
@@ -40,7 +40,7 @@ class LoginView
 	 * @param $message, String output message
 	 * @return  void, BUT writes to standard output!
 	 */
-	private function generateLogoutButtonHTML()
+	private function generateLogoutButtonHTML(): string
 	{
 		return '
 			<form  method="post" >
@@ -55,7 +55,7 @@ class LoginView
 	 * @param $message, String output message
 	 * @return  void, BUT writes to standard output!
 	 */
-	private function generateLoginFormHTML()
+	private function generateLoginFormHTML(): string
 	{
 		return '
 			<a href="?register">Register a new user</a>
@@ -79,7 +79,7 @@ class LoginView
 		';
 	}
 
-	public function handleNewCookies()
+	public function handleNewCookies(): CookieValues
 	{
 		$cookieValues = new CookieValues($_POST[self::$username], $this->generateRandomString());
 		$this->setCookies($cookieValues);
@@ -92,7 +92,7 @@ class LoginView
 		setcookie(self::$cookiePassword, $cookieValues->getCookiePassword(), time() + 3600);
 	}
 
-	private function generateRandomString()
+	private function generateRandomString(): string
 	{
 		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$charactersLength = strlen($characters);
@@ -110,7 +110,7 @@ class LoginView
 		setcookie(self::$cookiePassword, "", time() - 3600);
 	}
 
-	public function userHasCookie()
+	public function userHasCookie(): bool
 	{
 		return isset($_COOKIE[self::$cookieName]);
 	}
@@ -120,12 +120,12 @@ class LoginView
 		return new LoginUser($_POST[self::$username], $_POST[self::$password]);
 	}
 
-	public function getCookiePassword()
+	public function getCookiePassword(): string
 	{
 		return $_COOKIE[self::$cookiePassword];
 	}
 
-	public function getCookieUsername()
+	public function getCookieUsername(): string
 	{
 		return $_COOKIE[self::$cookieName];
 	}
@@ -135,17 +135,17 @@ class LoginView
 		return new CookieValues($_COOKIE[self::$cookieName], $_COOKIE[self::$cookiePassword]);
 	}
 
-	public function getUsername()
+	public function getUsername(): string
 	{
 		return strip_tags($_POST[self::$username]);
 	}
 
-	public function getPassword()
+	public function getPassword(): string
 	{
 		return $_POST[self::$password];
 	}
 
-	public function getIsLoggedIn()
+	public function getIsLoggedIn(): bool
 	{
 		return $this->loggedIn;
 	}

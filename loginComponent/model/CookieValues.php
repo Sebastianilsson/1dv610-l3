@@ -11,12 +11,12 @@ class CookieValues
         $this->cookiePassword = $cookiePassword;
     }
 
-    public function getCookieUsername()
+    public function getCookieUsername(): string
     {
         return $this->cookieUsername;
     }
 
-    public function getCookiePassword()
+    public function getCookiePassword(): string
     {
         return $this->cookiePassword;
     }

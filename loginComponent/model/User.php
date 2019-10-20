@@ -11,12 +11,12 @@ class User
         $this->isLoggedIn = $isLoggedIn;
     }
 
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
 
-    public function getIsLoggedIn()
+    public function getIsLoggedIn(): bool
     {
         return $this->isLoggedIn;
     }

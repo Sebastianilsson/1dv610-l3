@@ -5,6 +5,7 @@ class BillboardView {
 	private static $postText = 'BillboardView::PostText';
     private static $billboardMessageId = 'BillboardView::PostMessage';
     private static $submitPost = 'BillboardView::SubmitPost';
+    private static $updatePost = 'BillboardView::UpdatePost';
     private static $postId = 'BillboardView::PostId';
     private static $commentText = 'BillboardView::CommentText';
     private static $submitComment = 'BillboardView::SubmitComment';
@@ -12,16 +13,23 @@ class BillboardView {
     private static $postEditById = 'BillboardView::PostEditById';
     private static $postDelete = 'BillboardView::PostDelete';
 
+    private static $visible = '';
+    private static $hidden = 'hidden="hidden"';
+
     private $isLoggedIn;
     private $username;
     
-    private $isPostEdit = false;
+    private $isPostEdit = false; //BEHÖVS??
     private $billboardMessage = "";
     private $postTitleEdit = "";
     private $postTextEdit = "";
     private $postIdEdit;
     private $posts;
     private $comments;
+
+    // FULLÖSNING
+    private $submitVisibility = '';
+    private $updateVisibility = 'hidden="hidden"';
 
     public function __construct($user) {
         $this->isLoggedIn = $user->getIsLoggedIn();
@@ -34,7 +42,6 @@ class BillboardView {
 
     private function generateBillboardHTML() {
         return '
-        <a href="?">Back to login</a>
         <h1>Billboard</h1>
         <p>' . $this->message() .'</p>
         <h3 id="' . self::$billboardMessageId . '">' .$this->billboardMessage. '</h3>
@@ -69,7 +76,8 @@ class BillboardView {
                 <label for="' . self::$postText . '">Your thoughts</label><br>
                 <textarea id="' . self::$postText . '" name="' . self::$postText . '" rows="4" cols="50">'.$this->postTextEdit.'</textarea><br>
 					
-				<input type="submit" name="' . self::$submitPost . '" value="Submit Post" />
+                <input type="submit" name="' . self::$submitPost . '" value="Submit Post" '.$this->submitVisibility.' />
+                <input type="submit" name="' . self::$updatePost . '" value="Update Post" '.$this->updateVisibility.' />
 			</fieldset>
         </form>
         ';
@@ -143,9 +151,9 @@ class BillboardView {
         }
     }
 
-    public function isBillboardRequested() {
-        return isset($_GET['viewBillboard']);
-    }
+    // public function isBillboardRequested() {
+    //     return isset($_GET['viewBillboard']);
+    // }
 
     public function isEditPostRequested() {
         return isset($_POST[self::$postEdit]);
@@ -164,7 +172,7 @@ class BillboardView {
     }
 
     public function isEditPostSubmitted() {
-        return (isset($_POST[self::$postEdit]) && $this->isPostEdit);
+        return (isset($_POST[self::$updatePost]));
     }
 
     public function setPosts($posts) {
@@ -209,5 +217,7 @@ class BillboardView {
         $this->postTextEdit = $post['postText'];
         $this->isPostEdit = true;
         $this->postIdEdit = $post['id'];
+        $this->submitVisibility = self::$hidden;
+        $this->updateVisibility = self::$visible;
     }
 }

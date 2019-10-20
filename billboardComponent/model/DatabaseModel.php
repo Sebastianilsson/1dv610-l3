@@ -72,19 +72,19 @@ class DatabaseModel
         $this->closeStatementAndConnection();
     }
 
-    public function getPosts()
+    public function getPosts(): array
     {
         $sql = "SELECT * FROM posts ORDER BY id DESC";
         return $this->selectAllFromOneTable($sql);
     }
 
-    public function getComments()
+    public function getComments(): array
     {
         $sql = "SELECT * FROM comments ORDER BY id DESC";
         return $this->selectAllFromOneTable($sql);
     }
 
-    private function selectAllFromOneTable($sql)
+    private function selectAllFromOneTable($sql): array
     {
         $this->prepareStatement($sql);
         mysqli_stmt_execute($this->statement);
@@ -111,7 +111,7 @@ class DatabaseModel
         $this->closeStatementAndConnection();
     }
 
-    public function getPost(string $postId)
+    public function getPost(string $postId): object
     {
         $sql = "SELECT * FROM posts WHERE id=?";
         $this->prepareStatement($sql);

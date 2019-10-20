@@ -1,8 +1,9 @@
 <?php
 
-class BillboardView {
+class BillboardView
+{
     private static $postTitle = 'BillboardView::PostTitle';
-	private static $postText = 'BillboardView::PostText';
+    private static $postText = 'BillboardView::PostText';
     private static $billboardMessageId = 'BillboardView::PostMessage';
     private static $submitPost = 'BillboardView::SubmitPost';
     private static $updatePost = 'BillboardView::UpdatePost';
@@ -18,8 +19,7 @@ class BillboardView {
 
     private $isLoggedIn;
     private $username;
-    
-    private $isPostEdit = false; //BEHÖVS??
+
     private $billboardMessage = "";
     private $postTitleEdit = "";
     private $postTextEdit = "";
@@ -31,28 +31,32 @@ class BillboardView {
     private $submitVisibility = '';
     private $updateVisibility = 'hidden="hidden"';
 
-    public function __construct($user) {
+    public function __construct($user)
+    {
         $this->isLoggedIn = $user->getIsLoggedIn();
         $this->username = $user->getUsername();
     }
 
-    public function response() {
+    public function response()
+    {
         echo $this->generateBillboardHTML();
     }
 
-    private function generateBillboardHTML() {
+    private function generateBillboardHTML(): string
+    {
         return '
         <h1>Billboard</h1>
-        <p>' . $this->message() .'</p>
-        <h3 id="' . self::$billboardMessageId . '">' .$this->billboardMessage. '</h3>
-        '.$this->viewPostForm().'
+        <p>' . $this->message() . '</p>
+        <h3 id="' . self::$billboardMessageId . '">' . $this->billboardMessage . '</h3>
+        ' . $this->viewPostForm() . '
         <br>
         <hr>
-        '.$this->viewPosts().'
+        ' . $this->viewPosts() . '
         ';
     }
 
-    private function message() {
+    private function message(): string
+    {
         if ($this->isLoggedIn) {
             return 'You are logged in and are now able to add/edit/remove posts to the billboard as well as comment on other posts.';
         } else {
@@ -60,58 +64,60 @@ class BillboardView {
         }
     }
 
-    private function viewPostForm() {
+    private function viewPostForm(): string
+    {
         if ($this->isLoggedIn) {
             return '
         <form method="post" > 
 			<fieldset>
 				<legend>New Billboard Post - share whats on your mind</legend>
                 
-                <input type="hidden" name="'.self::$postEdit.'" value="'.$this->isPostEdit.'" />
-                <input type="hidden" name="'.self::$postEditById.'" value="'.$this->postIdEdit.'" />
+                <input type="hidden" name="' . self::$postEditById . '" value="' . $this->postIdEdit . '" />
                 
                 <label for="' . self::$postTitle . '">Post title</label><br>
-                <input type="text" id="' . self::$postTitle . '" name="' . self::$postTitle . '" value="'.$this->postTitleEdit.'" /><br>
+                <input type="text" id="' . self::$postTitle . '" name="' . self::$postTitle . '" value="' . $this->postTitleEdit . '" /><br>
 
                 <label for="' . self::$postText . '">Your thoughts</label><br>
-                <textarea id="' . self::$postText . '" name="' . self::$postText . '" rows="4" cols="50">'.$this->postTextEdit.'</textarea><br>
+                <textarea id="' . self::$postText . '" name="' . self::$postText . '" rows="4" cols="50">' . $this->postTextEdit . '</textarea><br>
 					
-                <input type="submit" name="' . self::$submitPost . '" value="Submit Post" '.$this->submitVisibility.' />
-                <input type="submit" name="' . self::$updatePost . '" value="Update Post" '.$this->updateVisibility.' />
+                <input type="submit" name="' . self::$submitPost . '" value="Submit Post" ' . $this->submitVisibility . ' />
+                <input type="submit" name="' . self::$updatePost . '" value="Update Post" ' . $this->updateVisibility . ' />
 			</fieldset>
         </form>
         ';
         }
     }
 
-    private function viewPosts() {
+    private function viewPosts(): string
+    {
         $posts = '';
         foreach ($this->posts as $post => $postContent) {
             $posts .= '
             <div class="post" style="border:solid;padding:20px;width:450px;margin-bottom:10px;">
-                <h1>'.$postContent->postTitle.'</h1>
-                '.$this->handleYourPost($postContent->username, $postContent->id).'
+                <h1>' . $postContent->postTitle . '</h1>
+                ' . $this->handleYourPost($postContent->username, $postContent->id) . '
                 <hr>
-                <h4>Written by : '.$postContent->username.'</h4>
-                <p>'.$postContent->postText.'</p>
-                <p>'.$postContent->timeStamp.'</p>
-                '.$this->commentForm($postContent).'
-                '.$this->viewComments($postContent->id).'
+                <h4>Written by : ' . $postContent->username . '</h4>
+                <p>' . $postContent->postText . '</p>
+                <p>' . $postContent->timeStamp . '</p>
+                ' . $this->commentForm($postContent) . '
+                ' . $this->viewComments($postContent->id) . '
             </div>
             ';
         }
         return $posts;
     }
 
-    private function commentForm($post) {
+    private function commentForm($post): string
+    {
         if ($this->isLoggedIn) {
             return '
             <div>
                 <form method="post" > 
                 <fieldset>
-                    <legend>New Comment On "'.$post->postTitle.'" - what do you think about his update?</legend>
+                    <legend>New Comment On "' . $post->postTitle . '" - what do you think about his update?</legend>
 
-                    <input type="hidden" name="'.self::$postId.'" value="'.$post->id.'" />
+                    <input type="hidden" name="' . self::$postId . '" value="' . $post->id . '" />
 
                     <label for="' . self::$commentText . '">Comment</label><br>
                     <textarea id="' . self::$commentText . '" name="' . self::$commentText . '" rows="4" cols="50"></textarea><br>
@@ -124,97 +130,109 @@ class BillboardView {
         }
     }
 
-    private function viewComments($postId) {
+    private function viewComments($postId): string
+    {
         $comments = '<br><h3>Comments</h3>';
         foreach ($this->comments as $comment => $commentContent) {
-            if($commentContent->postId == $postId) {
+            if ($commentContent->postId == $postId) {
                 $comments .= '
                 <hr>
-                <p>'.$commentContent->username.' says: '.$commentContent->commentText.'</p>
-                <p>'.$commentContent->timeStamp.'</p>
+                <p>' . $commentContent->username . ' says: ' . $commentContent->commentText . '</p>
+                <p>' . $commentContent->timeStamp . '</p>
                 <br>
                 ';
-                }
+            }
         }
         return $comments;
     }
 
-    private function handleYourPost($postAuthor, $postId) {
+    private function handleYourPost($postAuthor, $postId): string
+    {
         if ($this->isLoggedIn && $this->username == $postAuthor) {
             return '
             <form method="post">
-                <input type="hidden" name="'.self::$postId.'" value="'.$postId.'" />
-                <input type="submit" name="'.self::$postEdit.'" value="Edit Post" />
-                <input type="submit" name="'.self::$postDelete.'" value="Delete Post" />
+                <input type="hidden" name="' . self::$postId . '" value="' . $postId . '" />
+                <input type="submit" name="' . self::$postEdit . '" value="Edit Post" />
+                <input type="submit" name="' . self::$postDelete . '" value="Delete Post" />
             </form>
             ';
         }
     }
 
-    // public function isBillboardRequested() {
-    //     return isset($_GET['viewBillboard']);
-    // }
-
-    public function isEditPostRequested() {
+    public function isEditPostRequested(): bool
+    {
         return isset($_POST[self::$postEdit]);
     }
 
-    public function isDeletePostRequested() {
+    public function isDeletePostRequested(): bool
+    {
         return isset($_POST[self::$postDelete]);
     }
 
-    public function isNewPostSubmitted() {
+    public function isNewPostSubmitted(): bool
+    {
         return isset($_POST[self::$submitPost]);
     }
 
-    public function isNewCommentSubmitted() {
+    public function isNewCommentSubmitted(): bool
+    {
         return isset($_POST[self::$submitComment]);
     }
 
-    public function isEditPostSubmitted() {
+    public function isEditPostSubmitted(): bool
+    {
         return (isset($_POST[self::$updatePost]));
     }
 
-    public function setPosts($posts) {
+    public function setPosts($posts)
+    {
         $this->posts = $posts;
     }
 
-    public function setComments($comments) {
+    public function setComments($comments)
+    {
         $this->comments = $comments;
     }
 
-    public function getPost() {
+    public function getPost(): Post
+    {
         return new Post($_POST[self::$postTitle], $_POST[self::$postText], $this->username, $_POST[self::$postEditById]);
     }
 
-    public function getComment() {
+    public function getComment(): PostComment
+    {
         return new PostComment($_POST[self::$commentText], $this->username, $_POST[self::$postId]);
     }
 
-    public function getPostId () {
+    public function getPostId(): string
+    {
         return $_POST[self::$postId];
     }
-    
-    public function getIsLoggedIn() {
+
+    public function getIsLoggedIn(): bool
+    {
         return $this->isLoggedIn;
     }
 
-    public function getPostTitle() {
+    public function getPostTitle(): string
+    {
         return $_POST[self::$postTitle];
     }
 
-    public function getPostText() {
+    public function getPostText(): string
+    {
         return $_POST[self::$postText];
     }
 
-    public function setPostMessage($message) {
+    public function setPostMessage($message)
+    {
         $this->billboardMessage = $message;
     }
 
-    public function setPostTitleAndTextEdit($post) {
+    public function setPostTitleAndTextEdit($post)
+    {
         $this->postTitleEdit = $post->postTitle;
         $this->postTextEdit = $post->postText;
-        $this->isPostEdit = true;
         $this->postIdEdit = $post->id;
         $this->submitVisibility = self::$hidden;
         $this->updateVisibility = self::$visible;

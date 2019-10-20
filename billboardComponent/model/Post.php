@@ -20,27 +20,27 @@ class Post
         $this->timeStamp = date(self::$currentDateAndTime);
     }
 
-    public function getText()
+    public function getText(): string
     {
         return $this->postText;
     }
 
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->postTitle;
     }
 
-    public function getTimeStamp()
+    public function getTimeStamp(): string
     {
         return $this->timeStamp;
     }
 
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }

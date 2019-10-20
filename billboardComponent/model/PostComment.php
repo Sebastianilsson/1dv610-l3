@@ -18,22 +18,22 @@ class PostComment
         $this->timeStamp = date(self::$currentDateAndTime);
     }
 
-    public function getText()
+    public function getText(): string
     {
         return $this->commentText;
     }
 
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
 
-    public function getTimeStamp()
+    public function getTimeStamp(): string
     {
         return $this->timeStamp;
     }
 
-    public function getPostId()
+    public function getPostId(): string
     {
         return $this->postId;
     }

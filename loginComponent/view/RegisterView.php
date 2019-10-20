@@ -1,6 +1,7 @@
 <?php
 
-class RegisterView {
+class RegisterView
+{
 
     private static $message = 'RegisterView::Message';
     private static $username = 'RegisterView::UserName';
@@ -11,79 +12,94 @@ class RegisterView {
     private $registerMessage = "";
     private $isLoggedIn = false;
 
-    public function response() {
+    public function response()
+    {
         return $this->generateRegistrationFormHTML();
     }
 
-    private function generateRegistrationFormHTML() {
+    private function generateRegistrationFormHTML()
+    {
         return '
         <a href="?">Back to login</a>
         <h2>Register new user</h2>
         <form method="post" action="?register">
             <fieldset>
                 <legend>Register - choose a username and password</legend>
-                <p id='. self::$message .'>'. $this->registerMessage .'</p>
+                <p id=' . self::$message . '>' . $this->registerMessage . '</p>
                 <label>Username</label>
-                <input id='. self::$username .' type="text" name="'. self::$username .'" placeholder="Enter a username..." value="'.$this->name.'" /> <br>
+                <input id=' . self::$username . ' type="text" name="' . self::$username . '" placeholder="Enter a username..." value="' . $this->name . '" /> <br>
                 <label>Password</label>
-                <input id='. self::$password .' type="password" name="'. self::$password .'" placeholder="Enter a password..." /> <br>
+                <input id=' . self::$password . ' type="password" name="' . self::$password . '" placeholder="Enter a password..." /> <br>
                 <label>Repeat password</label>
-                <input id='. self::$passwordRepeat .' type="password" name="'. self::$passwordRepeat .'" placeholder="Repeat your password..." /> <br>
-                <input type="submit" name="'. self::$submitRegistration .'" />
+                <input id=' . self::$passwordRepeat . ' type="password" name="' . self::$passwordRepeat . '" placeholder="Repeat your password..." /> <br>
+                <input type="submit" name="' . self::$submitRegistration . '" />
             </fieldset>
         </form>
         ';
     }
 
-    public function isRegisterFormRequested() {
+    public function isRegisterFormRequested()
+    {
         return isset($_GET['register']);
     }
 
-    public function isRegistrationRequested() {
+    public function isRegistrationRequested()
+    {
         return isset($_POST[self::$submitRegistration]);
     }
 
-    public function isUsernameSet() {
+    public function isUsernameSet()
+    {
         return isset($_POST[self::$username]);
     }
 
-    public function isPasswordSet() {
+    public function isPasswordSet()
+    {
         return isset($_POST[self::$password]);
     }
 
-    public function isRepeatedPasswordSet() {
+    public function isRepeatedPasswordSet()
+    {
         return isset($_POST[self::$passwordRepeat]);
     }
 
-    public function getUserRegistration() {
+    public function getUserRegistration()
+    {
         return new RegisterUser($_POST[self::$username], $_POST[self::$password], $_POST[self::$passwordRepeat]);
     }
 
-    public function getUsername() {
+    public function getUsername()
+    {
         return $_POST[self::$username];
     }
 
-    public function getPassword() {
+    public function getPassword()
+    {
         return $_POST[self::$password];
     }
 
-    public function getRepeatedPassword() {
+    public function getRepeatedPassword()
+    {
         return $_POST[self::$passwordRepeat];
     }
 
-    public function getIsLoggedIn() {
+    public function getIsLoggedIn()
+    {
         return $this->isLoggedIn;
     }
 
-    public function isRegisterFormSubmitted() {
+    public function isRegisterFormSubmitted()
+    {
         return isset($_POST[self::$submitRegistration]);
     }
 
-    public function setUsernameValue($name) {
+    public function setUsernameValue($name)
+    {
         $this->name = $name;
     }
 
-    public function setRegisterMessage($message) {
+    public function setRegisterMessage($message)
+    {
         $this->registerMessage = $message;
     }
 }

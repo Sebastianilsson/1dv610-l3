@@ -1,19 +1,22 @@
 <?php
 
-class RegisterController {
+class RegisterController
+{
 
     private $databaseModel;
     private $registerView;
     private $validation;
 
-    public function __construct($registerView, $databaseModel) {
+    public function __construct($registerView, $databaseModel)
+    {
         $this->registerView = $registerView;
         $this->databaseModel = $databaseModel;
         $this->validation = new Validation();
     }
 
     // Method called if registration of a new user is requested
-    public function newRegistration() {
+    public function newRegistration()
+    {
         try {
             $registerUser = $this->registerView->getUserRegistration();
             $this->validation->validateRegisterInput($registerUser);
@@ -36,6 +39,5 @@ class RegisterController {
         } finally {
             $this->registerView->setUsernameValue(strip_tags($this->registerView->getUsername()));
         }
-        
     }
 }

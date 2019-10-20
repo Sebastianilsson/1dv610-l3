@@ -1,6 +1,7 @@
 <?php
 
-class DatabaseModel {
+class DatabaseModel
+{
 
     private $databaseServerName;
     private $databaseUserName;
@@ -10,7 +11,8 @@ class DatabaseModel {
     private $connection;
     private $statement;
 
-    public function __construct() {
+    public function __construct()
+    {
         $settings = new Settings();
         $this->databaseServerName = $settings->getDatabaseServerName();
         $this->databaseUserName = $settings->getDatabaseUserName();
@@ -18,15 +20,17 @@ class DatabaseModel {
         $this->databaseName = $settings->getDatabaseName();
     }
 
-    private function connectToDatabase() {
+    private function connectToDatabase()
+    {
         $this->connection = mysqli_connect($this->databaseServerName, $this->databaseUserName, $this->databasePassword, $this->databaseName);
         if (!$this->connection) {
             throw new FailedConnection("Failed to connect to database...");
-            die("Connection failed...".mysqli_connect_error());
+            die("Connection failed..." . mysqli_connect_error());
         }
     }
 
-    private function prepareStatement($sqlQuery) {
+    private function prepareStatement($sqlQuery)
+    {
         $this->connectToDatabase();
         $this->statement = mysqli_stmt_init($this->connection);
         if (!mysqli_stmt_prepare($this->statement, $sqlQuery)) {
@@ -34,12 +38,14 @@ class DatabaseModel {
         }
     }
 
-    private function closeStatementAndConnection() {
+    private function closeStatementAndConnection()
+    {
         mysqli_stmt_close($this->statement);
         mysqli_close($this->connection);
     }
 
-    public function checkIfUsernameIsFree($username) {
+    public function checkIfUsernameIsFree(string $username)
+    {
         $sql = "SELECT username FROM users WHERE username=?";
         $this->prepareStatement($sql);
         mysqli_stmt_bind_param($this->statement, "s", $username);
@@ -48,11 +54,12 @@ class DatabaseModel {
         $nrOfUsersWithUsername = mysqli_stmt_num_rows($this->statement);
         $this->closeStatementAndConnection();
         if ($nrOfUsersWithUsername > 0) {
-            throw new UsernameAlreadyExists('The username "'.$username.'" already exists in the database');
+            throw new UsernameAlreadyExists('The username "' . $username . '" already exists in the database');
         }
     }
 
-    public function saveUserToDatabase(RegisterUser $user) {
+    public function saveUserToDatabase(RegisterUser $user)
+    {
         $username = $user->getUsername();
         $password = $user->getPassword();
         $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
@@ -62,13 +69,15 @@ class DatabaseModel {
         $this->closeStatementAndConnection();
     }
 
-    public function checkIfCredentialsMatch(LoginUser $user) {
+    public function checkIfCredentialsMatch(LoginUser $user)
+    {
         if (!$this->usernameExistsInDatabase($user->getUsername()) || !$this->userPasswordMatch($user)) {
             throw new UsernameOrPasswordIsInvalid('Wrong username or password entered');
         }
     }
 
-    public function usernameExistsInDatabase($username) {
+    public function usernameExistsInDatabase(string $username)
+    {
         $sql = "SELECT username FROM users WHERE username=?";
         $this->prepareStatement($sql);
         mysqli_stmt_bind_param($this->statement, "s", $username);
@@ -79,7 +88,8 @@ class DatabaseModel {
         return $nrOfUsersWithUsername == 1 ? true : false;
     }
 
-    public function userPasswordMatch(LoginUser $user) {
+    public function userPasswordMatch(LoginUser $user)
+    {
         $username = $user->getUsername();
         $password = $user->getPassword();
         $sql = "SELECT * FROM users WHERE username=?";
@@ -87,14 +97,15 @@ class DatabaseModel {
         mysqli_stmt_bind_param($this->statement, "s", $username);
         mysqli_stmt_execute($this->statement);
         $matchingUser = mysqli_stmt_get_result($this->statement);
-        if ($user = mysqli_fetch_assoc($matchingUser)) {    
+        if ($user = mysqli_fetch_assoc($matchingUser)) {
             $matchingPassword = password_verify($password, $user['password']);
             $this->closeStatementAndConnection();
             return $matchingPassword ? true : false;
         }
     }
 
-    public function saveCookieCredentials(CookieValues $cookieValues) {
+    public function saveCookieCredentials(CookieValues $cookieValues)
+    {
         $cookieUsername = $cookieValues->getCookieUsername();
         $cookiePassword = $cookieValues->getCookiePassword();
         $this->removeOldCookieIfExisting($cookieUsername);
@@ -105,14 +116,16 @@ class DatabaseModel {
         $this->closeStatementAndConnection();
     }
 
-    private function removeOldCookieIfExisting($username) {
+    private function removeOldCookieIfExisting($username)
+    {
         $sql = "DELETE FROM cookies WHERE username='$username'";
         $this->prepareStatement($sql);
         mysqli_stmt_execute($this->statement);
         $this->closeStatementAndConnection();
     }
 
-    public function cookiePasswordMatch(CookieValues $cookieValues) {
+    public function cookiePasswordMatch(CookieValues $cookieValues)
+    {
         $cookieUsername = $cookieValues->getCookieUsername();
         $cookiePassword = $cookieValues->getCookiePassword();
         $sql = "SELECT * FROM cookies WHERE username=?";
@@ -120,10 +133,10 @@ class DatabaseModel {
         mysqli_stmt_bind_param($this->statement, "s", $cookieUsername);
         mysqli_stmt_execute($this->statement);
         $matchingUser = mysqli_stmt_get_result($this->statement);
-        $user = mysqli_fetch_assoc($matchingUser);    
+        $user = mysqli_fetch_assoc($matchingUser);
         $this->closeStatementAndConnection();
         if ($cookiePassword != $user['password']) {
-            throw new TamperedCookie('"'.$cookiePassword.'" does not match the existing cookie');
+            throw new TamperedCookie('"' . $cookiePassword . '" does not match the existing cookie');
         }
     }
 }

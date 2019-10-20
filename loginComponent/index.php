@@ -22,29 +22,28 @@ require_once('model/RegisterUser.php');
 require_once('model/User.php');
 require_once('model/Exceptions.php');
 
-require_once(''.__DIR__.'/../Settings.php');
+require_once('' . __DIR__ . '/../Settings.php');
 
 
-class LoginComponent {
+class LoginComponent
+{
 
     private $componentController;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->componentController = new MainController();
     }
 
-    public function render() {
+    public function render()
+    {
         $this->componentController->setState();
         $this->componentController->renderState();
     }
 
-    public function getCurrentUser() {
+    public function getCurrentUser()
+    {
         return $this->componentController->getUser();
     }
-    
 }
 // Create main controller
-
-
-
-

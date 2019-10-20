@@ -1,21 +1,23 @@
 <?php
 
-class LoginController {
+class LoginController
+{
 
     private $loginView;
     private $databaseModel;
     private $sessionModel;
-    private $loginModel;
     private $validation;
 
-    public function __construct($loginView, $databaseModel, $sessionModel) {
+    public function __construct($loginView, $databaseModel, $sessionModel)
+    {
         $this->loginView = $loginView;
         $this->databaseModel = $databaseModel;
         $this->sessionModel = $sessionModel;
         $this->validation = new Validation();
     }
     // Method called if login was requested.
-    public function newLogin() {
+    public function newLogin()
+    {
         try {
             $loginUser = $this->loginView->getLoginUser();
             $this->validation->validateLoginCredentials($loginUser);
@@ -32,11 +34,11 @@ class LoginController {
         } finally {
             $this->loginView->setUsernameValue($this->loginView->getUsername());
         }
-        
     }
 
     // Method called if the user already has a cookie from the site
-    public function loginWithCookies() {
+    public function loginWithCookies()
+    {
         try {
             $this->databaseModel->cookiePasswordMatch($this->loginView->getCookieUsernameAndPassword());
             $this->successfulCookieLogin();
@@ -47,7 +49,8 @@ class LoginController {
     }
 
     // Method called if the user already has an active session from the site
-    public function loginWithSession() {
+    public function loginWithSession()
+    {
         if ($this->sessionModel->sessionIsNotHijacked()) {
             $this->sessionModel->regenerateSessionId();
             $this->loginView->isLoggedIn();
@@ -55,7 +58,8 @@ class LoginController {
     }
 
     // Method called if logout is requested
-    public function logout() {
+    public function logout()
+    {
         if ($this->sessionModel->isSessionSet()) {
             $this->sessionModel->destroySession();
             $this->loginView->destroyCookies();
@@ -63,7 +67,8 @@ class LoginController {
         }
     }
 
-    private function successfulNewLogin() {
+    private function successfulNewLogin()
+    {
         $this->sessionModel->regenerateSessionId();
         $this->sessionModel->setSessionVariables($this->loginView->getUsername());
         $this->loginView->isLoggedIn();
@@ -75,7 +80,8 @@ class LoginController {
         }
     }
 
-    private function successfulCookieLogin() {
+    private function successfulCookieLogin()
+    {
         $this->loginView->isLoggedIn();
         $this->sessionModel->regenerateSessionId();
         if (!$this->sessionModel->isSessionSet()) {

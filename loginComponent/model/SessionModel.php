@@ -1,6 +1,7 @@
 <?php
 
-class SessionModel {
+class SessionModel
+{
 
     private static $isLoggedIn = 'SessionModel::IsLoggedIn';
     private static $username = 'SessionModel::Username';
@@ -12,37 +13,44 @@ class SessionModel {
     private static $doRegenerate = true;
     private static $userIsLoggedIn = true;
 
-    public function regenerateSessionId() {
+    public function regenerateSessionId()
+    {
         session_regenerate_id(self::$doRegenerate);
     }
 
-    public function setSessionVariables(string $username) {
+    public function setSessionVariables(string $username)
+    {
         $_SESSION[self::$isLoggedIn] = self::$userIsLoggedIn;
         $_SESSION[self::$username] = $username;
         $_SESSION[self::$userAgent] = getenv(self::$httpUserAgent);
         $_SESSION[self::$clientIp] = getenv(self::$httpXForwardedFor);
     }
 
-    public function userHasSession() {
+    public function userHasSession()
+    {
         return isset($_SESSION[self::$isLoggedIn]);
     }
-    
 
-    public function destroySession() {
+
+    public function destroySession()
+    {
         session_unset();
         session_destroy();
     }
 
-    public function isSessionSet() {
+    public function isSessionSet()
+    {
         return isset($_SESSION[self::$isLoggedIn]);
     }
 
-    public function sessionIsNotHijacked() {
-        return ($_SESSION[self::$userAgent] == getenv(self::$httpUserAgent) && 
-        $_SESSION[self::$clientIp] == getenv(self::$httpXForwardedFor));
+    public function sessionIsNotHijacked()
+    {
+        return ($_SESSION[self::$userAgent] == getenv(self::$httpUserAgent) &&
+            $_SESSION[self::$clientIp] == getenv(self::$httpXForwardedFor));
     }
 
-    public function getSessionUsername() {
+    public function getSessionUsername()
+    {
         return $_SESSION[self::$username];
     }
 }

@@ -1,19 +1,23 @@
 <?php
 
-class User {
+class User
+{
     private $username = "";
     private $isLoggedIn = false;
 
-    public function __construct($username, $isLoggedIn) {
+    public function __construct(string $username, bool $isLoggedIn)
+    {
         $this->username = $username;
         $this->isLoggedIn = $isLoggedIn;
     }
 
-    public function getUsername() {
+    public function getUsername()
+    {
         return $this->username;
     }
 
-    public function getIsLoggedIn() {
+    public function getIsLoggedIn()
+    {
         return $this->isLoggedIn;
     }
 }

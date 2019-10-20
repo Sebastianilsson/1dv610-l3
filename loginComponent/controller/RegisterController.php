@@ -5,7 +5,6 @@ class RegisterController {
     private $loginView;
     private $databaseModel;
     private $registerView;
-    // private $registerModel;
     private $validation;
 
     public function __construct($registerView, $loginView, $databaseModel) {
@@ -13,23 +12,16 @@ class RegisterController {
         $this->databaseModel = $databaseModel;
         $this->loginView = $loginView;
         $this->validation = new Validation();
-        // $this->registerModel = new RegisterModel($this->registerView, $this->databaseModel);
     }
 
     // Method called if registration of a new user is requested
     public function newRegistration() {
         try {
-            // $this->registerModel->getUserRegistrationInput();
-            // $this->registerModel->validateRegisterInput();
-            // $this->registerModel->hashPassword();
-            // $this->registerModel->saveUserToDatabase();
-            // $this->loginView->setUsernameValue($this->registerView->getUsername());
-            // $this->loginView->setLoginMessage(Messages::$successfulRegistration);
             $registerUser = $this->registerView->getUserRegistration();
             $this->validation->validateRegisterInput($registerUser);
             $this->databaseModel->checkIfUsernameIsFree($registerUser->getUsername());
             $registerUser->hashPassword();
-            $this->databaseModel->saveUserToDatabase($registerUser->getUsername(), $registerUser->getPassword());
+            $this->databaseModel->saveUserToDatabase($registerUser);
             header("Location: ?");
         } catch (ShortUsernameAndPassword $error) {
             $this->registerView->setRegisterMessage(Messages::$toShortUsernameAndPassword);

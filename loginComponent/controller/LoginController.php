@@ -19,7 +19,7 @@ class LoginController {
         try {
             $loginUser = $this->loginView->getLoginUser();
             $this->validation->validateLoginCredentials($loginUser);
-            $this->checkIfCredentialsMatchInDatabase($loginUser);
+            $this->databaseModel->checkIfCredentialsMatch($loginUser);
             $this->successfulNewLogin();
         } catch (MissingUsernameException $error) {
             $this->loginView->setLoginMessage(Messages::$usernameMissing);
@@ -60,13 +60,6 @@ class LoginController {
             $this->sessionModel->destroySession();
             $this->loginView->destroyCookies();
             $this->loginView->setLoginMessage(Messages::$logoutBye);
-        }
-    }
-
-    private function checkIfCredentialsMatchInDatabase($user) {
-        if (!$this->databaseModel->usernameExistsInDatabase($user->getUsername()) || 
-        !$this->databaseModel->userPasswordMatch($user->getUsername(), $user->getPassword())) {
-            throw new UsernameOrPasswordIsInvalid('Wrong username or password entered');
         }
     }
 

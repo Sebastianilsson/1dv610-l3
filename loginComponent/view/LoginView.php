@@ -124,7 +124,7 @@ class LoginView {
 	}
 
 	public function getUsername() {
-        return $_POST[self::$username];
+        return strip_tags($_POST[self::$username]);
     }
 
     public function getPassword() {

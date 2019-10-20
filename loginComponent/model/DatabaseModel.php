@@ -40,6 +40,7 @@ class DatabaseModel {
     }
 
     public function checkIfUsernameIsFree($username) {
+        $username = $user->getUsername();
         $sql = "SELECT username FROM users WHERE username=?";
         $this->prepareStatement($sql);
         mysqli_stmt_bind_param($this->statement, "s", $username);
@@ -52,7 +53,9 @@ class DatabaseModel {
         }
     }
 
-    public function saveUserToDatabase($username, $password) {
+    public function saveUserToDatabase(RegisterUser $user) {
+        $username = $user->getUsername();
+        $password = $user->getPassword();
         $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
         $this->prepareStatement($sql);
         mysqli_stmt_bind_param($this->statement, "ss", $username, $password);
@@ -60,7 +63,12 @@ class DatabaseModel {
         $this->closeStatementAndConnection();
     }
 
-    // KOLLA PÅ RETURN
+    public function checkIfCredentialsMatch(LoginUser $user) {
+        if (!$this->usernameExistsInDatabase($user->getUsername()) || !$this->userPasswordMatch($user)) {
+            throw new UsernameOrPasswordIsInvalid('Wrong username or password entered');
+        }
+    }
+
     public function usernameExistsInDatabase($username) {
         $sql = "SELECT username FROM users WHERE username=?";
         $this->prepareStatement($sql);
@@ -72,8 +80,9 @@ class DatabaseModel {
         return $nrOfUsersWithUsername == 1 ? true : false;
     }
 
-    // KOLLA PÅ RETURN
-    public function userPasswordMatch($username, $password) {
+    public function userPasswordMatch(LoginUser $user) {
+        $username = $user->getUsername();
+        $password = $user->getPassword();
         $sql = "SELECT * FROM users WHERE username=?";
         $this->prepareStatement($sql);
         mysqli_stmt_bind_param($this->statement, "s", $username);
@@ -86,10 +95,10 @@ class DatabaseModel {
         }
     }
 
-    public function saveCookieCredentials($cookieValues) {
+    public function saveCookieCredentials(CookieValues $cookieValues) {
         $cookieUsername = $cookieValues->getCookieUsername();
         $cookiePassword = $cookieValues->getCookiePassword();
-        $this->removeOldCookieIfExisting($cookieValues->getCookieUsername());
+        $this->removeOldCookieIfExisting($cookieUsername);
         $sql = "INSERT INTO cookies (username, password) VALUES (?, ?)";
         $this->prepareStatement($sql);
         mysqli_stmt_bind_param($this->statement, "ss", $cookieUsername, $cookiePassword);
@@ -104,7 +113,7 @@ class DatabaseModel {
         $this->closeStatementAndConnection();
     }
 
-    public function cookiePasswordMatch($cookieValues) {
+    public function cookiePasswordMatch(CookieValues $cookieValues) {
         $cookieUsername = $cookieValues->getCookieUsername();
         $cookiePassword = $cookieValues->getCookiePassword();
         $sql = "SELECT * FROM cookies WHERE username=?";

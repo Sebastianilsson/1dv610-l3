@@ -1,12 +1,14 @@
 <?php
 
-class BillboardController {
+class BillboardController
+{
 
     private $databaseModel;
     private $validation;
     private $billboardView;
 
-    public function __construct($user) {
+    public function __construct($user)
+    {
 
         $this->databaseModel = new \Billboard\DatabaseModel();
         $this->validation = new \Billboard\Validation();
@@ -14,7 +16,8 @@ class BillboardController {
     }
 
     // Method called if registration of a new user is requested
-    public function handleBillboardInteraction() {
+    public function handleBillboardInteraction()
+    {
         if ($this->billboardView->isEditPostSubmitted()) {
             $this->saveEditedPost();
         } elseif ($this->billboardView->isNewPostSubmitted()) {
@@ -29,11 +32,13 @@ class BillboardController {
         $this->setBillboardState();
     }
 
-    public function renderState() {
+    public function renderState()
+    {
         $this->billboardView->response();
     }
 
-    private function saveEditedPost() {
+    private function saveEditedPost()
+    {
         try {
             $editedPost = $this->billboardView->getPost();
             $this->validation->postValidation($editedPost);
@@ -46,7 +51,8 @@ class BillboardController {
         }
     }
 
-    private function createAndSaveNewPost() {
+    private function createAndSaveNewPost()
+    {
         try {
             $newPost = $this->billboardView->getPost();
             $this->validation->postValidation($newPost);
@@ -59,7 +65,8 @@ class BillboardController {
         }
     }
 
-    private function createAndSaveNewComment() {
+    private function createAndSaveNewComment()
+    {
         try {
             $newComment = $this->billboardView->getComment();
             $this->validation->commentValidation($newComment);
@@ -72,20 +79,23 @@ class BillboardController {
         }
     }
 
-    private function getPostToEdit() {
+    private function getPostToEdit()
+    {
         $postId = $this->billboardView->getPostId();
         $postToBeEdit = $this->databaseModel->getPost($postId);
         $this->billboardView->setPostTitleAndTextEdit($postToBeEdit);
         $this->billboardView->setPostMessage(\Billboard\Messages::$editYourPost);
     }
 
-    private function deletePostAndComments() {
+    private function deletePostAndComments()
+    {
         $postId = $this->billboardView->getPostId();
         $this->databaseModel->deletePostAndComments($postId);
         $this->billboardView->setPostMessage(\Billboard\Messages::$postDeleted);
     }
 
-    private function setBillboardState() {
+    private function setBillboardState()
+    {
         $posts = $this->databaseModel->getPosts();
         $comments = $this->databaseModel->getComments();
         $this->billboardView->setPosts($posts);

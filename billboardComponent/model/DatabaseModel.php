@@ -2,7 +2,8 @@
 
 namespace Billboard;
 
-class DatabaseModel {
+class DatabaseModel
+{
 
     private $databaseServerName;
     private $databaseUserName;
@@ -12,7 +13,8 @@ class DatabaseModel {
     private $connection;
     private $statement;
 
-    public function __construct() {
+    public function __construct()
+    {
         $settings = new \Settings();
         $this->databaseServerName = $settings->getDatabaseServerName();
         $this->databaseUserName = $settings->getDatabaseUserName();
@@ -20,15 +22,17 @@ class DatabaseModel {
         $this->databaseName = $settings->getDatabaseName();
     }
 
-    private function connectToDatabase() {
+    private function connectToDatabase()
+    {
         $this->connection = mysqli_connect($this->databaseServerName, $this->databaseUserName, $this->databasePassword, $this->databaseName);
         if (!$this->connection) {
             throw new FailedConnection("Failed to connect to database...");
-            die("Connection failed...".mysqli_connect_error());
+            die("Connection failed..." . mysqli_connect_error());
         }
     }
 
-    private function prepareStatement($sqlQuery) {
+    private function prepareStatement($sqlQuery)
+    {
         $this->connectToDatabase();
         $this->statement = mysqli_stmt_init($this->connection);
         if (!mysqli_stmt_prepare($this->statement, $sqlQuery)) {
@@ -36,12 +40,14 @@ class DatabaseModel {
         }
     }
 
-    private function closeStatementAndConnection() {
+    private function closeStatementAndConnection()
+    {
         mysqli_stmt_close($this->statement);
         mysqli_close($this->connection);
     }
 
-    public function savePost($post) {
+    public function savePost(Post $post)
+    {
         $username = $post->getUsername();
         $postTitle = $post->getTitle();
         $postText = $post->getText();
@@ -53,7 +59,8 @@ class DatabaseModel {
         $this->closeStatementAndConnection();
     }
 
-    public function savePostComment($postComment) {
+    public function savePostComment(PostComment $postComment)
+    {
         $username = $postComment->getUsername();
         $commentText = $postComment->getText();
         $timeStamp = $postComment->getTimeStamp();
@@ -65,17 +72,20 @@ class DatabaseModel {
         $this->closeStatementAndConnection();
     }
 
-    public function getPosts() {
+    public function getPosts()
+    {
         $sql = "SELECT * FROM posts ORDER BY id DESC";
         return $this->selectAllFromOneTable($sql);
     }
 
-    public function getComments() {
+    public function getComments()
+    {
         $sql = "SELECT * FROM comments ORDER BY id DESC";
         return $this->selectAllFromOneTable($sql);
     }
 
-    private function selectAllFromOneTable($sql) {
+    private function selectAllFromOneTable($sql)
+    {
         $this->prepareStatement($sql);
         mysqli_stmt_execute($this->statement);
         $result = mysqli_stmt_get_result($this->statement);
@@ -87,19 +97,22 @@ class DatabaseModel {
         return $contentArray;
     }
 
-    public function deletePostAndComments($postId) {
+    public function deletePostAndComments(string $postId)
+    {
         $this->deleteFromDataBaseById("DELETE FROM posts WHERE id=?", $postId);
         $this->deleteFromDataBaseById("DELETE FROM comments WHERE postId=?", $postId);
     }
 
-    private function deleteFromDataBaseById($sql, $id) {
+    private function deleteFromDataBaseById($sql, $id)
+    {
         $this->prepareStatement($sql);
         mysqli_stmt_bind_param($this->statement, "s", $id);
         mysqli_stmt_execute($this->statement);
         $this->closeStatementAndConnection();
     }
 
-    public function getPost($postId) {
+    public function getPost(string $postId)
+    {
         $sql = "SELECT * FROM posts WHERE id=?";
         $this->prepareStatement($sql);
         mysqli_stmt_bind_param($this->statement, "s", $postId);
@@ -110,14 +123,15 @@ class DatabaseModel {
         return $post;
     }
 
-    public function updateEditedPost($post) {
+    public function updateEditedPost(Post $post)
+    {
         $postTitle = $post->getTitle();
         $postText = $post->getText();
         $postId = $post->getId();
         $this->connectToDatabase();
         $sql = "UPDATE posts SET postTitle=?, postText=? WHERE id=?";
         $this->prepareStatement($sql);
-        mysqli_stmt_bind_param($this->statement, "sss",$postTitle, $postText, $postId);
+        mysqli_stmt_bind_param($this->statement, "sss", $postTitle, $postText, $postId);
         mysqli_stmt_execute($this->statement);
         $this->closeStatementAndConnection();
     }

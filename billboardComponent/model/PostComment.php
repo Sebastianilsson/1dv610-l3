@@ -1,6 +1,7 @@
 <?php
 
-class PostComment {
+class PostComment
+{
 
     private static $currentDateAndTime = 'Y-m-d H:i';
 
@@ -9,32 +10,31 @@ class PostComment {
     private $username;
     private $postId;
 
-    public function __construct($commentText, $username, $postId) {
+    public function __construct(string $commentText, string $username, string $postId)
+    {
         $this->commentText = $commentText;
         $this->postId = $postId;
         $this->username = $username;
         $this->timeStamp = date(self::$currentDateAndTime);
     }
 
-    private function validateText($text) {
-        $this->isFieldFilled($text);
-        $this->isNoHTMLTags($text);
-    }
-
-    public function getText() {
+    public function getText()
+    {
         return $this->commentText;
     }
 
-    public function getUsername() {
+    public function getUsername()
+    {
         return $this->username;
     }
 
-    public function getTimeStamp() {
+    public function getTimeStamp()
+    {
         return $this->timeStamp;
     }
 
-    public function getPostId() {
+    public function getPostId()
+    {
         return $this->postId;
     }
-
 }

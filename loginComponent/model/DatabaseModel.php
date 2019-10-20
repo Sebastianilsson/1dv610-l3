@@ -40,7 +40,6 @@ class DatabaseModel {
     }
 
     public function checkIfUsernameIsFree($username) {
-        $username = $user->getUsername();
         $sql = "SELECT username FROM users WHERE username=?";
         $this->prepareStatement($sql);
         mysqli_stmt_bind_param($this->statement, "s", $username);

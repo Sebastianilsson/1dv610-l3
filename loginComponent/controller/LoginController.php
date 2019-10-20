@@ -6,19 +6,22 @@ class LoginController {
     private $databaseModel;
     private $sessionModel;
     private $loginModel;
+    private $validation;
 
     public function __construct($loginView, $databaseModel, $sessionModel) {
         $this->loginView = $loginView;
         $this->databaseModel = $databaseModel;
         $this->sessionModel = $sessionModel;
-        $this->loginModel = new LoginModel($this->loginView, $this->databaseModel);
+        $this->validation = new Validation();
+        // $this->loginModel = new LoginModel($this->loginView, $this->databaseModel);
     }
     // Method called if login was requested.
     public function newLogin() {
         try {
-            $this->loginModel->getUserLoginInput();
-            $this->loginModel->validateLoginInput();
-            $this->loginModel->checkIfCredentialsMatchInDatabase();
+            $loginUser = $this->loginView->getLoginUser();
+            // $this->loginModel->getUserLoginInput();
+            $this->validation->validateLoginCredentials($loginUser);
+            $this->checkIfCredentialsMatchInDatabase($loginUser);
             $this->successfulNewLogin();
         } catch (MissingUsernameException $error) {
             $this->loginView->setLoginMessage(Messages::$usernameMissing);
@@ -59,6 +62,12 @@ class LoginController {
             $this->sessionModel->destroySession();
             $this->loginView->destroyCookies();
             $this->loginView->setLoginMessage(Messages::$logoutBye);
+        }
+    }
+
+    private function checkIfCredentialsMatchInDatabase($user) {
+        if (!$this->databaseModel->usernameExistsInDatabase($user->getUsername()) || !$this->databaseModel->userPasswordMatch($user->getUsername(), $user->getUsername())) {
+            throw new UsernameOrPasswordIsInvalid('Wrong username or password entered');
         }
     }
 

@@ -46,7 +46,7 @@ class DatabaseModel
         mysqli_close($this->connection);
     }
 
-    public function savePost(Post $post)
+    public function savePost(\Post $post)
     {
         $username = $post->getUsername();
         $postTitle = $post->getTitle();
@@ -59,7 +59,7 @@ class DatabaseModel
         $this->closeStatementAndConnection();
     }
 
-    public function savePostComment(PostComment $postComment)
+    public function savePostComment(\PostComment $postComment)
     {
         $username = $postComment->getUsername();
         $commentText = $postComment->getText();
@@ -123,7 +123,7 @@ class DatabaseModel
         return $post;
     }
 
-    public function updateEditedPost(Post $post)
+    public function updateEditedPost(\Post $post)
     {
         $postTitle = $post->getTitle();
         $postText = $post->getText();

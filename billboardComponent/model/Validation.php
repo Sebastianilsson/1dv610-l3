@@ -7,7 +7,7 @@ class Validation
 
     private static $emptyField = 0;
 
-    public function postValidation(Post $post)
+    public function postValidation(\Post $post)
     {
         $this->isFieldFilled($post->getTitle());
         $this->isFieldFilled($post->getText());
@@ -15,7 +15,7 @@ class Validation
         $this->isNoHTMLTags($post->getText());
     }
 
-    public function commentValidation(PostComment $comment)
+    public function commentValidation(\PostComment $comment)
     {
         $this->isFieldFilled($comment->getText());
         $this->isNoHTMLTags($comment->getText());

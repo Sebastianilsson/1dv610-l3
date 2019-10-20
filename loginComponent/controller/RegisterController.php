@@ -5,24 +5,31 @@ class RegisterController {
     private $loginView;
     private $databaseModel;
     private $registerView;
-    private $registerModel;
+    // private $registerModel;
+    private $validation;
 
     public function __construct($registerView, $loginView, $databaseModel) {
         $this->registerView = $registerView;
         $this->databaseModel = $databaseModel;
         $this->loginView = $loginView;
-        $this->registerModel = new RegisterModel($this->registerView, $this->databaseModel);
+        $this->validation = new Validation();
+        // $this->registerModel = new RegisterModel($this->registerView, $this->databaseModel);
     }
 
     // Method called if registration of a new user is requested
     public function newRegistration() {
         try {
-            $this->registerModel->getUserRegistrationInput();
-            $this->registerModel->validateRegisterInput();
-            $this->registerModel->hashPassword();
-            $this->registerModel->saveUserToDatabase();
-            $this->loginView->setUsernameValue($this->registerView->getUsername());
-            $this->loginView->setLoginMessage(Messages::$successfulRegistration);
+            // $this->registerModel->getUserRegistrationInput();
+            // $this->registerModel->validateRegisterInput();
+            // $this->registerModel->hashPassword();
+            // $this->registerModel->saveUserToDatabase();
+            // $this->loginView->setUsernameValue($this->registerView->getUsername());
+            // $this->loginView->setLoginMessage(Messages::$successfulRegistration);
+            $registerUser = $this->registerView->getUserRegistration();
+            $this->validation->validateRegisterInput($registerUser);
+            $this->databaseModel->checkIfUsernameIsFree($registerUser->getUsername());
+            $registerUser->hashPassword();
+            $this->databaseModel->saveUserToDatabase($registerUser->getUsername(), $registerUser->getPassword());
             header("Location: ?");
         } catch (ShortUsernameAndPassword $error) {
             $this->registerView->setRegisterMessage(Messages::$toShortUsernameAndPassword);

@@ -55,6 +55,10 @@ class RegisterView {
         return isset($_POST[self::$passwordRepeat]);
     }
 
+    public function getUserRegistration() {
+        return new RegisterUser($_POST[self::$username], $_POST[self::$password], $_POST[self::$passwordRepeat]);
+    }
+
     public function getUsername() {
         return $_POST[self::$username];
     }

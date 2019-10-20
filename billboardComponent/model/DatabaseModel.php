@@ -23,7 +23,7 @@ class DatabaseModel {
     private function connectToDatabase() {
         $this->connection = mysqli_connect($this->databaseServerName, $this->databaseUserName, $this->databasePassword, $this->databaseName);
         if (!$this->connection) {
-            throw new Exception("Failed to connect to database...");
+            throw new FailedConnection("Failed to connect to database...");
             die("Connection failed...".mysqli_connect_error());
         }
     }
@@ -31,10 +31,8 @@ class DatabaseModel {
     private function prepareStatement($sqlQuery) {
         $this->connectToDatabase();
         $this->statement = mysqli_stmt_init($this->connection);
-        if (mysqli_stmt_prepare($this->statement, $sqlQuery)) {
-            return true;
-        } else {
-            throw new Exception("Couldn't prepare statement for database...");
+        if (!mysqli_stmt_prepare($this->statement, $sqlQuery)) {
+            throw new FailedToPrepareStatement("Couldn't prepare statement for database...");
         }
     }
 
@@ -49,11 +47,10 @@ class DatabaseModel {
         $postText = $post->getText();
         $timeStamp = $post->getTimeStamp();
         $sql = "INSERT INTO posts (username, postTitle, postText, timeStamp) VALUES (?, ?, ?, ?)";
-        if ($this->prepareStatement($sql)) {
-            mysqli_stmt_bind_param($this->statement, "ssss", $username, $postTitle, $postText, $timeStamp);
-            mysqli_stmt_execute($this->statement);
-            $this->closeStatementAndConnection();
-        }
+        $this->prepareStatement($sql);
+        mysqli_stmt_bind_param($this->statement, "ssss", $username, $postTitle, $postText, $timeStamp);
+        mysqli_stmt_execute($this->statement);
+        $this->closeStatementAndConnection();
     }
 
     public function savePostComment($postComment) {
@@ -62,11 +59,10 @@ class DatabaseModel {
         $timeStamp = $postComment->getTimeStamp();
         $postId = $postComment->getPostId();
         $sql = "INSERT INTO comments (username, commentText, timeStamp, postId) VALUES (?, ?, ?, ?)";
-        if ($this->prepareStatement($sql)) {
-            mysqli_stmt_bind_param($this->statement, "ssss", $username, $commentText, $timeStamp, $postId);
-            mysqli_stmt_execute($this->statement);
-            $this->closeStatementAndConnection();
-        }
+        $this->prepareStatement($sql);
+        mysqli_stmt_bind_param($this->statement, "ssss", $username, $commentText, $timeStamp, $postId);
+        mysqli_stmt_execute($this->statement);
+        $this->closeStatementAndConnection();
     }
 
     public function getPosts() {
@@ -80,16 +76,15 @@ class DatabaseModel {
     }
 
     private function selectAllFromOneTable($sql) {
-        if ($this->prepareStatement($sql)) {
-            mysqli_stmt_execute($this->statement);
-            $result = mysqli_stmt_get_result($this->statement);
-            $contentArray = array();
-            while ($row = mysqli_fetch_array($result)) {
-                $contentArray[] = $row;
-            }
-            $this->closeStatementAndConnection();
-            return $contentArray;
+        $this->prepareStatement($sql);
+        mysqli_stmt_execute($this->statement);
+        $result = mysqli_stmt_get_result($this->statement);
+        $contentArray = array();
+        while ($row = mysqli_fetch_object($result)) {
+            $contentArray[] = $row;
         }
+        $this->closeStatementAndConnection();
+        return $contentArray;
     }
 
     public function deletePostAndComments($postId) {
@@ -98,23 +93,21 @@ class DatabaseModel {
     }
 
     private function deleteFromDataBaseById($sql, $id) {
-        if ($this->prepareStatement($sql)) {
-            mysqli_stmt_bind_param($this->statement, "s", $id);
-            mysqli_stmt_execute($this->statement);
-            $this->closeStatementAndConnection();
-        }
+        $this->prepareStatement($sql);
+        mysqli_stmt_bind_param($this->statement, "s", $id);
+        mysqli_stmt_execute($this->statement);
+        $this->closeStatementAndConnection();
     }
 
     public function getPost($postId) {
         $sql = "SELECT * FROM posts WHERE id=?";
-        if ($this->prepareStatement($sql)) {
-            mysqli_stmt_bind_param($this->statement, "s", $postId);
-            mysqli_stmt_execute($this->statement);
-            $result = mysqli_stmt_get_result($this->statement);
-            $post = mysqli_fetch_assoc($result);
-            $this->closeStatementAndConnection();
-            return $post;
-        }
+        $this->prepareStatement($sql);
+        mysqli_stmt_bind_param($this->statement, "s", $postId);
+        mysqli_stmt_execute($this->statement);
+        $result = mysqli_stmt_get_result($this->statement);
+        $post = mysqli_fetch_object($result);
+        $this->closeStatementAndConnection();
+        return $post;
     }
 
     public function updateEditedPost($post) {
@@ -123,10 +116,9 @@ class DatabaseModel {
         $postId = $post->getId();
         $this->connectToDatabase();
         $sql = "UPDATE posts SET postTitle=?, postText=? WHERE id=?";
-        if ($this->prepareStatement($sql)) {
-            mysqli_stmt_bind_param($this->statement, "sss",$postTitle, $postText, $postId);
-            mysqli_stmt_execute($this->statement);
-            $this->closeStatementAndConnection();
-        }
+        $this->prepareStatement($sql);
+        mysqli_stmt_bind_param($this->statement, "sss",$postTitle, $postText, $postId);
+        mysqli_stmt_execute($this->statement);
+        $this->closeStatementAndConnection();
     }
 }

@@ -10,10 +10,20 @@ ini_set('display_errors', 'On');
 //SESSION
 session_start();
 
-$loginComponent = new LoginComponent();
-$loginComponent->render();
-$user = $loginComponent->getCurrentUser();
+// TODO change catch if time....
 
-$billboardComponent = new BillboardComponent($user);
-$billboardComponent->render();
+try {
+    $loginComponent = new LoginComponent();
+    $loginComponent->render();
+    $user = $loginComponent->getCurrentUser();
+
+    $billboardComponent = new BillboardComponent($user);
+    $billboardComponent->render();
+} catch (FailedConnection $error) {
+    echo $error;
+} catch (FailedToPrepareStatement $error) {
+    echo $error;
+} catch (Exception $error) {
+    echo $error;
+}
 

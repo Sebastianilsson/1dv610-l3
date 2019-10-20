@@ -89,14 +89,14 @@ class BillboardView {
         foreach ($this->posts as $post => $postContent) {
             $posts .= '
             <div class="post" style="border:solid;padding:20px;width:450px;margin-bottom:10px;">
-                <h1>'.$postContent["postTitle"].'</h1>
-                '.$this->handleYourPost($postContent["username"], $postContent["id"]).'
+                <h1>'.$postContent->postTitle.'</h1>
+                '.$this->handleYourPost($postContent->username, $postContent->id).'
                 <hr>
-                <h4>Written by : '.$postContent["username"].'</h4>
-                <p>'.$postContent["postText"].'</p>
-                <p>'.$postContent["timeStamp"].'</p>
+                <h4>Written by : '.$postContent->username.'</h4>
+                <p>'.$postContent->postText.'</p>
+                <p>'.$postContent->timeStamp.'</p>
                 '.$this->commentForm($postContent).'
-                '.$this->viewComments($postContent["id"]).'
+                '.$this->viewComments($postContent->id).'
             </div>
             ';
         }
@@ -109,9 +109,9 @@ class BillboardView {
             <div>
                 <form method="post" > 
                 <fieldset>
-                    <legend>New Comment On "'.$post["postTitle"].'" - what do you think about his update?</legend>
+                    <legend>New Comment On "'.$post->postTitle.'" - what do you think about his update?</legend>
 
-                    <input type="hidden" name="'.self::$postId.'" value="'.$post["id"].'" />
+                    <input type="hidden" name="'.self::$postId.'" value="'.$post->id.'" />
 
                     <label for="' . self::$commentText . '">Comment</label><br>
                     <textarea id="' . self::$commentText . '" name="' . self::$commentText . '" rows="4" cols="50"></textarea><br>
@@ -127,11 +127,11 @@ class BillboardView {
     private function viewComments($postId) {
         $comments = '<br><h3>Comments</h3>';
         foreach ($this->comments as $comment => $commentContent) {
-            if($commentContent["postId"] == $postId) {
+            if($commentContent->postId == $postId) {
                 $comments .= '
                 <hr>
-                <p>'.$commentContent["commentText"].'</p>
-                <p>'.$commentContent["timeStamp"].'</p>
+                <p>'.$commentContent->username.' says: '.$commentContent->commentText.'</p>
+                <p>'.$commentContent->timeStamp.'</p>
                 <br>
                 ';
                 }
@@ -211,12 +211,11 @@ class BillboardView {
         $this->billboardMessage = $message;
     }
 
-    // FÅ IN ETT OBJEKT HÄR??
     public function setPostTitleAndTextEdit($post) {
-        $this->postTitleEdit = $post['postTitle'];
-        $this->postTextEdit = $post['postText'];
+        $this->postTitleEdit = $post->postTitle;
+        $this->postTextEdit = $post->postText;
         $this->isPostEdit = true;
-        $this->postIdEdit = $post['id'];
+        $this->postIdEdit = $post->id;
         $this->submitVisibility = self::$hidden;
         $this->updateVisibility = self::$visible;
     }

@@ -79,8 +79,8 @@ class DatabaseModel {
         mysqli_stmt_bind_param($this->statement, "s", $username);
         mysqli_stmt_execute($this->statement);
         $matchingUser = mysqli_stmt_get_result($this->statement);
-        if ($user = mysqli_fetch_object($matchingUser)) {    
-            $matchingPassword = password_verify($password, $user->password);
+        if ($user = mysqli_fetch_assoc($matchingUser)) {    
+            $matchingPassword = password_verify($password, $user['password']);
             $this->closeStatementAndConnection();
             return $matchingPassword ? true : false;
         }
@@ -112,7 +112,7 @@ class DatabaseModel {
         mysqli_stmt_bind_param($this->statement, "s", $cookieUsername);
         mysqli_stmt_execute($this->statement);
         $matchingUser = mysqli_stmt_get_result($this->statement);
-        $user = mysqli_fetch_object($matchingUser);    
+        $user = mysqli_fetch_assoc($matchingUser);    
         $this->closeStatementAndConnection();
         if ($cookiePassword != $user['password']) {
             throw new TamperedCookie('"'.$cookiePassword.'" does not match the existing cookie');

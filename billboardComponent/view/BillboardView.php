@@ -64,7 +64,7 @@ class BillboardView
         }
     }
 
-    private function viewPostForm(): string
+    private function viewPostForm()
     {
         if ($this->isLoggedIn) {
             return '
@@ -108,7 +108,7 @@ class BillboardView
         return $posts;
     }
 
-    private function commentForm($post): string
+    private function commentForm($post)
     {
         if ($this->isLoggedIn) {
             return '
@@ -146,7 +146,7 @@ class BillboardView
         return $comments;
     }
 
-    private function handleYourPost($postAuthor, $postId): string
+    private function handleYourPost($postAuthor, $postId)
     {
         if ($this->isLoggedIn && $this->username == $postAuthor) {
             return '

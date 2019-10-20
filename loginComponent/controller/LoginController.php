@@ -66,7 +66,8 @@ class LoginController {
     }
 
     private function checkIfCredentialsMatchInDatabase($user) {
-        if (!$this->databaseModel->usernameExistsInDatabase($user->getUsername()) || !$this->databaseModel->userPasswordMatch($user->getUsername(), $user->getUsername())) {
+        var_dump($this->databaseModel->userPasswordMatch($user->getUsername(), $user->getPassword()));
+        if (!$this->databaseModel->usernameExistsInDatabase($user->getUsername()) || !$this->databaseModel->userPasswordMatch($user->getUsername(), $user->getPassword())) {
             throw new UsernameOrPasswordIsInvalid('Wrong username or password entered');
         }
     }
